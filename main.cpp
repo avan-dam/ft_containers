@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/04/07 16:56:47 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/08 11:55:01 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,9 @@ void	ft_testing_my_own_list()
 {
 	int sixth[4] = {5,10,15,20};
 	ft_list<int> ft_list_me1(sixth);
-	ft_list<int> ft_list_me2(4, 100);
-	ft_list<int> ft_list_me3(ft_list_me2); // workout how to test this one better
-
-	ft_list<int> ft_list_me;
+	ft_list<int> ft_list_me2(6, 100);
+	ft_list<int> ft_list_me3(ft_list_me1); // workout how to test this one better
+	ft_list<int> ft_list_me = ft_list_me2;
 }
 
 int    main(int argc, char **argv)
