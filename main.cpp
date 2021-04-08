@@ -6,11 +6,12 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/03/23 15:26:17 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/04/07 16:56:47 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_containers.hpp"
+#include "ft_list.hpp"
+#include "list_node.hpp"
 #include <list>
 
 void    queue_tests()
@@ -43,6 +44,7 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
 	// the iterator constructor can also be used to construct from arrays:
 	int myints[] = {16,2,77,29};
 	std::list<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+	// std::list<int> sixth = {5,10,15,20};
 
 	std::cout << "The contents of first are: ";
   	for (std::list<int>::iterator it = first.begin(); it != first.end(); it++)
@@ -68,6 +70,10 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
  	for (std::list<int>::reverse_iterator rit=fifth.rbegin(); rit!=fifth.rend(); ++rit)
     std::cout << ' ' << *rit;
 	std::cout << '\n';
+  	// std::cout << "The contents of sixth (using cbegin and cend) are: ";
+  	// for (std::list<int>::iterator it = sixth.cbegin(); it != sixth.cend(); ++it)
+    // std::cout << ' ' << *it;
+  	// std::cout << '\n'; ASK IF WE NEED CBEGIN AND CEND
 	return 0;
 }
 
@@ -93,28 +99,41 @@ int    list_tests()
 	return 0;
 }
 
+void	ft_testing_my_own_list()
+{
+	int sixth[4] = {5,10,15,20};
+	ft_list<int> ft_list_me1(sixth);
+	ft_list<int> ft_list_me2(4, 100);
+	ft_list<int> ft_list_me3(ft_list_me2); // workout how to test this one better
+
+	ft_list<int> ft_list_me;
+}
+
 int    main(int argc, char **argv)
 {
-    if (argc == 1 || argc == 2)
-    {
-        if (argc == 1 || strcmp(argv[1], "list") == 0)
-            list_tests();
-        if (argc == 1 || strcmp(argv[1], "vector") == 0)
-            vector_tests();
-        if (argc == 1 || strcmp(argv[1], "map") == 0)
-            map_tests();
-        if (argc == 1 || strcmp(argv[1], "stack") == 0)
-            stack_tests();
-        if (argc == 1 || strcmp(argv[1], "queue") == 0)
-            queue_tests();
-        if (argc == 2 && strcmp(argv[1], "queue") != 0
-			&& strcmp(argv[1], "stack") != 0
-			&& strcmp(argv[1], "map") != 0
-			&& strcmp(argv[1], "vector") != 0
-			&& strcmp(argv[1], "list") != 0)
-           std::cout << "invalid arguments" << std::endl;
-    }
-    else
-        std::cout << "invalid arguments" << std::endl;
+	ft_testing_my_own_list();
+	(void)argv;
+	(void)argc;
+    // if (argc == 1 || argc == 2)
+    // {
+    //     if (argc == 1 || strcmp(argv[1], "list") == 0)
+    //         list_tests();
+    //     if (argc == 1 || strcmp(argv[1], "vector") == 0)
+    //         vector_tests();
+    //     if (argc == 1 || strcmp(argv[1], "map") == 0)
+    //         map_tests();
+    //     if (argc == 1 || strcmp(argv[1], "stack") == 0)
+    //         stack_tests();
+    //     if (argc == 1 || strcmp(argv[1], "queue") == 0)
+    //         queue_tests();
+    //     if (argc == 2 && strcmp(argv[1], "queue") != 0
+	// 		&& strcmp(argv[1], "stack") != 0
+	// 		&& strcmp(argv[1], "map") != 0
+	// 		&& strcmp(argv[1], "vector") != 0
+	// 		&& strcmp(argv[1], "list") != 0)
+    //        std::cout << "invalid arguments" << std::endl;
+    // }
+    // else
+    //     std::cout << "invalid arguments" << std::endl;
     return (0);
 }

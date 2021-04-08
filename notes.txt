@@ -1,0 +1,65 @@
+
+
+LISTS:
+- list containers implemented as doubly linked lists 
+    so each element keeps info on how to locate next and prev element allowing constant
+    time insert and erase operations before or after a specific element (even of 
+    entire ranges).
+- Lack direct random access to the elements by their position
+TEMPLATE PARAMETERS: 
+T : Type of elements, Aliased as memeber type list::value_type
+Alloc : type of the allocator object used to define the storage allocation model
+(we dont need this as not implemenenting allocators)
+
+MEMBER TYPES:
+- value_type: The first template parameter (T)
+- iterator: a bidrectional iterator to value_type
+- const_iterator: a bidrectional iterator to const value_type
+- reverse_iterator : a reverse_iterator<iterator>
+- const_reverse_iterator : reverse_iterator<const_iterator>
+- difference_type : a signed integral type, idential to : iterator_traits<iterator>::difference_type
+- size_type : an unsigned integral type that can represent any non-negative value of difference_type
+
+MEMBER FUNCTIONS:
+PUBLIC:
+CONSTRUCTOR:
+
+
+
+
+CONSTRUCTORS:
+    - EMPTY CONTAINER CONSTRUCTOR : constructs an empty container, with no elements
+    ft_list()
+    - FILL CONSTRUCTOR : Constructs a container with n elements. Each element is a copy of val.
+    - RANGE CONSTRUCTOR " constructs a container with as many elements as the range [first, last],
+    with each element constructed from its corresponding element in that range in the same order
+    - COPY CONSTRUCTOR : constructs a container with a copy of each of the elements in c, in same order.
+    PARAMETERS:
+    - alloc 
+    - n : Initial container size (i,e, no of elements in container at construction). Member type 
+    size_type is an unsigned integral type
+    - val : value to fill the container with. Eacho of the n elements in the container is initialized to
+    a copy of this value. Member type value_type is the type of the elements in the container, defined
+    in list as an alias of its first template parameter (T).
+    - first, last: Input iterators to the initial and final position in a range. The range used is 
+    [first, last], which includes all the elements between first and last, including the element 
+    pointed by first but not the element pointed by last. The function template argument InputIterator 
+    shall be an input iterator type that points to elements of a type from which value_type objects can
+    be constructed.
+    - x : another list object of the same type (with the same class template argyments), whose contents
+    are either copied or acquired
+    - il :  An initializer_list object. The objects are autonmatically constructed from initializer 
+    list declarators. Member tyoe value_type is the type of elements in the container, defined in list
+    as an alias of its first template parameter (T).
+
+template <class T>
+class ft_list {
+    public:
+    ft_list()
+    ft_list(*T val) - i.e. array of ints or anything
+
+
+    private:
+    unsigned int size_type n;
+    (double linked link)<T> val;
+}
