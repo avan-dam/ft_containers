@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/08 11:54:50 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/08 12:10:21 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,16 +120,19 @@ template <typename T>
 void ft_list<T>::deep_copy(const ft_list & source)
 {
     list_node<T> * temp_ptr = nullptr;
-    list_node<T> * temp_ptr2 = nullptr;
+    // list_node<T> * temp_ptr2 = nullptr;
 
     _size = source._size;
-    _start_ptr = temp_ptr;
-    while (temp_ptr)
-    {    
-        temp_ptr2 = temp_ptr->next_ptr;
-        delete temp_ptr;
-        temp_ptr = temp_ptr2;
-    }
+    // if (_start_ptr)
+    //     delete _start_ptr;
+    // temp_ptr = _start_ptr;
+    // while (temp_ptr)
+    // {    
+    //     temp_ptr2 = temp_ptr->next_ptr;
+    //     delete temp_ptr;
+    //     temp_ptr = temp_ptr2;
+    // }
+    _start_ptr = nullptr;
     _end_ptr = nullptr;
     if (source._start_ptr)
         _start_ptr = source._start_ptr;
@@ -155,5 +158,24 @@ ft_list<T> & ft_list<T>::operator=(const ft_list & source)
         deep_copy(source);
     return *this;
 }
+
+// template <typename T>
+// ft_list<T>::~ft_list()
+// {
+//     list_node<T> * temp_ptr;
+//     list_node<T> * temp_ptr2;
+
+//     if (_start_ptr == nullptr && _end_ptr == nullptr && _size == 0)
+//         return;
+//     temp_ptr = _start_ptr;
+//     while (temp_ptr)
+//     {
+//         temp_ptr2 = temp_ptr->next_ptr;
+//         if (temp_ptr)
+//             delete (temp_ptr);
+//         temp_ptr = temp_ptr2;
+//     }
+//     return ;
+// }
 
 #endif

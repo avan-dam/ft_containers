@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 15:47:16 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/08 11:31:02 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/08 12:06:17 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ template <typename T>
 class list_node
 {
     public:
+        list_node(); // ?
         list_node(T);
         list_node(const list_node & source);
         list_node & operator=(const list_node & source);
@@ -31,6 +32,14 @@ class list_node
         list_node<T>*   next_ptr;
         list_node<T>*   prev_ptr;
 };
+
+template <typename T>
+list_node<T>::list_node()
+{
+    data = 0;
+    next_ptr = nullptr;
+    prev_ptr = nullptr;
+}
 
 template <typename T>
 list_node<T>::list_node(T data_rec)
@@ -60,7 +69,9 @@ template <typename T>
 list_node<T>::~list_node()
 {
     data = 0;
+    // delete next_ptr;
     next_ptr = nullptr;
+    // delete prev_ptr;
     prev_ptr = nullptr;
 }
 
