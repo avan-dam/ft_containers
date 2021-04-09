@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/08 12:10:21 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/09 11:05:40 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,86 +17,56 @@
 
 #include <iostream>
 
-template <typename T>
-class ft_list
-{
-    public:
-    typedef unsigned int size_type;
-        ft_list();
-        ft_list(T *val);
-        ft_list(size_type n, T val);
-        ft_list(const ft_list &x);
-        ft_list & operator=(const ft_list &x);
-        void deep_copy(const ft_list & source);
-        // ~ft_list();
-    private:
-        list_node<T> *_start_ptr;
-        list_node<T> *_end_ptr;
-        size_type   _size;
+namespace ft {
+    template <typename T>
+    class list
+    {
+        public:
+        	typedef unsigned int size_type;
+        	list();
+        	list(size_type n, T val);
+        	list(const list &x);
+        	list & operator=(const list &x);
+        	void deep_copy(const list & source, int i);
+        	~list();
+        	bool    isempty();
+        private:
+            list_node<T> *_head;
+        	list_node<T> *_tail;
+        	size_type   _size;
 };
 
 template <typename T>
-ft_list<T>::ft_list() //creates list with start and end as nullptr
+bool list<T>::isempty()
 {
-    _size = 0;
-	_start_ptr = nullptr;
-	_end_ptr = nullptr;
+    if (_head == nullptr && _tail == nullptr && _size == 0)
+        return (true);
+    return (false);
 }
 
 template <typename T>
-ft_list<T>::ft_list(T *val)
+list<T>::list()
 {
-    list_node<T> * temp_ptr;
-
     _size = 0;
-    _start_ptr= nullptr;
-    _end_ptr = nullptr;
-    if (val[0])
-    {
-	    _start_ptr = new list_node<T>(val[0]); //creates new node
-        _size++;
-        std::cout << "_start_ptr node " << " with " << _start_ptr->data << std::endl;
-        temp_ptr = _start_ptr;
-        if (!(val[1]))
-        {
-            _end_ptr = _start_ptr;
-            return ;
-        }
-    }
-    for (int i = 1; val[i]; i++)
-    {
-	    list_node<T> * new_ptr = new list_node<T>(val[i]); //creates new node
-        _size++;
-        std::cout << "creating node " << i << " with " << new_ptr->data << std::endl;
-        new_ptr->prev_ptr = temp_ptr;
-        temp_ptr->next_ptr = new_ptr;
-        temp_ptr = new_ptr;
-    }
-    _end_ptr = temp_ptr;
-    std::cout << "_end_ptr node " << " with " << _end_ptr->data << std::endl;
-    _start_ptr->prev_ptr = nullptr;
-    _end_ptr->prev_ptr = nullptr;
-    std::cout << "size is: " << _size << std::endl;
-
+    _head = nullptr;
+    _tail = nullptr;
 }
 
-
 template <typename T>
-ft_list<T>::ft_list(size_type n, T val)
+list<T>::list(size_type n, T val)
 {
     list_node<T> * temp_ptr;
 
     _size = 0;
     if (n == 0)
         return ;
-    _end_ptr = nullptr;
-	_start_ptr = new list_node<T>(val); //creates new node
+	_head = new list_node<T>(val);
     _size++;
-    std::cout << "_start_ptr node " << " with " << _start_ptr->data << std::endl;
-    temp_ptr = _start_ptr;
+    std::cout << "_head node " << " with " << _head->data << std::endl;
+    temp_ptr = _head;
     if (n == 1)
     {
-        _end_ptr = _start_ptr;
+        _tail = _head;
         return ;
     }
     for (size_type i = 1; i < n; i++)
@@ -104,78 +74,82 @@ ft_list<T>::ft_list(size_type n, T val)
 	    list_node<T> * new_ptr = new list_node<T>(val); //creates new node
         _size++;
         std::cout << "creating node " << i << " with " << new_ptr->data << std::endl;
-        new_ptr->prev_ptr = temp_ptr;
-        temp_ptr->next_ptr = new_ptr;
+        new_ptr->prev = temp_ptr;
+        temp_ptr->next = new_ptr;
         temp_ptr = new_ptr;
     }
-    _end_ptr = temp_ptr;
-    std::cout << "_end_ptr node " << " with " << _end_ptr->data << std::endl;
-    _start_ptr->prev_ptr = nullptr;
-    _end_ptr->prev_ptr = nullptr;
+    _tail = temp_ptr;
+    std::cout << "_tail node " << " with " << _tail->data << std::endl;
+    _head->prev = nullptr;
+    _tail->next = nullptr;
     std::cout << "size is: " << _size << std::endl;
 
 }
 
 template <typename T>
-void ft_list<T>::deep_copy(const ft_list & source)
+void list<T>::deep_copy(const list & source, int i)
 {
-    list_node<T> * temp_ptr = nullptr;
-    // list_node<T> * temp_ptr2 = nullptr;
+	if (i == 1)
+	{
+   		list_node<T> * current;
+    		list_node<T> * temp;
 
+	    if (isempty() == false)
+    		{
+       		current =_head;
+        		while (current)
+        		{
+          		temp = current->next;
+          		std::cout << "deeletomg  " << std::endl;
+          		delete current;
+          		current = temp;
+        		}
+		}
+    }
     _size = source._size;
-    // if (_start_ptr)
-    //     delete _start_ptr;
-    // temp_ptr = _start_ptr;
-    // while (temp_ptr)
-    // {    
-    //     temp_ptr2 = temp_ptr->next_ptr;
-    //     delete temp_ptr;
-    //     temp_ptr = temp_ptr2;
-    // }
-    _start_ptr = nullptr;
-    _end_ptr = nullptr;
-    if (source._start_ptr)
-        _start_ptr = source._start_ptr;
-    std::cout << "creating _start_ptr " << _start_ptr->data << std::endl;
-    temp_ptr = _start_ptr;
-    if (source._end_ptr)
-        _end_ptr = source._end_ptr;
-    std::cout << "creating _end_ptr " << _end_ptr->data << std::endl;  
+    if (source._head)
+        _head = new list_node<T>(source._head->data);
+    std::cout << "creating _head " << _head->data << std::endl;
+    if (source._tail)
+        _tail = new list_node<T>(source._tail->data);
+    std::cout << "creating _tail " << _tail->data << std::endl;  
     std::cout << "size is: " << _size << std::endl;  
 }
 
 template <typename T>
-ft_list<T>::ft_list(const ft_list & source)
+list<T>::list(const list & source)
 {
-    deep_copy(source);
+    std::cout << "ASSIGNMENT opp called list" << std::endl;
+    deep_copy(source, 0);
     return ;
 }
 
 template<typename T>
-ft_list<T> & ft_list<T>::operator=(const ft_list & source)
+list<T> & list<T>::operator=(const list & source)
 {
-    if (this != source)
-        deep_copy(source);
+    std::cout << "COPY constructor called list" << std::endl;
+    if (_head != source._head || _tail != source._tail || _size != source._size)
+		deep_copy(source, 1);
     return *this;
 }
 
-// template <typename T>
-// ft_list<T>::~ft_list()
-// {
-//     list_node<T> * temp_ptr;
-//     list_node<T> * temp_ptr2;
+template <typename T>
+list<T>::~list()
+{
+    list_node<T> * current_ptr = _head;
+    list_node<T> * temp_ptr;
 
-//     if (_start_ptr == nullptr && _end_ptr == nullptr && _size == 0)
-//         return;
-//     temp_ptr = _start_ptr;
-//     while (temp_ptr)
-//     {
-//         temp_ptr2 = temp_ptr->next_ptr;
-//         if (temp_ptr)
-//             delete (temp_ptr);
-//         temp_ptr = temp_ptr2;
-//     }
-//     return ;
-// }
+    if (!isempty())
+    {
+        while (current_ptr != nullptr)
+        {
+            temp_ptr = current_ptr;
+            current_ptr = current_ptr->next;
+            delete (temp_ptr);
+        }
+    }
+    return ;
+}
+}
 
 #endif
