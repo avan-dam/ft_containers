@@ -6,12 +6,13 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/04/09 11:02:57 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/13 15:47:08 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_list.hpp"
 #include "list_node.hpp"
+#include "list_iterator.hpp"
 #include <list>
 
 void    queue_tests()
@@ -36,8 +37,9 @@ void    vector_tests()
 
 int	list_constructor() // and begin and end and iterator tested here and rend and rbegin
 {
-	// std::list<int> first;                                // empty list of ints
-	std::list<int> second (4,100);                       // four ints with value 100
+	std::list<int> first;                                // empty list of ints
+	ft::list<int> second;
+	std::list<int> third (4,100);                       // four ints with value 100
 // 	std::list<int> third (second.begin(),second.end());  // iterating through second
 // 	std::list<int> fourth (third);                       // a copy of third
 
@@ -52,10 +54,10 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
   	// for (std::list<int>::iterator it = first.begin(); it != first.end(); it++)
     // 	std::cout << *it << ' ';
 	// std::cout << '\n';
-	std::cout << "The contents of second are: ";
-  	for (std::list<int>::iterator it = second.begin(); it != second.end(); it++)
-    	std::cout << *it << ' ';
-	std::cout << '\n';
+	// std::cout << "The contents of second are: ";
+  	// for (std::list<int>::iterator it = second.begin(); it != second.end(); it++)
+    // 	std::cout << *it << ' ';
+	// std::cout << '\n';
 	// std::cout << "The contents of third are: ";
   	// for (std::list<int>::iterator it = third.begin(); it != third.end(); it++)
     // 	std::cout << *it << ' ';
@@ -82,13 +84,27 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
 int	list_assigment_opperator()
 {
 	std::list<int> first (3);      // list of 3 zero-initialized ints
+	ft::list<int> first2 (3);      // list of 3 zero-initialized ints
 	std::list<int> second (5);     // list of 5 zero-initialized ints
+	ft::list<int> second2 (5);     // list of 5 zero-initialized ints
 
 	second = first;
 	first = std::list<int>();
+	second2= first2;
+	first2 = ft::list<int>();
 
 	std::cout << "Size of first: " << int (first.size()) << '\n';
+	for (std::list<int>::iterator it = first.begin(); it != first.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
 	std::cout << "Size of second: " << int (second.size()) << '\n';
+	std::cout << "Size of first2: " << int (first2.size()) << '\n';
+	for (ft::list<int>::iterator itp = first2.begin(); itp != first2.end(); ++itp)
+    	std::cout << ' ' << *itp;
+  	std::cout << '\n';
+	// for (ft::list<float>::iterator it = D.begin(); it != D.end(); it++)
+    	// std::cout << ' ' << *it << std::endl;
+	std::cout << "Size of second2: " << int (second2.size()) << '\n';
 	return 0;
 }
 
@@ -105,29 +121,25 @@ void	ft_testing_my_own_list()
 {
 	ft::list<double> A;
 	std::list<double> B;
-	std::list<float> C (4,100);
-	ft::list<float> D (4,100);
+	std::list<float> C(4,100);
+	ft::list<float> D(4,100);
 	std::list<float> E(C);
 	ft::list<float> F(D);
 	ft::list<float> G = D;
 	std::list<float> H = C;
-	E = C;
-	F = D;
-	// ft_list<int> B(sixth, sixth + sizeof(sixth) / sizeof(int));	// float sixths[4] = {5.0,10.5,15.5,20.5};
-	// std::list<float> b(sixths);
-	// ft_list<char> B(6, "amber");
-	// ft_list<int> ft_list_me2(6, 100);
-	// ft_list<int>C(A);
-    // ft_list<char>D = B;
-	// ft_list_me2 =ft_list_me1; // workout how to test this one better
-	// ft_list_me2 = ft_list_me1;
-	// ft_list<int> ft_list4 (ft_list_me2);
-	// ft_list<int> first;                                // empty list of ints
-	// ft_list<int> second (4,100);                       // four ints with value 100
-	// ft_list<int> third (second.begin(),second.end());  // iterating through second
-	// ft_list<int> fourth (third); 
-	// int myints[] = {16,2,77,29};
-	// ft_list<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+	std::cout << "A empty function gives: " << A.empty() << std::endl;
+	std::cout << "B empty function gives: " << B.empty() << std::endl;
+	std::cout << "size of G is : " << G.size() << std::endl;
+	std::cout << "before it " << std::endl;
+	// ft::list<float>::iterator it= D.begin();
+	// ft::list<float>::iterator ite= D.end();
+	std::cout << "size of D is : " << D.size() << std::endl;
+// // ft::list<double>::iterator it = A.begin();
+// // ft::list<double>::iterator ite = A.end();
+  	for (ft::list<float>::iterator it = D.begin(); it != D.end(); it++)
+    	std::cout << ' ' << *it << std::endl;
+	// std::cout << "after it " << std::endl;
+
 }
 
 int    main(int argc, char **argv)
@@ -138,7 +150,7 @@ int    main(int argc, char **argv)
     // if (argc == 1 || argc == 2)
     // {
     //     if (argc == 1 || strcmp(argv[1], "list") == 0)
-            // list_tests();
+            list_tests();
     //     if (argc == 1 || strcmp(argv[1], "vector") == 0)
     //         vector_tests();
     //     if (argc == 1 || strcmp(argv[1], "map") == 0)
