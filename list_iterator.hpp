@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/09 14:51:34 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/13 15:48:29 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/16 14:20:53 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,42 +23,38 @@ template <typename T>
 class iterator 
 {
 	public:
-		typedef std::bidirectional_iterator_tag iterator_category;
-		typedef ptrdiff_t difference_type;
-		typedef T value_type;
-		typedef T& reference;
-		typedef T* pointer;
-		typedef list_node<T>*	lst_node_ptr;
+		typedef std::bidirectional_iterator_tag	iterator_category;
+		typedef ptrdiff_t						difference_type;
+		typedef T								value_type;
+		typedef T&								reference;
+		typedef T*								pointer;
+		typedef	list_node<T>					node;
+		typedef list_node<T>*					lst_node_ptr;
 
 		reference operator*() const { return _list->data; }
-    	pointer operator->() { return _list->data; }
-    	iterator& operator++() { _list = _list->get_next(); return *this; }   // Prefix increment
-    	iterator operator++(int) { iterator tmp = *this; _list = _list->get_next(); return tmp; } 	// Postfix increment
-		iterator& operator--() { _list = _list->prev; return *this; }   // Prefix increment
-    	iterator operator--(int) { iterator tmp = *this; (*this = this->prev); return tmp; } 	// Postfix increment
+    	pointer operator->() { return &_list->data; }
+    	iterator& operator++() { _list = _list->get_next(); return *this; }
+    	iterator operator++(int) { iterator tmp = *this; _list = _list->get_next(); return tmp; }
+		iterator& operator--() { _list = _list->get_prev(); return *this; }
+    	iterator operator--(int) {  iterator tmp = *this; _list = _list->get_prev(); return tmp; }
 		bool operator!=(const iterator& rhs) { return _list != rhs._list; }
 		bool operator==(const iterator& rhs) { return _list == rhs._list; }		
-		iterator(lst_node_ptr source)
-		{
-			_list = lst_node_ptr(source);
-		}
+		iterator() : _list(nullptr) {}
+		iterator(lst_node_ptr source) : _list(source) {}
 		iterator & operator=(const iterator& source)
 		{
-			std::cout << "in iterator asignment operator here" << std::endl;
 			if (_list != source._list)
 				_list = lst_node_ptr(source);
 			return *this;
 		}
-		iterator(const iterator & source)
+		iterator(const iterator & source) // check this
 		{
 			_list = lst_node_ptr(source._list);
 		}
-		value_type get_content()
-		{
-			return(*_list->data);
-		}
-	private:
-		lst_node_ptr	_list;
+		~iterator() {}
+		value_type get_content() {return(*_list->data);}
+	// private:
+		node	*_list;
 };
 }
 
