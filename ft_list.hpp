@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/16 14:33:46 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/16 14:47:23 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,52 +57,52 @@ list<T>::list(iterator first, iterator last)
     node * current;
 
 	_size = 0;
-    current = NULL;
-    _head = new node(first._list->data);
+    current = new node(first._list->data);
+    _head = current;
 	_size++;
-    _head->prev = nullptr;
-    current = _head;
-	for (ft::list<T>::iterator it = first; it != last; ++it)
+	for (iterator it = first; it != last; ++it)
     {
         current = new node(it._list->data);
 		_size++;
         current->prev = it._list->prev;
+		current->nxt = it._list->nxt;
         current = current->nxt;
     }
     _tail = current;
+    _head->prev = nullptr;
+	_tail->nxt = nullptr;
 }
 
 template <typename T>
 list<T>::list(size_type n, const value_type val)
 {
     node * temp_ptr;
+	node * new_ptr;
 
     _size = 0;
+	_head = nullptr;
+	_tail = nullptr;
     if (n == 0)
-        return ;
+	    return ;
 	_head = new node(val);
     _size++;
-    std::cout << "_head node " << " with " << _head->data << std::endl;
-    temp_ptr = _head;
     if (n == 1)
     {
         _tail = _head;
         return ;
     }
+    temp_ptr = _head;
     for (size_type i = 1; i < n; i++)
     {
-	    node * new_ptr = new node(val); //creates new node
+	    new_ptr = new node(val);
         _size++;
-        std::cout << "creating node " << i << " with " << new_ptr->data << std::endl;
         new_ptr->prev = temp_ptr;
         temp_ptr->nxt = new_ptr;
         temp_ptr = new_ptr;
     }
     _tail = temp_ptr;
-    std::cout << "_tail node " << " with " << _tail->data << std::endl;
     _head->prev = nullptr;
     _tail->nxt = nullptr;
-    std::cout << "size is: " << _size << std::endl;
 }
 
 template <typename T>
@@ -115,9 +115,10 @@ list<T>::list(size_type n)
 template <typename T>
 list<T>::list(const list & source)
 {
-    // clear();
+    clear();
 	_head = source._head;
 	_tail = source._tail;
+	_size = source._size;
     list(this->begin(), this->end());
     return ;
 }
