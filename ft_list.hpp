@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/16 14:47:23 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/20 12:33:27 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ class list
 		typedef	iterator<T>		iterator;
 
 	public:
-		list() : _head(nullptr), _tail(nullptr), _size(0) {}
+		list() : _head(nullptr), _tail(nullptr), _size(0) {} 
         list(size_type n, const value_type val);
 		list(size_type n);
         list(iterator first, iterator last);
 		list(const list &x);
 		list & operator=(const list &x);
-		~list();
+		~list() {clear(); return ;}
 
         void clear();
 
@@ -43,8 +43,23 @@ class list
 		size_type		size() const { return (_size); }
 		// size_type max_size() const;
 
-		iterator begin() const { return ft::iterator<T>(_head);	}
-		iterator end() const { return ft::iterator<T>(_tail); }
+		iterator begin() const { 
+			return ft::iterator<T>(_head);	
+
+		}
+		iterator end() const { 
+			if (_size > 0)
+				return ft::iterator<T>(_tail->nxt); 
+			else
+				return ft::iterator<T>(_tail); 
+		}
+	
+		node & front() { return (&_head);	}
+		// const_reference front() const;
+		node & back() { return (&_tail);	}
+		// const_reference back() const;
+
+
 	private:
 		node		*_head;
 		node		*_tail;
@@ -54,21 +69,23 @@ class list
 template <typename T>
 list<T>::list(iterator first, iterator last)
 {
-    node * current;
+    node * temp_ptr;
+	node * new_ptr;
+	size_type	size = 0;
 
 	_size = 0;
-    current = new node(first._list->data);
-    _head = current;
-	_size++;
+    _head = new node(first._list->data);
+    temp_ptr = _head;
+	size++;
 	for (iterator it = first; it != last; ++it)
     {
-        current = new node(it._list->data);
-		_size++;
-        current->prev = it._list->prev;
-		current->nxt = it._list->nxt;
-        current = current->nxt;
+        new_ptr = new node(it._list->data);
+		size++;
+        new_ptr->prev = temp_ptr;
+        temp_ptr->nxt = new_ptr;
+        temp_ptr = new_ptr;
     }
-    _tail = current;
+    _tail = temp_ptr;
     _head->prev = nullptr;
 	_tail->nxt = nullptr;
 }
@@ -95,6 +112,7 @@ list<T>::list(size_type n, const value_type val)
     for (size_type i = 1; i < n; i++)
     {
 	    new_ptr = new node(val);
+		
         _size++;
         new_ptr->prev = temp_ptr;
         temp_ptr->nxt = new_ptr;
@@ -108,8 +126,33 @@ list<T>::list(size_type n, const value_type val)
 template <typename T>
 list<T>::list(size_type n)
 {
-	list(n, 0);
-	return ;
+    node * temp_ptr;
+	node * new_ptr;
+
+    _size = 0;
+	_head = nullptr;
+	_tail = nullptr;
+    if (n == 0)
+	    return ;
+	_head = new node(0);
+    _size++;
+    if (n == 1)
+    {
+        _tail = _head;
+        return ;
+    }
+    temp_ptr = _head;
+    for (size_type i = 1; i < n; i++)
+    {
+	    new_ptr = new node(0);
+        _size++;
+        new_ptr->prev = temp_ptr;
+        temp_ptr->nxt = new_ptr;
+        temp_ptr = new_ptr;
+    }
+    _tail = temp_ptr;
+    _head->prev = nullptr;
+    _tail->nxt = nullptr;
 }
 
 template <typename T>
@@ -118,9 +161,12 @@ list<T>::list(const list & source)
     clear();
 	_head = source._head;
 	_tail = source._tail;
+	_tail->prev = source._tail->prev;
+	_tail->nxt = nullptr;
+	_head->prev = nullptr;
 	_size = source._size;
-    list(this->begin(), this->end());
-    return ;
+	list(ft::iterator<T>(_head), ft::iterator<T>(_tail->nxt));
+	return ;
 }
 
 template<typename T>
@@ -129,9 +175,12 @@ list<T> & list<T>::operator=(const list & source)
     if (_head != source._head || _tail != source._tail || _size != source._size)
 	{
         clear();
-        _head = source.head;
-        _tail = source.tail;
-        _size = source.size;
+        _size = source.size();
+		_head = source._head;
+		_tail = source._tail;
+		_tail->nxt = nullptr;
+		_head->prev = nullptr;
+		list(ft::iterator<T>(_head), ft::iterator<T>(_tail->nxt));
     }
     return *this;
 }
@@ -148,16 +197,10 @@ void list<T>::clear()
         {
             temp_ptr = current_ptr;
             current_ptr = current_ptr->nxt;
+			_size--;
             delete (temp_ptr);
         }
     }
-    return ;
-}
-
-template <typename T>
-list<T>::~list()
-{
-    clear();
     return ;
 }
 
