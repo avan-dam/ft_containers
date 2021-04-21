@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/04/20 12:33:54 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/21 09:09:30 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,15 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
 	std::list<int> third_std (second_std.begin(),second_std.end());				// iterating through second
 	ft::list<int> third_ft (second_ft.begin(),second_ft.end());					// iterating through second
 	std::list<int> fourth_std (third_std);                       				// a copy of third
-	ft::list<int> fourth_ft (third_ft);                     					// a copy of third
+	ft::list<int> fourth_ft (third_ft);  	                  					// a copy of third
+	int myarray[] = {16,2,77,29};
+	std::list<int> fifth_std (myarray, myarray + 4);
+	// THIS DOES NOT WORK
+	// ft::list<int> fifth_ft (myarray, myarray + 4);
 	// THIS DOES NOT WORK //
-	int myints[] = {16,2,77,29};
-	std::list<int> fifth_std (myints, myints + sizeof(myints) / sizeof(int) ); // the iterator constructor can also be used to construct from arrays:
-	// ft::list<int> fifth_ft (myints, myints + sizeof(myints) / sizeof(int) );
+	// int myints[] = {16,2,77,29};
+	// std::list<int> sixth_std (myints, myints + sizeof(myints) / sizeof(int) ); // the iterator constructor can also be used to construct from arrays:
+	// ft::list<int> sixth_ft (myints, myints + sizeof(myints) / sizeof(int) );
 
 	std::cout << "The contents of first_std are: ";
   	for (std::list<int>::iterator it = first_std.begin(); it != first_std.end(); it++)
@@ -82,7 +86,15 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
 	std::cout << "The contents of fourth_ft are: ";
   	for (ft::list<int>::iterator it6 = fourth_ft.begin(); it6 != fourth_ft.end(); it6++)
     	std::cout << *it6 << ' ';
-	std::cout << '\n';;
+	std::cout << '\n';
+	// std::cout << "The contents of fifth_std are: ";
+  	// for (std::list<int>::iterator it5 = fifth_std.begin(); it5 != fifth_std.end(); it5++)
+    // 	std::cout << *it5 << ' ';
+	// std::cout << '\n';
+	// std::cout << "The contents of fifth_ft are: ";
+  	// for (ft::list<int>::iterator it6 = fifth_ft.begin(); it6 != fifth_ft.end(); it6++)
+    // 	std::cout << *it6 << ' ';
+	// std::cout << '\n';
 	return 0;
 }
 
@@ -97,7 +109,7 @@ int	list_assigment_opperator()
 
   	second_std = first_std;
   	second_ft = first_ft;
-	  // DOES NOT WORK //
+	// DOES NOT WORK //
  	// first_std = std::list<int>();
  	// first_ft = ft::list<int>();
 
@@ -124,11 +136,43 @@ int	list_assigment_opperator()
 	return 0;
 }
 
+void	list_assign()
+{
+	std::cout << "Calling list assign functions:" << std::endl;
+	std::list<int> first_std;
+	ft::list<int> first_ft;
+  	std::list<int> second_std;
+  	ft::list<int> second_ft;
+
+
+  	first_std.assign (7,100);                      // 7 ints with value 100
+  	first_ft.assign (7,100);                      // 7 ints with value 100
+  	second_std.assign (second_std.begin(),second_std.end()); // a copy of first
+	second_ft.assign (second_ft.begin(),second_ft.end()); // a copy of first
+	std::cout << "Iterating through first_std:";
+	for (std::list<int>::iterator it = first_std.begin(); it != first_std.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "Iterating through first_ft:";
+	for (ft::list<int>::iterator it = first_ft.begin(); it != first_ft.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "Iterating through second_std:";
+	for (std::list<int>::iterator it = second_std.begin(); it != second_std.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "Iterating through second_ft:";
+	for (ft::list<int>::iterator it = second_ft.begin(); it != second_ft.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
+}
+
 int    list_tests()
 {
     std::cout << "PERFORMING LIST TESTS:" << std::endl;
 	list_constructor();
 	list_assigment_opperator();
+	list_assign();
 	return 0;
 }
 

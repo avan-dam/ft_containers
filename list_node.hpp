@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 15:47:16 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/20 12:08:40 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/20 18:27:38 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ template <typename T>
 class list_node
 {
     public:
-        list_node() : data(0), nxt(nullptr), prev(nullptr) {}
+        list_node() : data(), nxt(nullptr), prev(nullptr) {}
         list_node(T data_rec) : data(data_rec), nxt(nullptr), prev(nullptr) {}
         list_node(const list_node & source) : data(source.data), nxt(source.nxt), prev(source.prev) {}
         list_node(list_node & source) : data(source.data), nxt(source.nxt), prev(source.prev) {}
