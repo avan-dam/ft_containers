@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/09 14:51:34 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/20 18:31:57 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/21 13:53:15 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ class iterator
 		iterator & operator=(const iterator& source)
 		{
 			if (_list != source._list)
-				_list = lst_node_ptr(source);
+				_list = source._list;
+			// if (*_list != *(source.get_list()))
+			// 	*_list = node(*(source.get_list()));
 			return *this;
 		}
 		iterator(const iterator & source) // check this
@@ -52,7 +54,8 @@ class iterator
 			_list = lst_node_ptr(source._list);
 		}
 		~iterator() {}
-		value_type get_content() {return(*_list->data);}
+		value_type get_content() const {return(_list->data);}
+		node * get_list() const {return(_list);}
 	// private:
 		node	*_list;
 };

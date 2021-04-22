@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 15:47:16 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/20 18:27:38 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/21 10:01:37 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class list_node
 
         list_node<T>* get_next() {  return (nxt);}
         list_node<T>* get_prev() {	return (prev);}
+		T get_data() const {return (data);}
 
 		bool operator==(const list_node & rhs)
         {
@@ -55,5 +56,11 @@ class list_node
         list_node<T>*	nxt;
         list_node<T>*	prev;
 };
+
+template<class T>
+std::ostream& operator<<(std::ostream & out, const list_node<T> &o) {
+	out << o.get_data();
+	return out;
+}
 
 #endif
