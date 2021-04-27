@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/09 14:51:34 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/21 13:53:15 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/26 09:03:41 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ class iterator
     	iterator operator++(int) { iterator tmp = *this; _list = _list->get_next(); return tmp; }
 		iterator& operator--() { _list = _list->get_prev(); return *this; }
     	iterator operator--(int) {  iterator tmp = *this; _list = _list->get_prev(); return tmp; }
+    	// iterator& operator++() { if (_list->get_next() != nullptr) _list = _list->get_next(); return *this; }
+    	// iterator operator++(int) { iterator tmp = *this; if (_list->get_next() != nullptr) _list = _list->get_next(); return tmp; }
+		// iterator& operator--() { if (_list->get_prev() != nullptr) _list = _list->get_prev(); return *this; }
+    	// iterator operator--(int) {  iterator tmp = *this; if (_list->get_prev() != nullptr) _list = _list->get_prev(); return tmp; }
 		bool operator!=(const iterator& rhs) { return _list != rhs._list; }
 		bool operator==(const iterator& rhs) { return _list == rhs._list; }		
 		iterator() : _list(nullptr) {}

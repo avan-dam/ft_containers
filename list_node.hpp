@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 15:47:16 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/21 10:01:37 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/26 12:12:34 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,20 @@ class list_node
 		}
         ~list_node() {}
 
-        list_node<T>* get_next() {  return (nxt);}
-        list_node<T>* get_prev() {	return (prev);}
+        list_node<T>* get_next() {
+        if (nxt)
+            return (nxt); 
+        while (prev->prev)
+            prev = prev->prev;
+        return (prev);
+        }
+         list_node<T>* get_prev() {
+             if (prev)
+            return (prev); 
+        while (nxt->nxt)
+            nxt = nxt->nxt;
+        return (nxt);
+        }
 		T get_data() const {return (data);}
 
 		bool operator==(const list_node & rhs)
