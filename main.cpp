@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/04/28 11:57:47 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/04/28 12:20:48 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,8 +268,6 @@ void list_push()
 	ft::list<int> ft_list2;
 	std_list.push_back (200);
   	ft_list.push_back (200);
-	// std_list.push_back (40);
-  	// ft_list.push_back (40);
   	std::cout << "std_list2 contains :";
 	for (std::list<int>::iterator it=std_list2.begin(); it!=std_list2.end(); ++it)
     	std::cout << ' ' << *it;
@@ -450,6 +448,7 @@ void	list_erase()
 
 void	list_swap()
 {
+	std::cout << "calling list swap fucntions" << std::endl;
 	std::list<int> first_std (3,100);   // three ints with a value of 100
 	ft::list<int> first_ft (3,100);   // three ints with a value of 100
 	std::list<int> second_std (5,200);  // five ints with a value of 200
@@ -478,6 +477,7 @@ void	list_swap()
 
 void	list_clear()
 {
+	std::cout << "calling list clear fucntions" << std::endl;
 	std::list<int> mylist_std;
 	ft::list<int> mylist_ft;
   	std::list<int>::iterator it_std;
@@ -516,6 +516,33 @@ void	list_clear()
 	std::cout << '\n';
 }
 
+void	list_resize()
+{
+	std::cout << "calling list resize fucntions" << std::endl;
+	std::list<int> std_list;
+	std::list<int> ft_list;
+
+	for (int i=1; i<10; ++i) std_list.push_back(i);
+	for (int i=1; i<10; ++i) ft_list.push_back(i);
+
+	std_list.resize(5);
+	ft_list.resize(5);
+	std_list.resize(8,100);
+	ft_list.resize(8,100);
+	std_list.resize(12);
+	ft_list.resize(12);
+
+	std::cout << "std_list contains:";
+  	for (std::list<int>::iterator it=std_list.begin(); it!=std_list.end(); ++it)
+		std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "ft_list contains :";
+  	for (std::list<int>::iterator it=ft_list.begin(); it!=ft_list.end(); ++it)
+		std::cout << ' ' << *it;
+
+  	std::cout << '\n';
+}
+
 int    list_tests()
 {
     std::cout << "PERFORMING LIST TESTS:" << std::endl;
@@ -523,14 +550,11 @@ int    list_tests()
 	list_assigment_opperator();
 	list_assign();
 	list_push(); 
-	// push back does not work if empty and 
-	// then push in only two numbers because
-	// _tail _head not set properly !!
 	list_insert();
 	list_erase();
 	list_swap();
-	// list_resize(); // DO THIS ONE
 	list_clear();
+	list_resize();
 	return 0;
 }
 
@@ -558,5 +582,6 @@ int    main(int argc, char **argv)
     }
     else
         std::cout << "invalid arguments" << std::endl;
+	// while (1){}
     return (0);
 }

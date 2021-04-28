@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/28 12:08:10 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/04/28 12:16:18 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ class list
 		iterator	erase (iterator first, iterator last);
 
 		void		swap (list& x);
+
+		void resize (size_type n, value_type val);
 	private:
 		node		*_head;
 		node		*_tail;
@@ -84,6 +86,25 @@ class list
 		iterator	insert_newlist(ft::list<T> newlist, size_type n, iterator position);
 		void		create_tail_last();
 };
+
+template <typename T>
+void	list<T>::resize (size_type n, value_type val)
+{
+	if (n == _size)
+		return;
+	while (n < _size)
+	{
+		pop_back();
+		n++;
+	}
+	while (n > _size)
+	{
+		insert(val);
+		n++;
+	}
+	create_tail_last();
+	return;
+}
 
 template <typename T>
 void		list<T>::create_tail_last()
