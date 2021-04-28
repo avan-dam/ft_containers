@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/04/26 15:00:47 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/28 11:57:47 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,32 @@ void list_push()
   		std::cout << "  front: " << ft_list1.front();
     	ft_list1.pop_front();
   	}
-	std::cout << '\n';  
+	std::cout << '\n'; 
+
+	std::cout << "PArt two list_push: " << std::endl;
+	std::list<int> std_list2;
+	ft::list<int> ft_list2;
+	std_list.push_back (200);
+  	ft_list.push_back (200);
+	// std_list.push_back (40);
+  	// ft_list.push_back (40);
+  	std::cout << "std_list2 contains :";
+	for (std::list<int>::iterator it=std_list2.begin(); it!=std_list2.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+  	std::cout << "ft_list2 contains :";
+  	for (ft::list<int>::iterator it=ft_list2.begin(); it!=ft_list2.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n'; 
+  	std::cout << "std_list2 backwards :";
+	for (std::list<int>::iterator it=std_list2.end(); it!=std_list2.begin(); --it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+  	std::cout << "ft_list2 backwards :";
+  	for (ft::list<int>::iterator it=ft_list2.end(); it!=ft_list2.begin(); --it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n'; 
+	
 }
 
 void	list_insert()

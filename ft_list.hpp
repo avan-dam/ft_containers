@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/26 15:07:03 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/04/28 12:08:10 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,6 +402,7 @@ void list<T>::push_back (const value_type& val)
 		_tail = temp_ptr;
 		_head = _tail;
 		_size = 1;
+		create_tail_last();
 		return ;
 	}
 	temp_ptr->prev = _tail;
@@ -423,6 +424,7 @@ void list<T>::push_front (const value_type& val)
 		_tail = temp_ptr;
 		_head = _tail;
 		_size = 1;
+		create_tail_last();
 		return ;
 	}
 	temp_ptr->nxt = _head;
