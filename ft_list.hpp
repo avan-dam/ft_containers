@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/28 16:49:18 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/06/05 10:32:23 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,12 @@
 
 #include "list_node.hpp"
 #include "list_iterator.hpp"
+// #include "enable_if.hpp"
 #include <iostream>
+#include <algorithm>
+#include <cstddef>
+#include <memory>
+#include <limits>
 
 typedef unsigned int size_type; 
 
@@ -24,10 +29,10 @@ template <typename T>
 class list
     {
 	public:
-		typedef	T				value_type; 
-        typedef	list_node<T>	node;
-		typedef	iterator<T>		iterator;
-		typedef	iterator		reverse_iterator;
+		typedef	T						value_type; 
+        typedef	list_node<T>			node;
+		typedef	iterator<T>				iterator;
+		typedef	reverse_iterator<T>		reverse_iterator;
 
 	public:
 		list();
@@ -50,10 +55,22 @@ class list
 			return iterator(_head); 
 			}
 		iterator end() { 
-			if (_size == 0)
+			if (_size == 0 || !(_tail->nxt))
 				return iterator(_tail); 
 			else
 				return iterator(_tail->nxt); 
+		}
+
+		reverse_iterator rbegin() {
+			if (_size == 0)
+				return iterator(_tail); 
+			return iterator(_tail->nxt); 
+			}
+		reverse_iterator rend() { 
+			if (_size == 0)
+				return iterator(_tail); 
+			else
+				return iterator(_head); 
 		}
 
 		node		front() { return (*_head);	}
@@ -79,6 +96,83 @@ class list
 		void		swap (list& x);
 
 		void resize (size_type n, value_type val);
+
+		void splice (iterator position, list& x);
+		void splice (iterator position, list& x, iterator i);
+		void splice (iterator position, list& x, iterator first, iterator last);
+
+		void remove (const value_type& val);
+		template <class Predicate>
+  		void remove_if (Predicate pred)
+  		{
+			iterator	it;
+
+			it = begin();
+			while (it != end())
+			{
+				if (pred(*it) == true)
+				{
+					erase(it);
+					it = begin();
+				}
+				else
+					it++;
+			}	
+  		}
+		void unique();
+		template <class BinaryPredicate>
+  		void unique (BinaryPredicate binary_pred)
+		{
+		  	iterator	it;
+			iterator	nxt;
+
+			it = begin();
+			nxt = begin();
+			nxt++;
+			while (it != end() && nxt!= end())
+			{
+				if (binary_pred(*nxt, *it) == true)
+				{
+					nxt = erase(nxt);
+					it = nxt;
+					it--;
+				}
+				else
+				{
+					it++;
+					nxt++;
+				}
+			}	
+		}
+		void merge (list& x);
+
+		template <class Compare>
+		  void merge (list& x, Compare comp)
+		{
+			iterator	it_insert;
+			iterator	it_this;
+
+			it_insert = x.begin();
+			it_this = begin();
+			while (it_insert != x.end())
+			{
+				while (it_this != end())
+				{
+					std::cout << "trying to insert " << *it_insert << std::endl;
+					if (comp(*it_insert, *it_this) ==true)
+					{
+						insert(it_this, it_insert.get_content());
+						break;
+					}
+					it_this++;
+				}
+				if (it_this == end())
+					push_back(it_insert.get_content());
+				it_insert++;
+			}
+			x.clear();
+		}
+		
 	private:
 		node		*_head;
 		node		*_tail;
@@ -115,11 +209,11 @@ void		list<T>::create_tail_last()
 
 	if (_tail->nxt && _tail->nxt != nullptr)
 		delete(_tail->nxt);
-	temp_ptr = new node(_size);
+	temp_ptr = new node(); // ENABLE IF AS LAST ONE IN INT NEEDS TO BE THIS
+	// temp_ptr = new node(_size); // CHECK // if value try is integral then put size otherwise one above
 	_tail->nxt = temp_ptr;
 	temp_ptr->prev = _tail;
 	temp_ptr->nxt = nullptr;
-
 }
 
 template <typename T>
@@ -130,20 +224,22 @@ ft::iterator<T>	list<T>::insert_newlist(ft::list<T> newlist, size_type n, iterat
 	node *		temp_ptr;
 	iterator	it;
 	size_type	i;
+	size_type	initial_size;
 
 	i = 0;
+	initial_size = _size;
 	it = begin();
 	while (it != position && it != end())
 		it++;
 	afterinsert = it.get_list();
-	if (it == end() && it == position)
+	if (it == end() && it == position && it != begin())
 	{
 		if (_tail->nxt)
 			delete (_tail->nxt);
 		_tail->nxt = afterinsert;
 		afterinsert->prev = _tail;
 	}
-	else if ((it == end() && it != position) && afterinsert != _head->nxt)
+	else if (((it == end() && it != position) && afterinsert != _head->nxt) || (it == end() && it == position))
 		afterinsert = _head;
 	else if (afterinsert == _tail)
 	{
@@ -186,6 +282,18 @@ ft::iterator<T>	list<T>::insert_newlist(ft::list<T> newlist, size_type n, iterat
 		newlist_ptr = newlist_ptr->nxt;
 		i++;
 	}
+	if ((initial_size == 0) && temp_ptr == _head)
+	{
+		_tail = new node(1);
+		temp_ptr->nxt = _tail;
+		return (it);
+	}
+	if ((initial_size == 1) && temp_ptr == _head)
+	{
+		_tail = afterinsert;
+		temp_ptr->nxt = _tail;
+		return (it);
+	}
 	if (afterinsert == _tail)
 	{
 		new_ptr->nxt = _tail;
@@ -225,7 +333,10 @@ template <typename T>
 void list<T>::insert (iterator position, size_type n, const value_type& val)
 {
 	list<T>		newlist(n, val);
-
+	std::cout << "inserting newlist containing contains:";
+  	for (ft::list<int>::iterator it=newlist.begin(); it!=newlist.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
 	insert_newlist(newlist, n, position);
 	return ;
 }
@@ -293,9 +404,7 @@ ft::iterator<T> list<T>::erase(iterator first, iterator last)
 			return (_head);
 		}
 	}
-	if (aftererase == _tail)
-		std::cout << "GOT TAIL " << std::endl;
-	else
+	if (aftererase != _tail)
 	{
 		beforeerase->nxt = aftererase;
 		aftererase->prev = beforeerase;
@@ -423,11 +532,6 @@ void list<T>::push_back (const value_type& val)
 	temp_ptr = new node(val);
 	if (_size == 0)
 	{
-		clear();
-		_size = 0;
-	}
-	if (_size == 0)
-	{
 		_head = temp_ptr;
 		_tail = _head;
 		_size++;
@@ -474,7 +578,6 @@ void list<T>::push_front (const value_type& val)
 	create_tail_last();
 	return ;
 }
-
 template <typename T>
 list<T>::list(iterator first, iterator last)
 {
@@ -556,7 +659,7 @@ void list<T>::assign (size_type n, const value_type& val)
     }
     _tail = new_ptr;
     _head->prev = nullptr;
-    // _tail->nxt = nullptr;
+    _tail->nxt = nullptr;
 	temp_ptr->nxt = nullptr;
 	create_tail_last();
 	return ;
@@ -644,9 +747,9 @@ list<T> & list<T>::operator=(const list & source)
 template <typename T>
 void list<T>::clear()
 {
-    node * current_ptr = _head;
-    node * temp_ptr;
 
+	node * current_ptr = _head;
+    node * temp_ptr;
     if (empty() == 0)
     {
 		if (_tail->nxt)
@@ -666,8 +769,6 @@ void list<T>::clear()
 	{
 		if (_head != nullptr)
 			delete _head;
-		if (_tail->nxt != nullptr)
-			delete(_tail->nxt);
 		if (_tail != nullptr)
 			delete _tail;
 	}
@@ -706,6 +807,93 @@ void list<T>::assign_operator (iterator first, iterator last)
 	// _tail->nxt = nullptr;
 	create_tail_last();
 	return ;
+}
+
+template <typename T>
+void list<T>::splice (iterator position, list& x)
+{ 
+	iterator	it;
+
+	it = begin();
+	while (it != position && it != end())
+		it++;
+	insert(it, x.begin(), x.end());
+	x.clear();
+	x = list();
+
+}
+
+template <typename T>
+void list<T>::splice (iterator position, list& x, iterator i)
+{
+	const value_type& val = i.get_content();
+	insert (position, 1, val);
+	x.erase(i);
+}
+
+template <typename T>
+void list<T>::splice (iterator position, list& x, iterator first, iterator last)
+{
+	insert (position, first, last);
+	x.erase(first, last);
+}
+
+template <typename T>
+void list<T>::remove(const value_type& val)
+{
+	iterator	it;
+
+	it = begin();
+	while (it != end())
+	{
+		if (*it == val)
+		{
+			erase(it);
+			it = begin();
+		}
+		else
+			it++;
+	}	
+}
+
+template <typename T>
+void list<T>::unique()
+{
+	iterator	it;
+	iterator	nxt;
+
+	it = begin();
+	nxt = begin();
+	nxt++;
+	while (it != end() && nxt!= end())
+	{
+		if (*it == *nxt)
+		{
+			nxt = erase(it);
+			it = nxt;
+			it--;
+		}
+		else
+		{
+			it++;
+			nxt++;
+		}
+	}	
+}
+
+template <typename T>
+void list<T>::merge (list& x)
+{
+	iterator it;
+	
+	it = x.begin();
+	while (it != x.end())
+	{
+		const value_type& val = it.get_content();
+		push_back(val);
+		it++;
+	}
+	x.clear();
 }
 
 }

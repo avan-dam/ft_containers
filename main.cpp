@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/04/28 16:49:30 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/06/05 10:29:11 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,11 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
 	std::list<int> first_std;													// empty list of ints
 	ft::list<int> first_ft;
 	std::list<int> second_std (4,100);											// four ints with value 100
-	ft::list<int> second_ft (4,100);                       						// four ints with value 100
+	ft::list<int> second_ft (4,100);  
 	std::list<int> third_std (second_std.begin(),second_std.end());				// iterating through second
 	ft::list<int> third_ft (second_ft.begin(),second_ft.end());					// iterating through second
 	std::list<int> fourth_std (third_std);                       				// a copy of third
 	ft::list<int> fourth_ft (third_ft);  	                  					// a copy of third
-	// int myarray[] = {16,2,77,29};
-	// std::list<int> fifth_std (myarray, myarray + 4);
-	// THIS DOES NOT WORK
-	// ft::list<int> fifth_ft (myarray, myarray + 4);
-	// THIS DOES NOT WORK //
-	// int myints[] = {16,2,77,29};
-	// std::list<int> sixth_std (myints, myints + sizeof(myints) / sizeof(int) ); // the iterator constructor can also be used to construct from arrays:
-	// ft::list<int> sixth_ft (myints, myints + sizeof(myints) / sizeof(int) );
 
 	std::cout << "The contents of first_std are: ";
   	for (std::list<int>::iterator it = first_std.begin(); it != first_std.end(); it++)
@@ -88,14 +80,38 @@ int	list_constructor() // and begin and end and iterator tested here and rend an
   	for (ft::list<int>::iterator it6 = fourth_ft.begin(); it6 != fourth_ft.end(); it6++)
     	std::cout << *it6 << ' ';
 	std::cout << std::endl << std::endl;
-	// std::cout << "The contents of fifth_std are: ";
-  	// for (std::list<int>::iterator it5 = fifth_std.begin(); it5 != fifth_std.end(); it5++)
-    // 	std::cout << *it5 << ' ';
-	// std::cout << '\n';
-	// std::cout << "The contents of fifth_ft are: ";
-  	// for (ft::list<int>::iterator it6 = fifth_ft.begin(); it6 != fifth_ft.end(); it6++)
-    // 	std::cout << *it6 << ' ';
-	// std::cout << '\n';
+
+		std::list<int> std_list(4, 100);
+	ft::list<int> ft_list(4, 100);
+	std::cout << "std_list contains:";
+  	for (std::list<int>::iterator it=std_list.begin(); it!=std_list.end(); ++it)
+		std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "ft_list contains:";
+  	for (ft::list<int>::iterator it=ft_list.begin(); it!=ft_list.end(); ++it)
+		std::cout << ' ' << *it;
+  	std::cout << '\n';
+
+
+	std::list<int> std_list2(std_list.begin(), std_list.end());
+	ft::list<int> ft_list2(ft_list.begin(), ft_list.end());
+	std::cout << "std_list contains:";
+  	for (std::list<int>::iterator it=std_list2.end(); it!=std_list2.begin(); --it)
+		std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "ft_list contains:";
+  	for (ft::list<int>::iterator it=ft_list2.end(); it!=ft_list2.begin(); --it)
+		std::cout << ' ' << *it;
+  	std::cout << '\n';
+
+	std::list<std::string> myList(5, "Geeks");
+	for (std::list<std::string>::iterator itp=myList.begin(); itp!=myList.end(); ++itp)
+		std::cout << ' ' << *itp;
+  	std::cout << '\n';
+	ft::list<std::string> myList2(5, "GEEKS");
+	for (ft::list<std::string>::iterator itp=myList2.begin(); itp!=myList2.end(); ++itp)
+		std::cout << ' ' << *itp;
+  	std::cout << '\n';
 	return 0;
 }
 
@@ -486,29 +502,29 @@ void	list_swap()
 void	list_clear()
 {
 	std::cout << "calling list clear fucntions" << std::endl;
-	std::list<int> mylist_std(10, 100);
-	ft::list<int> mylist_ft(10, 100);
+	std::list<int> mylist_std1(10, 100);
+	ft::list<int> mylist_ft1(10, 100);
   	std::list<int>::iterator it_std;
   	ft::list<int>::iterator it_ft;
 
-	// mylist_std.push_back (100);
-	// mylist_ft.push_back (100);
+	mylist_std1.push_back (800);
+	mylist_ft1.push_back (800);
 	// mylist_std.push_back (200);
 	// mylist_ft.push_back (200);
 	// mylist_std.push_back (300);
 	// mylist_ft.push_back (300);
 
-	std::cout << "mylist_std contains:";
-	for (it_std=mylist_std.begin(); it_std!=mylist_std.end(); ++it_std)
+	std::cout << "mylist_std contains1:";
+	for (it_std=mylist_std1.begin(); it_std!=mylist_std1.end(); ++it_std)
     	std::cout << ' ' << *it_std;
 	std::cout << '\n';
-	std::cout << "mylist_ft contains :";
-	for (it_ft=mylist_ft.begin(); it_ft!=mylist_ft.end(); ++it_ft)
+	std::cout << "mylist_ft contains1 :";
+	for (it_ft=mylist_ft1.begin(); it_ft!=mylist_ft1.end(); ++it_ft)
     	std::cout << ' ' << *it_ft;
 	std::cout << '\n';
 
-	mylist_std.clear();
-	mylist_ft.clear();
+	mylist_std1.clear();
+	mylist_ft1.clear();
 	// mylist_std.push_back (1101);
 	// mylist_ft.push_back (1101);
 	// mylist_std.push_back (2202);
@@ -541,28 +557,256 @@ void	list_resize()
 	ft_list.resize(12);
 
 	std::cout << "std_list contains:";
-  	for (std::list<int>::iterator it=std_list.begin(); it!=std_list.end(); ++it)
+  	for (std::list<int>::reverse_iterator it=std_list.rbegin(); it!=std_list.rend(); ++it)
 		std::cout << ' ' << *it;
   	std::cout << '\n';
 	std::cout << "ft_list contains :";
-  	for (std::list<int>::iterator it=ft_list.begin(); it!=ft_list.end(); ++it)
+  	for (std::list<int>::reverse_iterator it=ft_list.rbegin(); it!=ft_list.rend(); ++it)
 		std::cout << ' ' << *it;
 
   	std::cout << '\n';
 }
 
+void	list_splice()
+{
+	std::cout << "calling list list_splice fucntions" << std::endl;
+	std::list<int> std_mylist1, std_mylist2;
+	ft::list<int> ft_mylist1, ft_mylist2;
+  	std::list<int>::iterator std_it;
+  	ft::list<int>::iterator ft_it;
+  	for (int i=2; i<=5; ++i)
+    	 std_mylist1.push_back(i);      // mylist1: 1 2 3 4
+  	for (int i=2; i<=5; ++i)
+    	 ft_mylist1.push_back(i);      // mylist1: 1 2 3 4
+  	for (int i=2; i<=4; ++i)
+    	std_mylist2.push_back(i*10);   // mylist2: 10 20 30
+  	for (int i=2; i<=4; ++i)
+    	ft_mylist2.push_back(i*10);   // mylist2: 10 20 30
+ 	ft_it = ft_mylist1.begin();
+ 	std_it = std_mylist1.begin();
+  	// ++std_it;	++std_it; 	++std_it; 	++std_it; 	++std_it; 	++std_it; 	++std_it;
+	// ++ft_it;	++ft_it;	++ft_it;	++ft_it;	++ft_it;	++ft_it;	++ft_it;
+  	std_mylist1.splice (std_it, std_mylist2);
+  	ft_mylist1.splice (ft_it, ft_mylist2);
+	std::cout << "std_mylist1 contains1:";
+	for (std::list<int>::iterator it_std=std_mylist1.begin(); it_std!=std_mylist1.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "ft_mylist1 contains1 :";
+	for (ft::list<int>::iterator it_ft=ft_mylist1.begin(); it_ft!=ft_mylist1.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::cout << "std_mylist_ft2 contains1 :";
+	for (std::list<int>::iterator it_ft=std_mylist2.begin(); it_ft!=std_mylist2.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::cout << "ft_mylist_ft2 contains1 :";
+	for (ft::list<int>::iterator it_ft=ft_mylist2.begin(); it_ft!=ft_mylist2.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+
+	std_mylist2.splice (std_mylist2.begin(),std_mylist1, std_it);
+	ft_mylist2.splice (ft_mylist2.begin(),ft_mylist1, ft_it);
+	std::cout << "PART 2: \nstd_mylist1 contains1 :";
+	for (std::list<int>::iterator it_std=std_mylist1.begin(); it_std!=std_mylist1.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "ft_mylist1 contains1 :";
+	for (ft::list<int>::iterator it_ft=ft_mylist1.begin(); it_ft!=ft_mylist1.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::cout << "std_mylist_ft contains2 :";
+	for (std::list<int>::iterator it_ft=std_mylist2.begin(); it_ft!=std_mylist2.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::cout << "ft_mylist_ft contains2 :";
+	for (ft::list<int>::iterator it_ft=ft_mylist2.begin(); it_ft!=ft_mylist2.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std_it = std_mylist1.begin();
+	ft_it = ft_mylist1.begin();
+  	std_it++;
+	ft_it++;
+	std_mylist1.splice ( std_mylist1.begin(), std_mylist1, std_it, std_mylist1.end());
+	ft_mylist1.splice ( ft_mylist1.begin(), ft_mylist1, ft_it, ft_mylist1.end());
+
+	std::cout << "PART 3: \nstd_mylist1 contains1 :";
+	for (std::list<int>::iterator it_std=std_mylist1.begin(); it_std!=std_mylist1.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "ft_mylist1 contains1 :";
+	for (ft::list<int>::iterator it_ft=ft_mylist1.begin(); it_ft!=ft_mylist1.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+}
+
+bool single_digit (const int& value) { return (value<10); }
+struct is_odd {
+  bool operator() (const int& value) { return (value%2)==1; }
+};
+void	list_remove()
+{
+	std::cout << "calling list list_remove fucntions" << std::endl;
+	std::list<int> first_std(4, 100);
+	ft::list<int> first_ft(4, 100);
+	for (int i=1; i<=4; ++i) first_std.push_back(i); // 1 2 3 4 5
+	for (int i=1; i<=4; ++i) first_ft.push_back(i); // 1 2 3 4 5
+	first_std.remove(2);
+	first_ft.remove(2);
+	std::cout << "first_std contains1 :";
+	for (std::list<int>::iterator it_std=first_std.begin(); it_std!=first_std.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "first_ft contains1 :";
+	for (ft::list<int>::iterator it_ft=first_ft.begin(); it_ft!=first_ft.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+
+	first_std.remove_if (is_odd());           // 15 36 17 20 39
+	first_ft.remove_if (is_odd());           // 15 36 17 20 39
+ 	std::cout << "PART TWO:\nfirst_std contains:";
+  	for (std::list<int>::iterator it=first_std.begin(); it!=first_std.end(); ++it)
+    std::cout << ' ' << *it;
+  	std::cout << '\n';
+ 	std::cout << "first_ft contains:";
+  	for (ft::list<int>::iterator it=first_ft.begin(); it!=first_ft.end(); ++it)
+    std::cout << ' ' << *it;
+  	std::cout << '\n';
+}
+
+struct is_near {
+  bool operator() (double first, double second)
+  { return (fabs(first-second)<5.0); }
+};
+
+void	list_unique()
+{
+	std::cout << "calling list list_unique fucntions" << std::endl;	
+	std::list<int> first_std(4, 100);
+	ft::list<int> first_ft(4, 100);
+	for (int i=1; i<=4; ++i) first_std.push_back(2); // 1 2 3 4 5
+	for (int i=1; i<=4; ++i) first_ft.push_back(2); // 1 2 3 4 5
+	first_std.unique();
+	first_ft.unique();
+	std::cout << "first_std contains1 :";
+	for (std::list<int>::iterator it_std=first_std.begin(); it_std!=first_std.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "first_ft contains1 :";
+	for (ft::list<int>::iterator it_ft=first_ft.begin(); it_ft!=first_ft.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::list<float> second_std;
+	ft::list<float> second_ft;
+	second_std.push_back(2.72);	second_std.push_back(3.14);	second_std.push_back(12.15); second_std.push_back(15.3); second_std.push_back(72.25); second_std.push_back(73.0);
+	second_ft.push_back(2.72);	second_ft.push_back(3.14);	second_ft.push_back(12.15); second_ft.push_back(15.3); second_ft.push_back(72.25); second_ft.push_back(73.0);	
+	std::cout << "second_std contains1 :";
+	for (std::list<float>::iterator it_std=second_std.begin(); it_std!=second_std.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "second_ft  contains1 :";
+	for (ft::list<float>::iterator it_ft=second_ft.begin(); it_ft!=second_ft.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	second_std.unique (is_near());
+	second_ft.unique (is_near());
+	std::cout << "second_std contains1 :";
+	for (std::list<float>::iterator it_std=second_std.begin(); it_std!=second_std.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "second_ft  contains1 :";
+	for (ft::list<float>::iterator it_ft=second_ft.begin(); it_ft!=second_ft.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+}
+
+
+bool mycomparison (double first, double second)
+{ return ( int(first)<int(second) ); }
+void	list_merge()
+{
+	std::cout << "calling list list_merge fucntions" << std::endl;	
+	std::list<double> first_std, second_std;
+	ft::list<double> first_ft, second_ft;
+
+ 	first_std.push_back (3.1);
+  	first_std.push_back (2.2);
+  	first_std.push_back (2.9);
+	first_ft.push_back (3.1);
+  	first_ft.push_back (2.2);
+  	first_ft.push_back (2.9);
+
+  	second_std.push_back (3.7);
+  	second_std.push_back (7.1);
+  	second_std.push_back (2.7);
+  	second_ft.push_back (3.7);
+  	second_ft.push_back (7.1);
+  	second_ft.push_back (2.7);
+
+  	// first_std.sort();
+  	// second_std.sort();
+
+  	first_std.merge(second_std);
+  	first_ft.merge(second_ft);
+	std::cout << "first_std contains1 :";
+	for (std::list<double>::iterator it_std=first_std.begin(); it_std!=first_std.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "first_ft  contains1 :";
+	for (ft::list<double>::iterator it_std=first_ft.begin(); it_std!=first_ft.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "second_std  contains1 :";
+	for (std::list<double>::iterator it_ft=second_std.begin(); it_ft!=second_std.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::cout << "second_ft  contains1 :";
+	for (ft::list<double>::iterator it_ft=second_ft.begin(); it_ft!=second_ft.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	second_std.push_back (2.9);
+	second_ft.push_back (2.9);
+	second_std.push_back (9.3);
+	second_ft.push_back (9.3);
+	second_std.push_back (4.3);
+	second_ft.push_back (4.3);
+  	first_std.merge(second_std,mycomparison);
+  	first_ft.merge(second_ft,mycomparison);
+	std::cout << "PART 2\nfirst_std contains1 :";
+	for (std::list<double>::iterator it_std=first_std.begin(); it_std!=first_std.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "first_ft  contains1 :";
+	for (ft::list<double>::iterator it_std=first_ft.begin(); it_std!=first_ft.end(); ++it_std)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "second_std  contains1 :";
+	for (std::list<double>::iterator it_ft=second_std.begin(); it_ft!=second_std.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	std::cout << "second_ft  contains1 :";
+	for (ft::list<double>::iterator it_ft=second_ft.begin(); it_ft!=second_ft.end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+	
+}
+
 int    list_tests()
 {
     std::cout << "PERFORMING LIST TESTS:" << std::endl;
-	list_constructor();
-	list_assigment_opperator();
-	list_push(); 
-	list_assign();
+	// list_constructor();
+	// list_assigment_opperator();
+	// list_push(); 
+	// list_assign();
 	// list_insert();
-	list_erase();
-	list_swap();
+	// list_erase();
+	// list_swap();
 	// list_clear();
-	list_resize();
+	// list_resize();
+	// list_splice();
+	// list_remove();
+	// list_unique();
+	list_merge();
 	return 0;
 }
 
@@ -590,6 +834,5 @@ int    main(int argc, char **argv)
     }
     else
         std::cout << "invalid arguments" << std::endl;
-	while (1){}
     return (0);
 }
