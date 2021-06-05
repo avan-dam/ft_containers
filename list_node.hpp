@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 15:47:16 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/04/26 12:12:34 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/05 12:59:24 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,12 @@ class list_node
             if (data == rhs.data && nxt == rhs.nxt && prev == rhs.prev)
                 return (false);
             return (true); 
+        }
+
+        void    change_content(T newdata)
+        {
+            data = newdata;
+            return;
         }
 
         T				data;

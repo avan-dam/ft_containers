@@ -6,7 +6,7 @@
 #    By: avan-dam <avan-dam@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/23 14:38:29 by avan-dam      #+#    #+#                  #
-#    Updated: 2021/03/23 14:52:21 by avan-dam      ########   odam.nl          #
+#    Updated: 2021/06/05 19:08:52 by ambervandam   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CXX = clang++
 
 G++ = /usr/local/bin/g++-10
 
-FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
+FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 
+# -g -fsanitize=address
 
 FILES = main.cpp
 
