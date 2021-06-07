@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/05 19:08:48 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/07 11:50:32 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ class list
 		size_type	_size;
 		iterator	insert_newlist(ft::list<T> newlist, size_type n, iterator position);
 		void		create_tail_last();
-		void		assign_operator(iterator first, iterator last);
+		void		create_empty_lst();
 
 };
 
@@ -241,7 +241,7 @@ void		list<T>::create_tail_last()
 {
 	node * 		temp_ptr;
 
-	if (_tail->nxt && _tail->nxt != nullptr)
+	if (_tail && _tail != nullptr && _tail->nxt && _tail->nxt != nullptr)
 		delete(_tail->nxt);
 	temp_ptr = new node(); // ENABLE IF AS LAST ONE IN INT NEEDS TO BE THIS
 	// temp_ptr = new node(_size); // CHECK // if value try is integral then put size otherwise one above
@@ -253,118 +253,13 @@ void		list<T>::create_tail_last()
 template <typename T>
 ft::iterator<T>	list<T>::insert_newlist(ft::list<T> newlist, size_type n, iterator position)
 {
-	node * 		afterinsert;
-	node *		new_ptr = NULL;
-	node *		temp_ptr;
-	iterator	it;
-	size_type	i;
-	size_type	initial_size;
-
-	i = 0;
-	if (_size == 0)
-		clear();
-	initial_size = _size;
-	it = begin();
-	while (it != position && it != end())
-		it++;
-	afterinsert = it.get_list();
-	if (it == end() && it == position && it != begin())
-	{
-		if (_tail->nxt)
-			delete (_tail->nxt);
-		_tail->nxt = afterinsert;
-		afterinsert->prev = _tail;
+	(void)position;
+	(void)n;
+	for (ft::list<T>::iterator it=newlist.begin(); it!=newlist.end(); ++it)
+	{	
+		push_back(it.get_content());
 	}
-	else if (((it == end() && it != position) && afterinsert != _head->nxt) || (it == end() && it == position))
-		afterinsert = _head;
-	else if (afterinsert == _tail)
-	{
-		afterinsert = _tail;
-		afterinsert->prev = _tail->prev;
-	}
-	node * newlist_ptr = newlist._head;
-	if (afterinsert == _head)
-	{
-		_head = new node(newlist_ptr->get_data());
-		it = (iterator)_head;
-		newlist_ptr = newlist_ptr->nxt;
-        _size++;
-        _head->prev = nullptr;
-		temp_ptr = _head;
-		i++;
-	}
-	else if (afterinsert->prev == _head)
-	{
-		new_ptr = new node(newlist_ptr->get_data());
-		it = (iterator)new_ptr;	
-	    _size++;
-		_head->nxt = new_ptr;
-		new_ptr->prev = _head;
-		temp_ptr = new_ptr;
-		i++;
-	}
-	else
-		temp_ptr = afterinsert->prev;	
-	while (i < n)
-	{
-		new_ptr = new node(newlist_ptr->get_data());
-		if (i == 0)
-			it = (iterator)new_ptr;	
-	    _size++;
-	    new_ptr->prev = temp_ptr;
-	    temp_ptr->nxt = new_ptr;
-    	if (i != n - 1 || (afterinsert != _tail && afterinsert != _tail->nxt))	
-			temp_ptr = new_ptr;
-		newlist_ptr = newlist_ptr->nxt;
-		i++;
-	}
-	if ((initial_size == 0) && temp_ptr == _head)
-	{
-		_head->nxt = _tail;
-		// _size++;
-		_tail = new node();
-		temp_ptr->nxt = _tail;
-		return (it);
-	}
-	if ((initial_size == 1) && temp_ptr == _head)
-	{
-		_tail = afterinsert;
-		temp_ptr->nxt = _tail;
-		return (it);
-	}
-	if (initial_size == 1 && afterinsert == _tail)
-	{
-		temp_ptr = _tail;
-		delete temp_ptr;
-		_tail = new_ptr;
-		_head->nxt = _tail;
-		_tail->prev = _head;
-		create_tail_last();
-		return(it);
-	}
-	if (afterinsert == _tail)
-	{
-		new_ptr->nxt = _tail;
-		_tail = afterinsert;
-		_tail->prev = new_ptr;
-		create_tail_last();
-		return (it);
-	}
-	if (afterinsert == _tail->nxt)
-	{
-		_tail = new_ptr;
-		_tail->prev = temp_ptr;
-		create_tail_last();
-		return (it);
-	}
-	temp_ptr->nxt = afterinsert;
-	if (afterinsert->prev != _head)
-		afterinsert->prev = temp_ptr;
-	else
-		temp_ptr->prev = _tail;
-	create_tail_last();
-	
-	return (it);
+	return (end());
 }
 
 template <typename T>
@@ -382,7 +277,20 @@ template <typename T>
 void list<T>::insert (iterator position, size_type n, const value_type& val)
 {
 	list<T>		newlist(n, val);
+	iterator	it;
+
+	it = begin();
+	while (it != position)
+		it++;
+	list<T>		list_start(begin(), it);
+	list<T>		list_end(it, end());
+	clear();
+	insert_newlist(list_start, n, position);
 	insert_newlist(newlist, n, position);
+	insert_newlist(list_end, n, position);
+	list_start.clear();
+	newlist.clear();
+	list_end.clear();
 	return ;
 }
 
@@ -400,7 +308,6 @@ template <typename T>
 void list<T>::swap (list& x)
 {
 	ft::list<T> tempthislist(begin(), end());	
-	clear();
 	assign(x.begin(), x.end());
 	_size = x._size;
 	x.clear();
@@ -415,25 +322,27 @@ ft::iterator<T> list<T>::erase(iterator first, iterator last)
 	node * 		aftererase;
 	node * 		erase;
 	node * 		beforeerase;
-	iterator	it;
+	node *	tmp;
 
 	if (_size == 0)
 		return (_head);
 	if (first == last)
 		return(_head);
-	it = first;
-	erase = it.get_list();
+	erase = first.get_list();
 	if (erase == _head)
 		beforeerase = nullptr;
 	else
 		beforeerase = erase->prev;
-	while (it != last)
+	aftererase = erase->nxt;
+	while (aftererase != last.get_list())
 	{
-		erase = it.get_list();
+		tmp = erase;
+		erase = erase->nxt;
+		if (!erase || !erase->nxt)
+			break;
 		aftererase = erase->nxt;
-		delete erase;
+		delete tmp;
 		_size--;
-		it++;
 	}
 	if (beforeerase == nullptr)
 	{
@@ -610,8 +519,25 @@ void list<T>::pop_back()
 template <typename T>
 void list<T>::push_back (const value_type& val)
 {
-	// std::cout <<
-	insert(end(), val);
+	node * old_tail;
+
+	if (_size == 0)
+	{
+		clear();
+		_tail = new node(val);
+		_head = _tail;
+		_size = 1;
+		create_tail_last();
+		return ;
+	}
+	if (_tail->nxt)
+		delete _tail->nxt;
+	old_tail = _tail;
+	_tail = new node(val);
+	old_tail->nxt = _tail;
+	_tail->prev = old_tail;
+	_size++;
+	create_tail_last();
 	return ;
 }
 
@@ -624,30 +550,27 @@ void list<T>::push_front (const value_type& val)
 template <typename T>
 list<T>::list(iterator first, iterator last)
 {
-	assign(first, last);
 	_size = 0;
-	for (ft::list<T>::iterator it = first; it != last; ++it)
-		_size++;
-	create_tail_last();
+	assign(first, last);
 	return ;
 }
 
 template <typename T>
 list<T>::list(size_type n, const value_type val)
 {
-	if (n == 0)
-	{
-		_head = new node();
-		_tail = new node();
-		_head->nxt = _tail;
-		_tail->prev = _head;
-		_tail->nxt = nullptr;
-		_size = 0;
-		create_tail_last();
-		return ;
-	}
+	_size = 0;
 	assign(n, val);
-	_size = n;
+	return ;
+}
+
+template <typename T>
+void	list<T>::create_empty_lst()
+{
+	_head = new node();
+	_tail = new node();
+	_head->nxt = _tail;
+	_tail->prev = _head;
+	_size = 0;
 	create_tail_last();
 	return ;
 }
@@ -655,17 +578,7 @@ list<T>::list(size_type n, const value_type val)
 template <typename T>
 list<T>::list()
 {
-	
-	// _size = 0;
-	// assign(0, 0);
-	// _size = 0;
-	// create_tail_last();
-	_head = new node();
-	_tail = new node();
-	_head->nxt = _tail;
-	_tail->prev = _head;
-	_size = 0;
-	// create_tail_last();
+	create_empty_lst();
 	return ;
 }
 
@@ -677,24 +590,8 @@ void list<T>::assign (size_type n, const value_type& val)
 
 	if (_size > 0 && _size < 20000) // MAX SIZE
 		clear();
-    _size = 0;
-	_head = nullptr;
-	_tail = nullptr;
     if (n == 0)
-	{
-		// _head = new node();
-		// _tail = _head;
-		// _size = 0;
-		// create_tail_last();
-		// return;
-		_head = new node();
-		_tail = new node();
-		_head->nxt = _tail;
-		_tail->prev = _head;
-		_size = 0;
-		create_tail_last();
-		return ;	
-	}
+		return (create_empty_lst());
     if (n == 1)
 	{
 		_head = new node(val);
@@ -716,8 +613,6 @@ void list<T>::assign (size_type n, const value_type& val)
     }
     _tail = new_ptr;
     _head->prev = nullptr;
-    _tail->nxt = nullptr;
-	temp_ptr->nxt = nullptr;
 	create_tail_last();
 	return ;
 }
@@ -727,33 +622,29 @@ void list<T>::assign (iterator first, iterator last)
 {
     node * temp_ptr;
 	node * new_ptr;
-	size_type	size = 0;
-
+	
 	if (_size > 0 && _size < 20000) // MAX SIZE
 		clear();
 	_size = 0;
 	if (first == last)
-	{
-		list();
-		return ;
+	{	
+		return (create_empty_lst());
 	}
 	_head = new node(first.get_content());
     temp_ptr = _head;
-	size++;
-	iterator it = first;
-	it++;
-	while (it != last)
+	_size++;
+	first++;
+	while (first != last)
     {
-		new_ptr = new node(it.get_content());
-		size++;
+		new_ptr = new node(first.get_content());
+		_size++;
         new_ptr->prev = temp_ptr;
         temp_ptr->nxt = new_ptr;
         temp_ptr = new_ptr;
-		it++;
+		first++;
     }
     _tail = temp_ptr;
     _head->prev = nullptr;
-	// _tail->nxt = nullptr;
 	create_tail_last();
 	return ;
 }
@@ -761,6 +652,7 @@ void list<T>::assign (iterator first, iterator last)
 template <typename T>
 list<T>::list(size_type n)
 {
+	_size = 0;
 	assign(n, 0);
 	_size = n;
 	create_tail_last();
@@ -770,10 +662,9 @@ list<T>::list(size_type n)
 template <typename T>
 list<T>::list(const list & source)
 {
+	_size = 0;
 	_head = source._head;
 	_tail = source._tail;
-	_tail->prev = source._tail->prev;
-	_head->prev = nullptr;
 	assign(_head, _tail->nxt);
 	_size = source._size;
 	create_tail_last();
@@ -786,17 +677,10 @@ list<T> & list<T>::operator=(const list & source)
     if (_head != source._head || _tail != source._tail || _size != source._size)
 	{
         clear();
-        _size = source.size();
-		_head = source._head;
-		_tail = source._tail;
-		// _tail->nxt = nullptr;
-		
-		_head->prev = nullptr;
-		create_tail_last();
-		assign_operator(_head, _tail->nxt);
-		_size = source._size;
-		create_tail_last();
-
+		iterator first = source._head;
+		iterator last = source._tail->nxt;
+		assign (first, last);
+		return *this;
    }
     return *this;
 }
@@ -814,57 +698,28 @@ void list<T>::clear()
         {
             temp_ptr = current_ptr;
 			_size--;
-			if (current_ptr && current_ptr->nxt)
-	           	current_ptr = current_ptr->nxt;
+			if (_size > 0 && current_ptr && current_ptr->nxt)
+	        {   
+				current_ptr = current_ptr->nxt;
+			}
             if (temp_ptr)
 				delete (temp_ptr);
+
         }
 		_head = nullptr;
 		_tail = nullptr;
     }
 	else
 	{
-		// if (_head != nullptr)
+		if (_head)
 			delete _head;
-		// if (_tail != nullptr)
+		if (_tail && _tail->nxt)
 			delete _tail->nxt;
+		if (_tail)
 			delete _tail;
 	}
-    return ;
-}
-
-template <typename T>
-void list<T>::assign_operator (iterator first, iterator last)
-{
-    node * temp_ptr;
-	node * new_ptr;
-	size_type	size = 0;
-
 	_size = 0;
-	if (first == last)
-	{
-		list();
-		return ;
-	}
-	_head = new node(first.get_content());
-    temp_ptr = _head;
-	size++;
-	iterator it = first;
-	it++;
-	while (it != last)
-    {
-		new_ptr = new node(it.get_content());
-		size++;
-        new_ptr->prev = temp_ptr;
-        temp_ptr->nxt = new_ptr;
-        temp_ptr = new_ptr;
-		it++;
-    }
-    _tail = temp_ptr;
-    _head->prev = nullptr;
-	// _tail->nxt = nullptr;
-	create_tail_last();
-	return ;
+    return ;
 }
 
 template <typename T>
@@ -892,8 +747,21 @@ void list<T>::splice (iterator position, list& x, iterator i)
 template <typename T>
 void list<T>::splice (iterator position, list& x, iterator first, iterator last)
 {
+	std::cout << "in splice" << std::endl;
 	insert (position, first, last);
+	std::cout << "in splice after insert" << std::endl;
+	std::cout << "with size " << _size << std::endl;
+	std::cout << "going to clear :";
+	for (ft::list<T>::iterator it_ft=begin(); it_ft!=end(); ++it_ft)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
 	x.erase(first, last);
+	std::cout << "in splice after erase" << std::endl;
+	std::cout << "leaving splice with with size " << _size << std::endl;
+	std::cout << "going to clear :";
+	for (ft::list<T>::iterator it_ft=begin(); it_ft!=end(); ++it_ft)
+    	std::cout << ' ' << *it_ft << std::endl;
+	std::cout << '\n';
 }
 
 template <typename T>
