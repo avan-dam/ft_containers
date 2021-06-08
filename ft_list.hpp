@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/07 18:23:25 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/08 10:47:57 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,21 +239,155 @@ class list
 			return;
 		}
 	
-		iterator	insert (iterator position, const value_type& val);
-		void		insert (iterator position, size_type n, const value_type& val);
-		void		insert (iterator position, iterator first, iterator last);
+		iterator	insert (iterator position, const value_type& val)
+		{
+			list<T>		newlist(1, val);
+			return (insert_list_helper(newlist, position));
+		}
+		
+		void		insert (iterator position, size_type n, const value_type& val)
+		{
+			list<T>		newlist(n, val);
+			insert_list_helper(newlist, position);
+			return ;
+		}
+		
+		void		insert (iterator position, iterator first, iterator last)
+		{
+			list<T>		newlist(first, last);
+			insert_list_helper(newlist, position);
+			return ;
+		}
 	
-		iterator	erase (iterator position);
-		iterator	erase (iterator first, iterator last);
+		iterator	erase (iterator position)
+		{
+			iterator end = position;
+			end++;
+			erase(position, end);
+			return (position);
+		}
+		
+		iterator	erase (iterator first, iterator last)
+		{
+			iterator	it = begin();
 
-		void		swap (list& x);
+			while (it != first)
+				it++;
+			list<T>		list_start(begin(), it);
+			while (it != last)
+				it++;
+			list<T>		list_end(it, end());
 
-		void resize (size_type n, value_type val);
-        void 		clear();
+			clear();
+			if (list_end.empty() && list_start.empty())
+				return (_head);
+			it = insert_newlist(list_start);
+			insert_newlist(list_end);
+			if (list_start.empty())
+				it = begin();
+			if (list_end.empty())
+				it = end();
+			if (!list_start.empty())
+				list_start.clear();
+			if (!list_end.empty())
+				list_end.clear();
+			return (it);
+		}
 
-		void splice (iterator position, list& x);
-		void splice (iterator position, list& x, iterator i);
-		void splice (iterator position, list& x, iterator first, iterator last);
+		void		swap (list& x)
+		{
+			ft::list<T> tempthislist(begin(), end());	
+			assign(x.begin(), x.end());
+			_size = x._size;
+			x.clear();
+			x.assign(tempthislist.begin(), tempthislist.end());
+			x._size = tempthislist._size;
+		}
+
+		void		resize (size_type n, value_type val)
+		{
+			if (n == _size)
+				return;
+			while (n < _size)
+			{
+				pop_back();
+				n++;
+			}
+			while (n > _size)
+			{
+				insert(val);
+				n++;
+			}
+			create_tail_last();
+			return;
+		}
+
+        void 		clear()
+		{
+			node * current_ptr = _head;
+    		node * temp_ptr;
+   			if (empty() == 0)
+    		{
+				if (_tail && _tail != nullptr && _tail->nxt)
+					delete(_tail->nxt);
+    		    while (_size > 0)
+    		    {
+            		temp_ptr = current_ptr;
+					_size--;
+					if (_size > 0 && current_ptr && current_ptr->nxt)
+						current_ptr = current_ptr->nxt;
+        		    if (temp_ptr)
+						delete (temp_ptr);
+		        }
+				_head = nullptr;
+				_tail = nullptr;
+				return ;
+    		}
+		if (_head)
+			delete _head;
+		if (_tail && _tail->nxt)
+			delete _tail->nxt;
+		if (_tail)
+			delete _tail;
+		_size = 0;
+    	return ;
+		}
+
+		void splice (iterator position, list& x)
+		{
+			iterator	it;
+
+			if (x.empty())
+				return;
+			it = begin();
+			while (it != position && it != end())
+				it++;
+			insert(it, x.begin(), x.end());
+			x.clear();
+			return ;
+		}
+		
+		void splice (iterator position, list& x, iterator i)
+		{
+			iterator	it;
+
+			if (x.empty())
+				return;
+			it = begin();
+			while (it != position && it != end())
+				it++;
+			const value_type& val = i.get_content();
+			insert (it, 1, val);
+			x.erase(i);
+			return;
+		}
+
+		void splice (iterator position, list& x, iterator first, iterator last)
+		{
+			insert (position, first, last);
+			x.erase(first, last);
+			return;
+		}
 
 		void remove (const value_type& val);
 		template <class Predicate>
@@ -274,6 +408,7 @@ class list
 			}	
   		}
 		void unique();
+
 		template <class BinaryPredicate>
   		void unique (BinaryPredicate binary_pred)
 		{
@@ -366,29 +501,10 @@ class list
 		node		*_tail;
 		size_type	_size;
 		iterator	insert_newlist(ft::list<T> newlist);
+		iterator	insert_list_helper(ft::list<T> newlist, iterator position);
 		void		create_tail_last();
 		void		create_empty_lst();
-
 };
-
-template <typename T>
-void	list<T>::resize (size_type n, value_type val)
-{
-	if (n == _size)
-		return;
-	while (n < _size)
-	{
-		pop_back();
-		n++;
-	}
-	while (n > _size)
-	{
-		insert(val);
-		n++;
-	}
-	create_tail_last();
-	return;
-}
 
 template <typename T>
 void		list<T>::create_tail_last()
@@ -415,59 +531,8 @@ ft::iterator<T>	list<T>::insert_newlist(ft::list<T> newlist)
 }
 
 template <typename T>
-void list<T>::insert (iterator position, iterator first, iterator last)
+iterator<T> list<T>::insert_list_helper(ft::list<T> newlist, iterator position)
 {
-	list<T>		newlist(first, last);
-	iterator	it;
-
-	it = begin();
-	while (it != position)
-		it++;
-	list<T>		list_start(begin(), it);
-	list<T>		list_end(it, end());
-
-	clear();
-	insert_newlist(list_start);
-	insert_newlist(newlist);
-	insert_newlist(list_end);
-	if (!list_start.empty())
-		list_start.clear();
-	if (!newlist.empty())
-		newlist.clear();
-	if (!list_end.empty())
-		list_end.clear();
-	return ;
-}
-
-template <typename T>
-void list<T>::insert (iterator position, size_type n, const value_type& val)
-{
-	list<T>		newlist(n, val);
-	iterator	it;
-
-	it = begin();
-	while (it != position)
-		it++;
-	list<T>		list_start(begin(), it);
-	list<T>		list_end(it, end());
-
-	clear();
-	insert_newlist(list_start);
-	position = insert_newlist(newlist);
-	insert_newlist(list_end);
-	if (!list_start.empty())
-		list_start.clear();
-	if (!newlist.empty())
-		newlist.clear();
-	if (!list_end.empty())
-		list_end.clear();
-	return ;
-}
-
-template <typename T>
-iterator<T> list<T>::insert (iterator position, const value_type& val)
-{
-	list<T>		newlist(1, val);
 	iterator	it;
 
 	it = begin();
@@ -490,68 +555,6 @@ iterator<T> list<T>::insert (iterator position, const value_type& val)
 }
 
 template <typename T>
-void list<T>::swap (list& x)
-{
-	ft::list<T> tempthislist(begin(), end());	
-	assign(x.begin(), x.end());
-	_size = x._size;
-	x.clear();
-	x.assign(tempthislist.begin(), tempthislist.end());
-	x._size = tempthislist._size;
-	// tempthislist.clear(); // not letting me do this so check mem 
-}
-
-template <typename T>
-ft::iterator<T> list<T>::erase(iterator first, iterator last)
-{
-
-	iterator	it = begin();
-
-	while (it != first)
-		it++;
-	list<T>		list_start(begin(), it);
-	while (it != last)
-		it++;
-	list<T>		list_end(it, end());
-
-	clear();
-	if (list_end.empty() && list_start.empty())
-		return (_head);
-	it = insert_newlist(list_start);
-	insert_newlist(list_end);
-	if (list_start.empty())
-		it = begin();
-	if (list_end.empty())
-		it = end();
-	if (!list_start.empty())
-		list_start.clear();
-	if (!list_end.empty())
-		list_end.clear();
-	return (it);
-}
-
-template <typename T>
-ft::iterator<T> list<T>::erase(iterator position)
-{
-	iterator	it = begin();
-
-	while (it != position)
-		it++;
-	list<T>		list_start(begin(), it);
-	it++;
-	list<T>		list_end(it, end());
-
-	clear();
-	insert_newlist(list_start);
-	insert_newlist(list_end);
-	if (!list_start.empty())
-		list_start.clear();
-	if (!list_end.empty())
-		list_end.clear();
-	return (position);
-}
-
-template <typename T>
 void	list<T>::create_empty_lst()
 {
 	_head = new node();
@@ -561,85 +564,6 @@ void	list<T>::create_empty_lst()
 	_size = 0;
 	create_tail_last();
 	return ;
-}
-
-template <typename T>
-void list<T>::clear()
-{
-	node * current_ptr = _head;
-    node * temp_ptr;
-    if (empty() == 0)
-    {
-		if (_tail && _tail != nullptr && _tail->nxt)
-			delete(_tail->nxt);
-        while (_size > 0)
-        {
-            temp_ptr = current_ptr;
-			_size--;
-			if (_size > 0 && current_ptr && current_ptr->nxt)
-	        {   
-				current_ptr = current_ptr->nxt;
-			}
-            if (temp_ptr)
-				delete (temp_ptr);
-
-        }
-		_head = nullptr;
-		_tail = nullptr;
-    }
-	else
-	{
-		if (_head)
-			delete _head;
-		if (_tail && _tail->nxt)
-			delete _tail->nxt;
-		if (_tail)
-			delete _tail;
-	}
-	_size = 0;
-    return ;
-}
-
-template <typename T>
-void list<T>::splice (iterator position, list& x)
-{ 
-	iterator	it;
-
-	it = begin();
-	while (it != position && it != end())
-		it++;
-	insert(it, x.begin(), x.end());
-	x.clear();
-	x = list();
-
-}
-
-template <typename T>
-void list<T>::splice (iterator position, list& x, iterator i)
-{
-	const value_type& val = i.get_content();
-	insert (position, 1, val);
-	x.erase(i);
-}
-
-template <typename T>
-void list<T>::splice (iterator position, list& x, iterator first, iterator last)
-{
-	std::cout << "in splice" << std::endl;
-	insert (position, first, last);
-	std::cout << "in splice after insert" << std::endl;
-	std::cout << "with size " << _size << std::endl;
-	std::cout << "going to clear :";
-	for (ft::list<T>::iterator it_ft=begin(); it_ft!=end(); ++it_ft)
-    	std::cout << ' ' << *it_ft;
-	std::cout << '\n';
-	x.erase(first, last);
-	std::cout << "in splice after erase" << std::endl;
-	std::cout << "leaving splice with with size " << _size << std::endl;
-	std::cout << "going to clear :";
-	for (ft::list<T>::iterator it_ft=begin(); it_ft!=end(); ++it_ft)
-    	std::cout << ' ' << *it_ft << std::endl;
-	std::cout << '\n';
 }
 
 template <typename T>
