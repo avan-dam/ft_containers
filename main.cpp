@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/06/08 10:48:16 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/08 16:25:43 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,8 +333,8 @@ void	list_erase()
   	for (ft::list<int>::iterator it=mylist_ft.begin(); it!=mylist_ft.end(); ++it)
     	std::cout << ' ' << *it;
   	std::cout << '\n';
-	mylist_std.erase(it_std);
-	mylist_ft.erase(it_ft);
+	std::cout << "ret from std lst erase" << *(mylist_std.erase(it_std)) << std::endl;
+	std::cout << "ret from ft lst erase" << *(mylist_ft.erase(it_ft)) << std::endl;
   	std::cout << "mylist_std contains:";
   	for (std::list<int>::iterator it=mylist_std.begin(); it!=mylist_std.end(); ++it)
     	std::cout << ' ' << *it;
@@ -471,12 +471,12 @@ struct is_odd {
 void	list_remove()
 {
 	std::cout << "calling list list_remove fucntions" << std::endl;
-	std::list<int> first_std(4, 100);
-	ft::list<int> first_ft(4, 100);
-	for (int i=1; i<=4; ++i) first_std.push_back(i); // 1 2 3 4 5
-	for (int i=1; i<=4; ++i) first_ft.push_back(i); // 1 2 3 4 5
-	first_std.remove(2);
-	first_ft.remove(2);
+	std::list<int> first_std;
+	ft::list<int> first_ft;
+	for (int i=1; i<=9; i = i + 2) first_std.push_back(i);
+	for (int i=1; i<=9; i = i + 2) first_ft.push_back(i);
+	first_std.remove(3);
+	first_ft.remove(3);
 	std::cout << "first_std contains1 :";
 	for (std::list<int>::iterator it_std=first_std.begin(); it_std!=first_std.end(); ++it_std)
     	std::cout << ' ' << *it_std;
@@ -485,10 +485,9 @@ void	list_remove()
 	for (ft::list<int>::iterator it_ft=first_ft.begin(); it_ft!=first_ft.end(); ++it_ft)
     	std::cout << ' ' << *it_ft;
 	std::cout << '\n';
-
-	first_std.remove_if (is_odd());           // 15 36 17 20 39
-	first_ft.remove_if (is_odd());           // 15 36 17 20 39
- 	std::cout << "PART TWO:\nfirst_std contains:";
+	first_std.remove_if (is_odd());
+	first_ft.remove_if (is_odd());
+ 	std::cout << "part two:\nfirst_std contains:";
   	for (std::list<int>::iterator it=first_std.begin(); it!=first_std.end(); ++it)
     std::cout << ' ' << *it;
   	std::cout << '\n';
@@ -567,9 +566,6 @@ void	list_merge()
   	second_ft.push_back (7.1);
   	second_ft.push_back (2.7);
 
-  	// first_std.sort();
-  	// second_std.sort();
-
   	first_std.merge(second_std);
   	first_ft.merge(second_ft);
 	std::cout << "first_std contains1 :";
@@ -596,7 +592,7 @@ void	list_merge()
 	second_ft.push_back (4.3);
   	first_std.merge(second_std,mycomparison);
   	first_ft.merge(second_ft,mycomparison);
-	std::cout << "PART 2\nfirst_std contains1 :";
+	std::cout << "PART 2\nfirst_std contains1:";
 	for (std::list<double>::iterator it_std=first_std.begin(); it_std!=first_std.end(); ++it_std)
     	std::cout << ' ' << *it_std;
 	std::cout << '\n';
@@ -604,7 +600,7 @@ void	list_merge()
 	for (ft::list<double>::iterator it_std=first_ft.begin(); it_std!=first_ft.end(); ++it_std)
     	std::cout << ' ' << *it_std;
 	std::cout << '\n';
-	std::cout << "second_std  contains1 :";
+	std::cout << "second_std  contains1:";
 	for (std::list<double>::iterator it_ft=second_std.begin(); it_ft!=second_std.end(); ++it_ft)
     	std::cout << ' ' << *it_ft;
 	std::cout << '\n';
@@ -807,45 +803,57 @@ void	list_sort()
 
 void	list_reverse()
 {
-		std::cout << "calling list list_reverse fucntions" << std::endl;
-
-	//   std::list<int> mylist7;
-
-//   for (int i=1; i<10; ++i) mylist7.push_back(i);
-
-//   mylist7.reverse();
-
-//   std::cout << "mylist contains:";
-//   for (std::list<int>::iterator it=mylist7.begin(); it!=mylist7.end(); ++it)
-//     std::cout << ' ' << *it;
-
-//   std::cout << '\n';
-	// std::list<int> mystdlist;
+	std::cout << "calling list list_reverse fucntions" << std::endl;
 	ft::list<int> myftlist(2,20);
-	// std::list<int> mystdlist;
+	std::list<int> mystdlist(2,10);
 
-	// myftlist.assign(2, 20);
-  	// for (int i=1; i<10; ++i) mystdlist.push_back(i);
-  	// for (int i=1; i<10; ++i) mystdlist.push_back(i);
+	myftlist.assign(2, 20);
+	mystdlist.assign(2, 20);
+  	for (int i=1; i<10; ++i) mystdlist.push_back(i);
+  	for (int i=1; i<10; ++i) myftlist.push_back(i);
+  	for (int i=1; i<10; ++i) mystdlist.push_back(i);
   	for (int i=1; i<10; ++i) myftlist.push_back(i);
 	  	std::cout << "before reverse \nmyftlist contains :";
  	for (ft::list<int>::iterator it=myftlist.begin(); it!=myftlist.end(); ++it)
     	std::cout << ' ' << *it;
 	std::cout << '\n';
-	//   	std::cout << "mystdlist contains :";
- 	// for (std::list<int>::iterator it=mystdlist.begin(); it!=mystdlist.end(); ++it)
-    // 	std::cout << ' ' << *it;
-	// std::cout << '\n';
-  	// mystdlist.reverse();
+	  	std::cout << "mystdlist contains :";
+ 	for (std::list<int>::iterator it=mystdlist.begin(); it!=mystdlist.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+  	mystdlist.reverse();
 	myftlist.reverse();
- 	// std::cout << "mystdlist contains:";
- 	// for (std::list<int>::iterator it=mystdlist.begin(); it!=mystdlist.end(); ++it)
-    // 	std::cout << ' ' << *it;
-	// std::cout << '\n';
- 	std::cout << "after reverse\nmyftlist contains :";
+ 	std::cout << "after reverse\nmystdlist contains:";
+ 	for (std::list<int>::iterator it=mystdlist.begin(); it!=mystdlist.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+ 	std::cout << "myftlist contains :";
  	for (ft::list<int>::iterator it=myftlist.begin(); it!=myftlist.end(); ++it)
     	std::cout << ' ' << *it;
 	std::cout << '\n';
+}
+
+void	list_relational_operators()
+{
+	std::cout << "calling list list_relational_operators fucntions" << std::endl;
+	ft::list<int> ft_list1(1, 100);
+	ft::list<int> ft_list2(1, 100);
+	ft_list1.push_back (3);
+  	ft_list2.push_back (3);
+	ft_list1.push_back (4);
+  	ft_list2.push_back (1);
+	if (ft_list2>=ft_list1) std::cout << "std_list1 is more than std_list2\n";
+	else
+		std::cout << "std_list1 is NOT more than std_list2\n";
+	std::list<int> std_list1(1, 100);
+	std::list<int> std_list2(1, 100);
+	std_list1.push_back (3);
+  	std_list2.push_back (3);
+	std_list1.push_back (4);
+  	std_list2.push_back (1);
+	if (std_list2>=std_list1) std::cout << "std_list1 is more than std_list2\n";
+	else
+		std::cout << "std_list1 is NOT more than std_list2\n";
 }
 
 int    list_tests()
@@ -860,11 +868,12 @@ int    list_tests()
 	list_clear();
 	list_resize();
 	list_splice();
-	// list_remove();
-	// list_unique();
-	// list_merge();
-	// list_sort();
-	// list_reverse();
+	list_remove();
+	list_unique();
+	list_merge();
+	list_sort();
+	list_reverse();
+	list_relational_operators();
 	return 0;
 }
 

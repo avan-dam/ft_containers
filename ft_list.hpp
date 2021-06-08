@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/08 10:47:57 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/08 16:25:35 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,10 @@ class list
 		//ASSIGNMENT OPERATOR
 		list & operator=(const list &x)
 		{
-			iterator first;
-			iterator last;
 			if (_head != x._head || _tail != x._tail || _size != x._size)
 			{
     		    clear();
-				first = x._head;
-				last = x._tail->nxt;
-				assign (first, last);
+				assign (x._head, x._tail->nxt);
 				return *this;
    			}
 		    return *this;
@@ -263,14 +259,20 @@ class list
 		{
 			iterator end = position;
 			end++;
-			erase(position, end);
-			return (position);
+			end = erase(position, end);
+			return (end);
 		}
 		
 		iterator	erase (iterator first, iterator last)
 		{
 			iterator	it = begin();
 
+			if (first == it && last == end())// end?
+			{
+				clear();
+				assign(0,0);
+				return(_head);
+			}
 			while (it != first)
 				it++;
 			list<T>		list_start(begin(), it);
@@ -282,7 +284,7 @@ class list
 			if (list_end.empty() && list_start.empty())
 				return (_head);
 			it = insert_newlist(list_start);
-			insert_newlist(list_end);
+			insert_newlist(list_end);		
 			if (list_start.empty())
 				it = begin();
 			if (list_end.empty())
@@ -389,13 +391,27 @@ class list
 			return;
 		}
 
-		void remove (const value_type& val);
+		void remove (const value_type& val)
+		{
+			iterator	it = begin();
+
+			while (it != end())
+			{
+				if (*it == val)
+				{
+					erase(it);
+					it = begin();
+				}
+			else
+				it++;
+			}	
+		}
+		
 		template <class Predicate>
   		void remove_if (Predicate pred)
   		{
-			iterator	it;
+			iterator	it = begin();
 
-			it = begin();
 			while (it != end())
 			{
 				if (pred(*it) == true)
@@ -407,24 +423,28 @@ class list
 					it++;
 			}	
   		}
-		void unique();
-
-		template <class BinaryPredicate>
-  		void unique (BinaryPredicate binary_pred)
+		
+		void unique()
 		{
-		  	iterator	it;
-			iterator	nxt;
+			iterator	it = begin();
+			iterator	nxt = begin();
 
-			it = begin();
-			nxt = begin();
 			nxt++;
 			while (it != end() && nxt!= end())
 			{
-				if (binary_pred(*nxt, *it) == true)
+				if (*it == *nxt)
 				{
 					nxt = erase(nxt);
-					it = nxt;
-					it--;
+					if (nxt == begin())
+					{
+						nxt++;
+						it = begin();
+					}
+					else
+					{
+						it = nxt;
+						it--;
+					}
 				}
 				else
 				{
@@ -433,29 +453,72 @@ class list
 				}
 			}
 		}
-		void merge (list& x);
+
+		template <class BinaryPredicate>
+  		void unique (BinaryPredicate binary_pred)
+		{
+		  	iterator	it = begin();
+			iterator	nxt = begin();
+
+			nxt++;
+			while (it != end() && nxt!= end())
+			{
+				if (binary_pred(*nxt, *it) == true)
+				{
+					nxt = erase(nxt);
+					if (nxt == begin())
+					{
+						nxt++;
+						it = begin();
+					}
+					else
+					{
+						it = nxt;
+						it--;
+					}
+				}
+				else
+				{
+					it++;
+					nxt++;
+				}
+			}
+		}
+		void merge (list& x)
+		{
+			iterator it = x.begin();
+	
+			while (it != x.end())
+			{
+				push_back(it.get_content());
+				it++;
+			}
+			x.clear();
+		}
 
 		template <class Compare>
-		  void merge (list& x, Compare comp)
+		void merge (list& x, Compare comp)
 		{
-			iterator	it_insert;
-			iterator	it_this;
+			iterator	it_insert = x.begin();
+			iterator	it_this = begin();
 
-			it_insert = x.begin();
-			it_this = begin();
-			while (it_insert != x.end())
+			while (it_insert != x.end() && it_this != end())
 			{
-				while (it_this != end())
+				while (it_this != _tail)
 				{
 					if (comp(*it_insert, *it_this) == true)
 					{
-						insert(it_this, it_insert.get_content());
+						const value_type& val = it_insert.get_content();
+						it_this = insert(it_this, val);
+						it_this++;
+						it_this++;
 						break;
 					}
 					it_this++;
 				}
-				if (it_this == end())
+				if (it_this == _tail)
 				{
+					std::cout << "it_this" << *it_this << std::endl;
 					push_back(it_insert.get_content());
 					it_this++;
 				}
@@ -464,16 +527,38 @@ class list
 			x.clear();
 		}
 
-		void	sort();
+		void	sort()
+		{
+			iterator	it = begin();
+			iterator	nxt = begin();
+
+			nxt++;
+			while (it != end() && nxt!= end())
+			{
+				if (*it > *nxt)
+				{
+					const value_type& val1 = it.get_content();
+					const value_type& val2 = nxt.get_content();
+					nxt.get_list()->change_content(val1);
+					it.get_list()->change_content(val2);
+					it = begin();
+					nxt = begin();
+					nxt++;
+				}
+				else
+				{
+					it++;
+					nxt++;
+				}
+			}	
+		}
 
 		template <class Compare>
 	 	void sort (Compare comp)
 		{
-			iterator	it;
-			iterator	nxt;
+			iterator	it = begin();
+			iterator	nxt = begin();
 
-			it = begin();
-			nxt = begin();
 			nxt++;
 			while (it != end() && nxt!= end())
 			{
@@ -494,188 +579,162 @@ class list
 				}
 			}	
 		}
-		void reverse();
+		void reverse()
+		{
+			iterator it = begin();
+			list<T> list_copy(begin(), end());
+			iterator copy_it = list_copy.end();
+	
+			copy_it--;
+			while (it != end() && copy_it != list_copy.begin())
+			{
+				const value_type& val2 = copy_it.get_content();
+				it.get_list()->change_content(val2);
+				it++;
+				copy_it--;
+			}
+			const value_type& val2 = list_copy.begin().get_content();
+			it = end();
+			it--;
+			it.get_list()->change_content(val2);
+			list_copy.clear();
+		}
 
 	private:
 		node		*_head;
 		node		*_tail;
 		size_type	_size;
-		iterator	insert_newlist(ft::list<T> newlist);
-		iterator	insert_list_helper(ft::list<T> newlist, iterator position);
-		void		create_tail_last();
-		void		create_empty_lst();
+
+		//HELPER FUNCTIONS
+		iterator	insert_newlist(ft::list<T> newlist)
+		{
+			if (newlist.size() == 0)
+				return (end());
+			for (ft::list<T>::iterator it=newlist.begin(); it!=newlist.end(); ++it)
+				push_back(it.get_content());
+			if (newlist.size() == 1)
+				return (begin());
+			return (_tail);
+		}
+		iterator	insert_list_helper(ft::list<T> newlist, iterator position)
+		{
+			iterator	it = begin();
+
+			while (it != position)
+				it++;
+			list<T>		list_start(begin(), it);
+			list<T>		list_end(it, end());
+			if (!empty())
+				clear();
+			insert_newlist(list_start);
+			position = insert_newlist(newlist);
+			insert_newlist(list_end);
+			if (!list_start.empty())
+				list_start.clear();
+			if (!newlist.empty())
+				newlist.clear();
+			if (!list_end.empty())
+				list_end.clear();
+			return (position);
+		}
+		void		create_tail_last()
+		{
+			node * 		temp_ptr;
+
+			if (_tail && _tail != nullptr && _tail->nxt && _tail->nxt != nullptr)
+				delete(_tail->nxt);
+			temp_ptr = new node(); // ENABLE IF AS LAST ONE IN INT NEEDS TO BE THIS
+			// temp_ptr = new node(_size); // CHECK // if value try is integral then put size otherwise one above
+			_tail->nxt = temp_ptr;
+			temp_ptr->prev = _tail;
+			temp_ptr->nxt = nullptr;
+		}
+		void		create_empty_lst()
+		{
+			_head = new node();
+			_tail = new node();
+			_head->nxt = _tail;
+			_tail->prev = _head;
+			_size = 0;
+			create_tail_last();
+			return ;
+		}
 };
 
+//REALTIONAL OPERATORS
 template <typename T>
-void		list<T>::create_tail_last()
+bool operator== (const list<T>& lhs, const list<T>& rhs)
 {
-	node * 		temp_ptr;
-
-	if (_tail && _tail != nullptr && _tail->nxt && _tail->nxt != nullptr)
-		delete(_tail->nxt);
-	temp_ptr = new node(); // ENABLE IF AS LAST ONE IN INT NEEDS TO BE THIS
-	// temp_ptr = new node(_size); // CHECK // if value try is integral then put size otherwise one above
-	_tail->nxt = temp_ptr;
-	temp_ptr->prev = _tail;
-	temp_ptr->nxt = nullptr;
-}
-
-template <typename T>
-ft::iterator<T>	list<T>::insert_newlist(ft::list<T> newlist)
-{
-	if (newlist.size() == 0)
-		return (end());
-	for (ft::list<T>::iterator it=newlist.begin(); it!=newlist.end(); ++it)
-		push_back(it.get_content());
-	return (end());
-}
-
-template <typename T>
-iterator<T> list<T>::insert_list_helper(ft::list<T> newlist, iterator position)
-{
-	iterator	it;
-
-	it = begin();
-	while (it != position)
-		it++;
-	list<T>		list_start(begin(), it);
-	list<T>		list_end(it, end());
-	if (!empty())
-		clear();
-	insert_newlist(list_start);
-	position = insert_newlist(newlist);
-	insert_newlist(list_end);
-	if (!list_start.empty())
-		list_start.clear();
-	if (!newlist.empty())
-		newlist.clear();
-	if (!list_end.empty())
-		list_end.clear();
-	return (position);
-}
-
-template <typename T>
-void	list<T>::create_empty_lst()
-{
-	_head = new node();
-	_tail = new node();
-	_head->nxt = _tail;
-	_tail->prev = _head;
-	_size = 0;
-	create_tail_last();
-	return ;
-}
-
-template <typename T>
-void list<T>::remove(const value_type& val)
-{
-	iterator	it;
-
-	it = begin();
-	while (it != end())
+	if (lhs.size() != rhs.size())
+		return false;
+	ft::list<T> lhs_copy(lhs);
+	ft::list<T> rhs_copy(rhs);
+	typename ft::list<T>::iterator lhs_it = lhs_copy.begin();
+	typename ft::list<T>::iterator rhs_it = rhs_copy.begin();
+	while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end())
 	{
-		if (*it == val)
-		{
-			erase(it);
-			it = begin();
-		}
-		else
-			it++;
-	}	
-}
-
-template <typename T>
-void list<T>::unique()
-{
-	iterator	it;
-	iterator	nxt;
-
-	it = begin();
-	nxt = begin();
-	nxt++;
-	while (it != end() && nxt!= end())
-	{
-		if (*it == *nxt)
-		{
-			nxt = erase(it);
-			it = nxt;
-			it--;
-		}
-		else
-		{
-			it++;
-			nxt++;
-		}
-	}	
-}
-
-template <typename T>
-void list<T>::merge (list& x)
-{
-	iterator it;
-	
-	it = x.begin();
-	while (it != x.end())
-	{
-		const value_type& val = it.get_content();
-		push_back(val);
-		it++;
+		if (lhs_it.get_content() != rhs_it.get_content())
+			return false;
+		lhs_it++;
+		rhs_it++;
 	}
-	x.clear();
+	return true;
 }
 
 template <typename T>
-void list<T>::sort ()
+bool operator!=(const list<T>& lhs, const list<T>& rhs)
 {
-	iterator	it;
-	iterator	nxt;
-
-	it = begin();
-	nxt = begin();
-	nxt++;
-	while (it != end() && nxt!= end())
-	{
-		if (*it > *nxt)
-		{
-			const value_type& val1 = it.get_content();
-			const value_type& val2 = nxt.get_content();
-			nxt.get_list()->change_content(val1);
-			it.get_list()->change_content(val2);
-			it = begin();
-			nxt = begin();
-			nxt++;
-		}
-		else
-		{
-			it++;
-			nxt++;
-		}
-	}	
+	return !(lhs == rhs);
 }
 
 template <typename T>
-void list<T>::reverse()
+bool operator>(const list<T>& lhs, const list<T>& rhs)
 {
-	iterator it;
-	iterator copy_it;
-	list<T> list_copy(begin(), end());
-	
-	it = begin();
-	copy_it = list_copy.end();
-	copy_it--;
-	while (it != end() && copy_it != list_copy.begin())
+	ft::list<T> lhs_copy(lhs);
+	ft::list<T> rhs_copy(rhs);
+	typename ft::list<T>::iterator lhs_it = lhs_copy.begin();
+	typename ft::list<T>::iterator rhs_it = rhs_copy.begin();
+	while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end())
 	{
-		const value_type& val2 = copy_it.get_content();
-		it.get_list()->change_content(val2);
-		it++;
-		copy_it--;
+		if (lhs_it.get_content() > rhs_it.get_content())
+			return true;
+		lhs_it++;
+		rhs_it++;
 	}
-	const value_type& val2 = list_copy.begin().get_content();
-	it = end();
-	it--;
-	it.get_list()->change_content(val2);
-	list_copy.clear();
-	}
+	if (lhs_it != lhs_copy.end())
+		return true;
+	return false;
 }
 
+template <typename T>
+bool operator<(const list<T>& lhs, const list<T>& rhs)
+{
+	ft::list<T> lhs_copy(lhs);
+	ft::list<T> rhs_copy(rhs);
+	typename ft::list<T>::iterator lhs_it = lhs_copy.begin();
+	typename ft::list<T>::iterator rhs_it = rhs_copy.begin();
+	while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end())
+	{
+		if (lhs_it.get_content() < rhs_it.get_content())
+			return true;
+		lhs_it++;
+		rhs_it++;
+	}
+	if (rhs_it != rhs_copy.end())
+		return true;
+	return false;
+}
+
+template <typename T>
+bool operator<=(const list<T>& lhs, const list<T>& rhs)
+{
+	return !(lhs > rhs);
+}
+
+template <typename T>
+bool operator>=(const list<T>& lhs, const list<T>& rhs)
+{
+	return !(lhs < rhs);
+}
+}
 #endif
