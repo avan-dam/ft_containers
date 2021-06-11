@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/08 16:25:35 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/10 13:10:26 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,12 @@
 #include <memory>
 #include <limits>
 
-typedef unsigned int size_type; 
-
 namespace ft {
 template <typename T>
 class list
     {
 	public:
+		typedef unsigned int 			size_type; 
 		typedef	T						value_type; 
         typedef	list_node<T>			node;
 		typedef	iterator<T>				iterator;
@@ -42,7 +41,7 @@ class list
 			return ;
 		}
 		
-        list(size_type n, const value_type val)
+        list(size_type n, const value_type &val)
 		{
 			_size = 0;
 			assign(n, val);
@@ -89,7 +88,6 @@ class list
 			{
     		    clear();
 				assign (x._head, x._tail->nxt);
-				return *this;
    			}
 		    return *this;
 		}
@@ -736,5 +734,14 @@ bool operator>=(const list<T>& lhs, const list<T>& rhs)
 {
 	return !(lhs < rhs);
 }
+
+template <class T>
+  void swap (list<T>& x, list<T>& y)
+  {
+	  ft::list<T> tempthislist(y.begin(), y.end());
+	  y.assign(x.begin(), x.end());
+	  x.clear();
+	  x.assign(tempthislist.begin(), tempthislist.end());
+  }
 }
 #endif

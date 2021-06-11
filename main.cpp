@@ -6,11 +6,12 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/06/08 16:25:43 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/11 16:09:21 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_list.hpp"
+#include "ft_vector.hpp"
 #include "list_node.hpp"
 #include "list_iterator.hpp"
 #include <list>
@@ -29,11 +30,6 @@ void    stack_tests()
 void    map_tests()
 {
     std::cout << "PERFORMING MAP TESTS:" << std::endl;
-}
-
-void    vector_tests()
-{
-    std::cout << "PERFORMING VECTOR TESTS:" << std::endl;
 }
 
 void	list_constructor() // and begin and end and iterator tested here and rend and rbegin
@@ -842,18 +838,55 @@ void	list_relational_operators()
   	ft_list2.push_back (3);
 	ft_list1.push_back (4);
   	ft_list2.push_back (1);
-	if (ft_list2>=ft_list1) std::cout << "std_list1 is more than std_list2\n";
-	else
-		std::cout << "std_list1 is NOT more than std_list2\n";
 	std::list<int> std_list1(1, 100);
 	std::list<int> std_list2(1, 100);
 	std_list1.push_back (3);
   	std_list2.push_back (3);
 	std_list1.push_back (4);
   	std_list2.push_back (1);
-	if (std_list2>=std_list1) std::cout << "std_list1 is more than std_list2\n";
+	if (ft_list1>ft_list2) std::cout << "std_list1 is more than std_list2\n";
 	else
 		std::cout << "std_list1 is NOT more than std_list2\n";
+	if (std_list1>std_list2) std::cout << "std_list1 is more than std_list2\n";
+	else
+		std::cout << "std_list1 is NOT more than std_list2\n";
+
+	if (ft_list1==ft_list2) std::cout << "std_list1 is the same as than std_list2\n";
+	else
+		std::cout << "std_list1 is NOT the same as  than std_list2\n";
+	if (std_list1==std_list2) std::cout << "std_list1 is the same as  than std_list2\n";
+	else
+		std::cout << "std_list1 is NOT the same as  than std_list2\n";
+}
+
+void	list_swap_list()
+{
+	std::cout << "calling list list_swap_list fucntions" << std::endl;
+	std::list<int> foo (3,100);
+	ft::list<int> fooft (3,100);
+	std::list<int> bar (5,200);
+	ft::list<int> barft (5,200);
+
+	std::swap(foo,bar);
+	ft::swap(fooft,barft);
+
+	std::cout << "foo contains  :";
+	for (std::list<int>::iterator it = foo.begin(); it!=foo.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << "fooft contains:";
+	for (ft::list<int>::iterator it = fooft.begin(); it!=fooft.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+
+	std::cout << "bar contains  :";
+	for (std::list<int>::iterator it = bar.begin(); it!=bar.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << "barft contains:";
+	for (ft::list<int>::iterator it = barft.begin(); it!=barft.end(); ++it)
+    	std::cout << ' ' << *it;
+	std::cout << '\n';
 }
 
 int    list_tests()
@@ -874,18 +907,234 @@ int    list_tests()
 	list_sort();
 	list_reverse();
 	list_relational_operators();
+	list_swap_list();
 	return 0;
 }
 
+void vector_constructor()
+{
+	std::cout << "calling vector vector_constructor fucntions" << std::endl;
+
+	std::vector<int> first_std;
+	ft::vector<int> first_ft;
+
+	std::cout << "first_std contains:";
+	for (unsigned i=0; i<first_std.size(); i++)
+    	std::cout << ' ' << first_std[i];
+	std::cout << '\n';
+	std::cout << "first_ft contains:";
+	for (unsigned i=0; i<first_ft.size(); i++)
+    	std::cout << ' ' << first_ft[i];
+	std::cout << '\n';
+
+	std::vector<int> second_std (4,100);
+	ft::vector<int> second_ft (4,100);
+	std::cout << "second_std contains:";
+	for (unsigned i=0; i<second_std.size(); i++)
+    	std::cout << ' ' << second_std[i];
+	std::cout << '\n';
+	std::cout << "second_ft contains:";
+	for (unsigned i=0; i<second_ft.size(); i++)
+    	std::cout << ' ' << second_ft[i];
+	std::cout << '\n';
+	
+	std::vector<int> third_std (second_std.begin(),second_std.end());
+	std::vector<int> third_ft (second_ft.begin(),second_ft.end());
+	std::cout << "third_std contains:";
+	for (unsigned i=0; i<third_std.size(); i++)
+    	std::cout << ' ' << third_std[i];
+	std::cout << '\n';
+	std::cout << "third_ft contains:";
+	for (unsigned i=0; i<third_ft.size(); i++)
+    	std::cout << ' ' << third_ft[i];
+	std::cout << '\n';
+
+	std::vector<int> fourth_std (second_std);
+	ft::vector<int> fourth_ft (second_ft);
+	std::cout << "fourth_std contains:";
+	for (unsigned i=0; i<fourth_std.size(); i++)
+    	std::cout << ' ' << fourth_std[i];
+	std::cout << '\n';
+	std::cout << "fourth_ft contains:";
+	for (unsigned i=0; i<fourth_ft.size(); i++)
+    	std::cout << ' ' << fourth_ft[i];
+	std::cout << '\n';
+}
+
+void	vector_assigment_opperator()
+{
+	std::cout << "calling vector vector_assigment_opperator fucntions" << std::endl;
+	std::vector<int> foo_std (3,0);
+	std::vector<int> bar_std (5,0);
+  	ft::vector<int> foo_ft (3,0);
+  	ft::vector<int> bar_ft (5,0);
+
+  	bar_std = foo_std;
+  	bar_ft = foo_ft;
+  	foo_std = std::vector<int>();
+  	foo_ft = ft::vector<int>();
+
+	std::cout << "Size of foo_std: " << int(foo_std.size()) << '\n';
+	std::cout << "Size of foo_ft: " << int(foo_ft.size()) << '\n';
+  	std::cout << "Size of bar_std: " << int(bar_std.size()) << '\n';
+  	std::cout << "Size of bar_ft: " << int(bar_ft.size()) << '\n';
+	std::cout << "bar_std contains:";
+	for (unsigned i=0; i<bar_std.size(); i++)
+    	std::cout << ' ' << bar_std[i];
+	std::cout << '\n';
+	std::cout << "bar_ft contains:";
+	for (unsigned i=0; i<bar_ft.size(); i++)
+    	std::cout << ' ' << bar_ft[i];
+	std::cout << '\n';
+	std::cout << "foo_std contains:";
+	for (unsigned i=0; i<foo_std.size(); i++)
+    	std::cout << ' ' << foo_std[i];
+	std::cout << '\n';
+	std::cout << "foo_ft contains:";
+	for (unsigned i=0; i<foo_ft.size(); i++)
+    	std::cout << ' ' << foo_ft[i];
+	std::cout << '\n';
+}
+
+void	vector_iterator()
+{
+	std::cout << "calling vector vector_iterator fucntions" << std::endl;
+	std::vector<int> first_std(4, 100);
+	ft::vector<int> first_ft(4, 100);
+	std::cout << "first_std contains:";
+  	for (std::vector<int>::iterator it = first_std.begin() ; it != first_std.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
+	std::cout << "first_ft contains:";
+  	for (ft::vector<int>::iterator it = first_ft.begin() ; it != first_ft.end(); ++it)
+    	std::cout << ' ' << *it;
+  	std::cout << '\n';
+}
+
+void	vector_capacity()
+{
+	std::cout << "calling vector vector_capacity fucntions" << std::endl;
+	std::cout << "Size function:" << std::endl;
+	std::vector<int> first_std;
+	ft::vector<int> first_ft;
+	std::cout << "first_std size: " << first_std.size() << '\n';
+	std::cout << "first_ft size: " << first_ft.size() << '\n';
+	
+	std::vector<int> second_std(4, 100);
+	ft::vector<int> second_ft(4, 100);
+	std::cout << "second_std size: " << second_std.size() << '\n';
+	std::cout << "second_ft size: " << second_ft.size() << '\n';
+
+	
+	std::cout << "Resize function:" << std::endl;
+	std::vector<int> third_std;
+	ft::vector<int> third_ft;
+	for (int i=1;i<10;i++) third_std.push_back(i);
+	for (int i=1;i<10;i++) third_ft.push_back(i);
+
+	// third_std.resize(5);
+	// third_ft.resize(5);
+	third_std.resize(4,100);
+	third_ft.resize(4,100);
+	third_std.resize(10,100);
+	third_ft.resize(10,100);
+	// third_std.resize(12);
+	// third_ft.resize(12);
+
+	std::cout << "third_std contains:";
+	for (unsigned int i=0;i<third_std.size();i++)
+		std::cout << ' ' << third_std[i];
+	std::cout << '\n';
+	std::cout << "third_ft contains:";
+	for (unsigned int i=0;i<third_ft.size();i++)
+		std::cout << ' ' << third_ft[i];
+	std::cout << '\n';
+	std::cout << "third_std size is :" << third_std.size() << "and capacity is " << third_std.capacity() << std::endl;
+	std::cout << "third_ft size is :" << third_ft.size() << "and third_ft is " << third_ft.capacity() << std::endl;
+
+	std::cout << "calling reserve function :" << third_ft.size() << "and third_ft is " << third_ft.capacity() << std::endl;
+	std::vector<int>::size_type sz_std;
+	ft::vector<int>::size_type sz_ft;
+
+	std::vector<int> foo_std;
+	std::vector<int> foo_ft;
+	sz_std = foo_std.capacity();
+	sz_ft = foo_ft.capacity();
+	std::cout << "making foo_std grow:\n";
+	for (int i=0; i<100; ++i) {
+    	foo_std.push_back(i);
+		if (sz_std!=foo_std.capacity()) {
+			sz_std = foo_std.capacity();
+      std::cout << "foo_std capacity changed: " << sz_std << '\n';
+    }
+  }
+	std::cout << "making foo_ft grow:\n";
+	for (int i=0; i<100; ++i) {
+    	foo_ft.push_back(i);
+		if (sz_ft!=foo_ft.capacity()) {
+			sz_ft = foo_ft.capacity();
+      std::cout << "foo_ft capacity changed: " << sz_ft << '\n';
+    	}
+	}
+  std::vector<int> bar_std;
+  ft::vector<int> bar_ft;
+  sz_std = bar_std.capacity();
+  bar_std.reserve(100);   // this is the only difference with foo above
+  std::cout << "making bar_std grow:\n";
+  for (int i=0; i<100; ++i) {
+    bar_std.push_back(i);
+    if (sz_std!=bar_std.capacity()) {
+      sz_std = bar_std.capacity();
+      std::cout << "bar_std capacity changed: " << sz_std << '\n';
+    }
+  }
+// std::cout << "making bar_ft grow:\n";
+//   for (int i=0; i<100; ++i) {
+//     bar_ft.push_back(i);
+//     if (sz_std!=bar_ft.capacity()) {
+//       sz_std = bar_ft.capacity();
+//       std::cout << "bar_ft capacity changed: " << sz_std << '\n';
+//     }
+//   }
+  
+}
+
+void	vector_push_back()
+{
+	std::vector<int> first_std;
+	ft::vector<int> first_ft;
+
+  // set some initial content:
+  for (int i=1;i<10;i++) first_std.push_back(i);
+  for (int i=1;i<10;i++) first_ft.push_back(i);
+	std::cout << "first_std contains:";
+	for (unsigned i=0; i<first_std.size(); i++)
+    	std::cout << ' ' << first_std[i];
+	std::cout << '\n';
+	std::cout << "first_ft contains:";
+	for (unsigned i=0; i<first_ft.size(); i++)
+    	std::cout << ' ' << first_ft[i];
+	std::cout << '\n';
+}
+
+void	vector_tests()
+{
+    std::cout << "PERFORMING VECTOR TESTS:" << std::endl;
+	vector_constructor();
+	vector_assigment_opperator();
+	vector_iterator();
+	vector_capacity();
+	// vector_push_back();
+}
 int    main(int argc, char **argv)
 {
 	// ft_testing_my_own_list();
     if (argc == 1 || argc == 2)
     {
-        if (argc == 1 || strcmp(argv[1], "list") == 0)
+        // if (argc == 1 || strcmp(argv[1], "list") == 0)
             list_tests();
-    //     if (argc == 1 || strcmp(argv[1], "vector") == 0)
-    //         vector_tests();
+        if (argc == 1 || strcmp(argv[1], "vector") == 0)
+            vector_tests();
     //     if (argc == 1 || strcmp(argv[1], "map") == 0)
     //         map_tests();
     //     if (argc == 1 || strcmp(argv[1], "stack") == 0)
