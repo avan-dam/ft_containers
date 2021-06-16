@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/11 15:43:16 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/15 15:42:44 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class vector
 		typedef	vector_iterator<T>		iterator;
         
     public:
-        vector() :  _vector(nullptr), _size(0) {}
+        vector() :  _vector(nullptr), _size(0), _capacity(0){}
 
         vector(size_type n, const value_type &val)
         {
@@ -37,6 +37,16 @@ class vector
                 _vector[i] = val;
             return;
         }
+
+		vector(size_type n)
+		{
+            _vector = new value_type[n];
+            _size = n;
+            _capacity = n;
+            for (unsigned int i = 0; i < n; i++)
+                _vector[i] = 0;
+			return ;
+		}
 
         vector(iterator first, iterator last)
         {
@@ -110,7 +120,7 @@ class vector
 		{
 			if (n > _capacity)
 			{
-				vector<T>		tmp = this;
+				vector<T>		tmp(begin(), end());
 				_capacity = n;
 				delete _vector;
 				_vector = new value_type[_capacity];
@@ -129,12 +139,28 @@ class vector
 
 		reference at (size_type n) { return (&_vector[n]);}
 		// const_reference at (size_type n) const;
-        reference front() { return &_vector[0];}
+        reference front() { return _vector[0];}
         // const_reference front() const { return const &_vector[0];}
-        reference back() { if (_size == 0) return front(); return &_vector[_size - 1];}
+        reference back() { if (_size == 0) return front(); return _vector[_size - 1];}
         // const_reference back() const { return const &_vector[_size - 1];}
 
-        // void assign (InputIterator first, InputIterator last);
+        void assign (iterator first, iterator last)
+		{
+			if (_size > 0 && _size < 20000) // MAX SIZE
+				clear();
+			_size = 0;
+			for (ft::vector<T>::iterator counter = first; counter !=last; counter++)
+				_size++;
+			_capacity = _size;
+            _vector = new value_type[_size];
+            for (unsigned int i = 0; i < _size; i++)
+            {
+			    _vector[i] = *first;
+				first++;
+			}
+				
+		}
+
         void assign (size_type n, const value_type& val)
         {
             _size = n;
@@ -149,8 +175,9 @@ class vector
         {
 			vector<T>		newvector(_vector);
 
+			if (_size == _capacity)
+	            _capacity++;
             _size++;
-            _capacity++;
             delete [] _vector;
             _vector = new value_type[_size];
 			_vector[0] = val;
@@ -163,8 +190,9 @@ class vector
 		{
 			vector<T>		newvector(begin(), end());
 
+			if (_size == _capacity)
+	            _capacity++;
             _size++;
-            _capacity++;
             delete [] _vector;
             _vector = new value_type[_size];
             for (unsigned int i = 0; i < _size - 1; i++)
@@ -215,20 +243,21 @@ class vector
 		return (true);
     }
 
+	void	pop_back()
+	{
+		ft::vector<T> tmp(begin(), end());
+		_size--;
+		_capacity--;
+		delete [] _vector;
+		_vector = new value_type[_size];
+       for (unsigned int i = 0; i < _size; i++)
+            _vector[i] = tmp[i];
+		}
+
     private:
         value_type* _vector;
 		size_type	_size;
 		size_type	_capacity;
-		void	pop_back()
-		{
-			ft::vector<T> tmp(begin(), end());
-			_size--;
-			_capacity--;
-			delete [] _vector;
-			_vector = new value_type[_size];
-            for (unsigned int i = 0; i < _size; i++)
-                _vector[i] = tmp[i];
-		}
     };
 
 }

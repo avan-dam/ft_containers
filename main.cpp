@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/06/11 16:09:21 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/15 15:43:34 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1060,6 +1060,8 @@ void	vector_capacity()
 	std::vector<int> foo_ft;
 	sz_std = foo_std.capacity();
 	sz_ft = foo_ft.capacity();
+	std::cout << "foo_std empty function returns: " << (bool)foo_std.empty() << std::endl;
+	std::cout << "foo_ft empty function returns: " << (bool)foo_ft.empty() << std::endl;	
 	std::cout << "making foo_std grow:\n";
 	for (int i=0; i<100; ++i) {
     	foo_std.push_back(i);
@@ -1076,31 +1078,40 @@ void	vector_capacity()
       std::cout << "foo_ft capacity changed: " << sz_ft << '\n';
     	}
 	}
+	std::cout << "foo_std empty function returns: " << (bool)foo_std.empty() << std::endl;
+	std::cout << "foo_ft empty function returns: " << (bool)foo_ft.empty() << std::endl;
   std::vector<int> bar_std;
   ft::vector<int> bar_ft;
   sz_std = bar_std.capacity();
+  sz_ft = bar_ft.capacity();
   bar_std.reserve(100);   // this is the only difference with foo above
+  bar_ft.reserve(100);   // this is the only difference with foo above
   std::cout << "making bar_std grow:\n";
   for (int i=0; i<100; ++i) {
     bar_std.push_back(i);
     if (sz_std!=bar_std.capacity()) {
       sz_std = bar_std.capacity();
-      std::cout << "bar_std capacity changed: " << sz_std << '\n';
     }
   }
-// std::cout << "making bar_ft grow:\n";
-//   for (int i=0; i<100; ++i) {
-//     bar_ft.push_back(i);
-//     if (sz_std!=bar_ft.capacity()) {
-//       sz_std = bar_ft.capacity();
-//       std::cout << "bar_ft capacity changed: " << sz_std << '\n';
-//     }
-//   }
+	std::cout << "bar_std size " << bar_std.size() << "capacity is " << bar_std.capacity() << std::endl;
+	std::cout << "sz_std size " << sz_std << std::endl;
+    std::cout << "bar_std capacity changed: " << sz_std << '\n';
+	std::cout << "making bar_ft grow:\n";
+  	for (int i=0; i<100; ++i) {
+    	bar_ft.push_back(i);
+    if (sz_ft!=bar_ft.capacity()) {
+      sz_ft = bar_ft.capacity();
+    }
+  }
+	std::cout << "bar_ft size " << bar_ft.size() << "capacity is " << bar_ft.capacity() << std::endl;	
+	std::cout << "sz_ft size " << sz_ft << std::endl;
+    std::cout << "bar_ft capacity changed: " << sz_ft << '\n';
   
 }
 
-void	vector_push_back()
+void	vector_push_n_pop_back()
 {
+	std::cout << "calling vector vector_push_n_pop_back functions" << std::endl;
 	std::vector<int> first_std;
 	ft::vector<int> first_ft;
 
@@ -1115,6 +1126,161 @@ void	vector_push_back()
 	for (unsigned i=0; i<first_ft.size(); i++)
     	std::cout << ' ' << first_ft[i];
 	std::cout << '\n';
+	std::vector<int> second_std;
+	ft::vector<int> second_ft;
+	int sum_std (0);
+	int sum_ft (0);
+	second_std.push_back (100);
+	second_ft.push_back (100);
+	second_std.push_back (200);
+	second_ft.push_back (200);
+	second_std.push_back (300);
+	second_ft.push_back (300);
+	while (!second_std.empty())
+	{
+    	sum_std+=second_std.back();
+    	second_std.pop_back();
+  	}
+	while (!second_ft.empty())
+	{
+    	sum_ft+=second_ft.back();
+    	second_ft.pop_back();
+  	}
+	std::cout << "The elements of second_std add up to " << sum_std << '\n';
+	std::cout << "The elements of second_std add up to " << sum_ft << '\n';
+	std::cout << "second_std size is : " << second_std.size() << std::endl;
+	std::cout << "second_std size is : " << second_ft.size() << std::endl;
+}
+
+void	vector_element_access()
+{
+	std::cout << "calling vector vector_element_access functions" << std::endl;
+	std::cout << "operator[] functions" << std::endl;
+	std::vector<int> myvector_std (10);
+	ft::vector<int> myvector_ft (10);
+
+  	std::vector<int>::size_type sz_std = myvector_std.size();
+  	ft::vector<int>::size_type sz_ft = myvector_ft.size();
+	for (unsigned i=0; i<sz_std; i++) myvector_std[i]=i;
+	for (unsigned i=0; i<sz_ft; i++) myvector_ft[i]=i;
+  	for (unsigned i=0; i<sz_std/2; i++)
+  	{
+    	int temp = myvector_std[sz_std-1-i];
+    	myvector_std[sz_std-1-i]=myvector_std[i];
+    	myvector_std[i]=temp;
+  	}
+  	for (unsigned i=0; i<sz_ft/2; i++)
+  	{
+    	int temp = myvector_ft[sz_ft-1-i];
+    	myvector_ft[sz_ft-1-i]=myvector_ft[i];
+    	myvector_ft[i]=temp;
+  	}
+	std::cout << "myvector_std contains:";
+  	for (unsigned i=0; i<sz_std; i++)
+    	std::cout << ' ' << myvector_std[i];
+  	std::cout << '\n';
+	std::cout << "myvector_ft contains:";
+  	for (unsigned i=0; i<sz_ft; i++)
+    	std::cout << ' ' << myvector_ft[i];
+  	std::cout << '\n';
+	std::cout << "at functions" << std::endl;
+	std::vector<int> std_vector (10);   // 10 zero-initialized ints
+	std::vector<int> ft_vector (10);   // 10 zero-initialized ints
+  	for (unsigned i=0; i<std_vector.size(); i++)
+   		std_vector.at(i)=i;
+  	for (unsigned i=0; i<ft_vector.size(); i++)
+   		ft_vector.at(i)=i;
+  	std::cout << "std_vector contains:";
+  	for (unsigned i=0; i<std_vector.size(); i++)
+    	std::cout << ' ' << std_vector.at(i);
+  	std::cout << '\n';
+  	std::cout << "ft_vector contains:";
+  	for (unsigned i=0; i<ft_vector.size(); i++)
+    	std::cout << ' ' << ft_vector.at(i);
+  	std::cout << '\n';
+	std::cout << "front functions and back" << std::endl;
+	std::vector<int> vector_std;
+	ft::vector<int> vector_ft;
+	vector_std.push_back(78);
+	vector_ft.push_back(78);
+	vector_std.push_back(16);
+	vector_ft.push_back(16);
+	vector_std.front() -= vector_std.back();
+	vector_ft.front() -= vector_ft.back();
+	std::cout << "vector_std.front() is now " << vector_std.front() << '\n';
+	std::cout << "vector_ft.front() is now " << vector_ft.front() << '\n';
+	std::cout << "vector_std.back() is now " << vector_std.back() << '\n';
+	std::cout << "vector_ft.back() is now " << vector_ft.back() << '\n';
+	std::vector<int> vector_std2;
+	std::vector<int> vector_ft2;
+	vector_std2.push_back(10);
+	vector_ft2.push_back(10);
+	while (vector_std2.back() != 0)
+	    vector_std2.push_back ( vector_std2.back() -1 );
+	while (vector_ft2.back() != 0)
+	    vector_ft2.push_back ( vector_ft2.back() -1 );
+	std::cout << "vector_std2 contains:";
+	for (unsigned i=0; i<vector_std2.size() ; i++)
+    	std::cout << ' ' << vector_std2[i];
+	std::cout << '\n';
+	std::cout << "vector_ft2 contains:";
+	for (unsigned i=0; i<vector_ft2.size() ; i++)
+    	std::cout << ' ' << vector_ft2[i];
+	std::cout << '\n';
+	std::cout << "vector_std2.front() is now " << vector_std2.front() << '\n';
+	std::cout << "vector_ft2.front() is now " << vector_ft2.front() << '\n';
+	std::cout << "vector_std2.back() is now " << vector_std2.back() << '\n';
+	std::cout << "vector_ft2.back() is now " << vector_ft2.back() << '\n';
+}
+
+void	vector_assign()
+{
+	std::cout << "calling vector vector_assign functions" << std::endl;
+	std::vector<int> first_std;
+	ft::vector<int> first_ft;
+	std::vector<int> second_std;
+	ft::vector<int> second_ft;
+	std::vector<int> third_std;
+	ft::vector<int> third_ft;
+
+	first_std.assign (7,100);             // 7 ints with a value of 100
+	first_ft.assign (7,100);             // 7 ints with a value of 100
+	std::vector<int>::iterator it =first_std.begin(); it++;
+	ft::vector<int>::iterator it_ft =first_ft.begin(); it_ft++;
+	second_std.assign (it,first_std.end());
+	second_ft.assign (it_ft ,first_ft.end());
+	int myints[] = {1776,7,4};
+  	third_std.assign (myints,myints+3);   // assigning from array.
+  	third_ft.assign (myints,myints+3);
+	std::cout << "first_std contains:";
+	for (unsigned i=0; i<first_std.size() ; i++)
+    	std::cout << ' ' << first_std[i];
+	std::cout << '\n';
+	std::cout << "first_ft contains:";
+	for (unsigned i=0; i<first_ft.size() ; i++)
+    	std::cout << ' ' << first_ft[i];
+	std::cout << '\n';
+	std::cout << "second_std contains:";
+	for (unsigned i=0; i<second_std.size() ; i++)
+    	std::cout << ' ' << second_std[i];
+	std::cout << '\n';
+	std::cout << "second_ft contains:";
+	for (unsigned i=0; i<second_ft.size() ; i++)
+    	std::cout << ' ' << second_ft[i];
+	std::cout << '\n';
+	std::cout << "third_std contains:";
+	for (unsigned i=0; i<third_std.size() ; i++)
+    	std::cout << ' ' << third_std[i];
+	std::cout << '\n';
+	std::cout << "third_ft contains:";
+	for (unsigned i=0; i<third_ft.size() ; i++)
+    	std::cout << ' ' << third_ft[i];
+	std::cout << '\n';
+}
+
+void	vector_insert()
+{
+	
 }
 
 void	vector_tests()
@@ -1124,7 +1290,10 @@ void	vector_tests()
 	vector_assigment_opperator();
 	vector_iterator();
 	vector_capacity();
-	// vector_push_back();
+	vector_element_access();
+	vector_assign();
+	vector_push_n_pop_back();
+	vector_insert();
 }
 int    main(int argc, char **argv)
 {
