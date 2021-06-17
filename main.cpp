@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/06/15 15:43:34 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/16 16:58:23 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "ft_vector.hpp"
 #include "list_node.hpp"
 #include "list_iterator.hpp"
+#include <math.h>
 #include <list>
 #include <vector>
 
@@ -1280,7 +1281,50 @@ void	vector_assign()
 
 void	vector_insert()
 {
-	
+	std::cout << "calling vector vector_insert functions" << std::endl;
+	std::vector<int> myvector_std (3,100);
+	ft::vector<int> myvector_ft (3,100);
+	std::vector<int>::iterator it_std;
+	ft::vector<int>::iterator it_ft;
+
+	it_std = myvector_std.begin(); it_std++; it_std++;it_std++;// it_std++;
+	it_ft = myvector_ft.begin(); it_ft++; it_ft++; it_ft++; //it_ft++;
+	it_std = myvector_std.insert ( it_std , 200 );
+	it_ft = myvector_ft.insert ( it_ft , 200 );
+
+	std::cout << "iterator returned it_std " << *it_std << std::endl;
+	std::cout << "iterator returned it_ft " << *it_ft << std::endl;
+	myvector_std.insert (it_std,2,300);
+	myvector_ft.insert (it_ft,2,300);
+	std::cout << "myvector_std size is " << myvector_std.size() << " contains:";
+	for (unsigned i=0; i<myvector_std.size() ; i++)
+    	std::cout << ' ' << myvector_std[i];
+	std::cout << '\n';
+	std::cout << "myvector_ft size is " << myvector_ft.size() << " contains:";
+	for (unsigned i=0; i<myvector_ft.size() ; i++)
+    	std::cout << ' ' << myvector_ft[i];
+	std::cout << '\n';
+
+	it_std = myvector_std.begin();
+	it_ft = myvector_ft.begin();
+	std::vector<int> anothervector_std (2,400); it_std++; it_std++;
+	ft::vector<int> anothervector_ft (2,400); it_ft++; it_ft++;
+	myvector_std.insert (it_std,anothervector_std.begin(),anothervector_std.end());
+	myvector_ft.insert (it_ft,anothervector_ft.begin(),anothervector_ft.end());
+
+	int myarray [] = { 501,502,503 };
+	myvector_std.insert (myvector_std.begin(), myarray, myarray+3);
+	myvector_ft.insert (myvector_ft.begin(), myarray, myarray+3);
+
+	std::cout << "myvector_std now contains:";
+	for (it_std=myvector_std.begin(); it_std != myvector_std.end(); it_std++)
+    	std::cout << ' ' << *it_std;
+	std::cout << '\n';
+	std::cout << "myvector_ft now contains :";
+	for (it_ft=myvector_ft.begin(); it_ft !=myvector_ft.end(); it_ft++)
+    	std::cout << ' ' << *it_ft;
+	std::cout << '\n';
+
 }
 
 void	vector_tests()
@@ -1294,6 +1338,7 @@ void	vector_tests()
 	vector_assign();
 	vector_push_n_pop_back();
 	vector_insert();
+	vector_
 }
 int    main(int argc, char **argv)
 {

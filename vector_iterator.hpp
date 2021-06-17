@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:49:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/10 17:32:32 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/16 15:40:22 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class vector_iterator
     	vector_iterator& operator++() { _vct++; return *this; }
     	vector_iterator operator++(int) { vector_iterator tmp = *this; _vct++; return tmp; }
 		vector_iterator& operator--() { _vct--; return *this; }
-    	vector_iterator operator--(int) {  vector_iterator tmp = *this; _vct; return tmp; }
+    	vector_iterator operator--(int) {  vector_iterator tmp = *this; _vct--; return tmp; }
 		
 		bool operator!=(const vector_iterator& rhs) { return !(*this == rhs); }
 		bool operator==(const vector_iterator& rhs) { return _vct == rhs._vct; }		

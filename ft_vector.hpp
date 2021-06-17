@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/15 15:42:44 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/17 22:07:25 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,10 +190,11 @@ class vector
 		{
 			vector<T>		newvector(begin(), end());
 
+			if (_size != 0)
+	            delete [] _vector;
 			if (_size == _capacity)
 	            _capacity++;
             _size++;
-            delete [] _vector;
             _vector = new value_type[_size];
             for (unsigned int i = 0; i < _size - 1; i++)
             {
@@ -203,10 +204,27 @@ class vector
 
 		}
 
-//		iterator insert (iterator position, const value_type& val);
-//     	void insert (iterator position, size_type n, const value_type& val);
-//		template <class InputIterator>
-//		void insert (iterator position, InputIterator first, InputIterator last);
+		iterator insert (iterator position, const value_type& val)
+		{
+			vector<T>		newvector(1, val);
+			return (insert_vector_helper(newvector, position));
+		}
+
+		
+
+    	void insert (iterator position, size_type n, const value_type& val)
+		{
+			vector<T>		newvector(n, val);
+			insert_vector_helper(newvector, position);
+			return ;
+
+		}
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last)
+		{
+			vector<T>		newvector(first, last);
+			insert_vector_helper(newvector, position);
+		}
 
 
 //		iterator erase (iterator position);
@@ -258,6 +276,27 @@ class vector
         value_type* _vector;
 		size_type	_size;
 		size_type	_capacity;
+
+		void	insert_newvector(ft::vector<T> newvector)
+		{
+			if (newvector.size() == 0)
+				return ;
+			for (ft::vector<T>::iterator it=newvector.begin(); it!=newvector.end(); ++it)
+				push_back(*it);
+			return ;
+		}
+		iterator	insert_vector_helper(ft::vector<T> newvector, iterator position)
+		{
+			vector<T>		vector_start(begin(), position);
+			vector<T>		vector_end(position, end());
+			if (!empty())
+				clear();
+			insert_newvector(vector_start);
+			insert_newvector(newvector);
+			position = &_vector[_size - 1];
+			insert_newvector(vector_end);
+			return (position);
+		}
     };
 
 }

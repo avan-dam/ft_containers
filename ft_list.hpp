@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/04/07 13:06:53 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/10 13:10:26 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/06/16 16:06:35 by avan-dam      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -635,6 +635,7 @@ class list
 				list_end.clear();
 			return (position);
 		}
+
 		void		create_tail_last()
 		{
 			node * 		temp_ptr;
