@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/06/17 22:07:25 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/06/19 15:48:39 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,18 +227,49 @@ class vector
 		}
 
 
-//		iterator erase (iterator position);
-//		iterator erase (iterator first, iterator last);
+		iterator erase (iterator position)
+		{
+			iterator pos_nxt = position;
+			pos_nxt++;
+			return (erase(position, pos_nxt));
+		}
+
+		iterator erase (iterator first, iterator last)
+		{
+			size_type	size_delete = 0;
+			size_type	i = 0;
+			vector<T>	copyvector(begin(), end());
+			iterator 	loop = begin();
+
+			for (iterator tmp = first; tmp != last; tmp++)
+				size_delete++;
+			_size = _size - size_delete;
+			_capacity = _size;
+			delete [] _vector;
+            _vector = new value_type[_size];
+			while (loop != first)
+			{
+				_vector[i] = copyvector[i];
+				loop++;
+				i++;
+			}
+			iterator ret = (&_vector[i]);//+1?
+			while (i < _size)
+			{
+				_vector[i] = copyvector[i + size_delete];
+				i++;
+			}
+			return (ret);
+		}
 
 		void swap (vector& x)
 		{
-			ft::vector<T> tmp = this;	
-			this = x;
+			ft::vector<T> tmp(begin(), end());	
+			assign(x.begin(), x.end());
 			_size = x._size;
 			x.clear();
-			x = tmp;
+			x.assign(tmp.begin(), tmp.end());
 			x._size = tmp._size;
-			// tmp.clear()??
 		}
 		
 		void clear()
@@ -299,6 +330,89 @@ class vector
 		}
     };
 
+template <typename T>
+bool operator== (const vector<T>& lhs, const vector<T>& rhs)
+{
+	if (lhs.size() != rhs.size())
+		return false;
+	typename ft::vector<T>::iterator lhs_it = lhs.begin();
+	typename ft::vector<T>::iterator rhs_it = rhs.begin();
+	unsigned int i = 0;
+	while (lhs_it != lhs.end() && rhs_it != rhs.end() && i < lhs.size())
+	{
+		if (lhs[i] != rhs[i])
+			return false;
+		lhs_it++;
+		rhs_it++;
+		i++;
+	}
+	return true;
+}
+
+template <typename T>
+bool operator!=(const vector<T>& lhs, const vector<T>& rhs)
+{
+	return !(lhs == rhs);
+}
+
+template <typename T>
+bool operator>(const vector<T>& lhs, const vector<T>& rhs)
+{
+	typename ft::vector<T>::iterator lhs_it = lhs.begin();
+	typename ft::vector<T>::iterator rhs_it = rhs.begin();
+	unsigned int i = 0;
+	while (lhs_it != lhs.end() && rhs_it != rhs.end() && i < lhs.size())
+	{
+		if (lhs[i] > rhs[i])
+			return true;
+		lhs_it++;
+		rhs_it++;
+		i++;
+	}
+	if (lhs_it != lhs.end())
+		return true;
+	return false;
+}
+
+template <typename T>
+bool operator<(const vector<T>& lhs, const vector<T>& rhs)
+{
+	typename ft::vector<T>::iterator lhs_it = lhs.begin();
+	typename ft::vector<T>::iterator rhs_it = rhs.begin();
+	unsigned int i = 0;
+	while (lhs_it != lhs.end() && rhs_it != rhs.end() && i < lhs.size())
+	{
+		if (lhs[i] < rhs[i])
+			return true;
+		lhs_it++;
+		rhs_it++;
+		i++;
+	}
+	if (rhs_it != rhs.end())
+		return true;
+	return false;
+}
+
+template <typename T>
+bool operator<=(const vector<T>& lhs, const vector<T>& rhs)
+{
+	return !(lhs > rhs);
+}
+
+template <typename T>
+bool operator>=(const vector<T>& lhs, const vector<T>& rhs)
+{
+	return !(lhs < rhs);
+}
+
+template <class T>
+  void swap (vector<T>& x, vector<T>& y)
+  {
+	  ft::vector<T> tempthislist(y.begin(), y.end());
+	  y.assign(x.begin(), x.end());
+	  x.clear();
+	  x.assign(tempthislist.begin(), tempthislist.end());
+  }
 }
 
 # endif

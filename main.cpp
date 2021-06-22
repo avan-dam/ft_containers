@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/06/16 16:58:23 by avan-dam      ########   odam.nl         */
+/*   Updated: 2021/06/19 15:51:13 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -890,28 +890,6 @@ void	list_swap_list()
 	std::cout << '\n';
 }
 
-int    list_tests()
-{
-	list_constructor();
-	list_assigment_opperator();
-	list_push(); 
-	list_assign();
-	list_insert();
-	list_erase();
-	list_swap();
-	list_clear();
-	list_resize();
-	list_splice();
-	list_remove();
-	list_unique();
-	list_merge();
-	list_sort();
-	list_reverse();
-	list_relational_operators();
-	list_swap_list();
-	return 0;
-}
-
 void vector_constructor()
 {
 	std::cout << "calling vector vector_constructor fucntions" << std::endl;
@@ -1327,6 +1305,111 @@ void	vector_insert()
 
 }
 
+void 	vector_erase()
+{
+	std::cout << "calling vector_erase functions" << std::endl;
+	std::vector<int> myvector_std;
+	ft::vector<int> myvector_ft;
+	for (int i=1; i<=10; i++) myvector_std.push_back(i);
+	for (int i=1; i<=10; i++) myvector_ft.push_back(i);
+
+	// myvector.erase (myvector.begin()+5); // erase the 6th element
+	std::vector<int>::iterator first_std = myvector_std.begin(); first_std++;
+	ft::vector<int>::iterator first_ft = myvector_ft.begin(); first_ft++;
+	std::vector<int>::iterator last_std = myvector_std.begin(); last_std++; last_std++; last_std++;
+	ft::vector<int>::iterator last_ft = myvector_ft.begin(); last_ft++; last_ft++; last_ft++;
+	
+	std::vector<int>::iterator result_std = myvector_std.erase (first_std,last_std);  // erase the first 3 elements:
+	ft::vector<int>::iterator result_ft = myvector_ft.erase (first_ft,last_ft);  // erase the first 3 elements:
+	std::cout << "result_std of function is " << *result_std << std::endl;
+	std::cout << "result_ft of function is " << *result_ft << std::endl;
+	first_std = myvector_std.end(); first_std--;
+	first_ft = myvector_ft.end(); first_ft--;
+	myvector_std.erase (first_std);  // erase the first 3 elements:
+	myvector_ft.erase (first_ft);
+	std::cout << "myvector_std contains:";
+	for (unsigned i=0; i<myvector_std.size(); ++i)
+    	std::cout << ' ' << myvector_std[i];
+	std::cout << '\n';
+	std::cout << "myvector_ft contains:";
+	for (unsigned i=0; i<myvector_ft.size(); ++i)
+    	std::cout << ' ' << myvector_ft[i];
+	std::cout << '\n';
+}
+
+void	vector_swap()
+{
+	std::vector<int> foo_std (3,100);   // three ints with a value of 100
+	ft::vector<int> foo_ft (3,100);   // three ints with a value of 100
+	std::vector<int> bar_std (5,200);   // five ints with a value of 200
+	ft::vector<int> bar_ft (5,200);   // three ints with a value of 100
+
+	foo_std.swap(bar_std);
+	foo_ft.swap(bar_ft);
+
+	std::cout << "foo_std contains:";
+	for (unsigned i=0; i<foo_std.size(); i++)
+		std::cout << ' ' << foo_std[i];
+	std::cout << '\n';
+	std::cout << "foo_ft  contains:";
+	for (unsigned i=0; i<foo_ft.size(); i++)
+		std::cout << ' ' << foo_ft[i];
+	std::cout << '\n';
+	std::cout << "bar_std contains:";
+	for (unsigned i=0; i<bar_std.size(); i++)
+    	std::cout << ' ' << bar_std[i];
+  	std::cout << '\n';
+	std::cout << "bar_ft contains:";
+	for (unsigned i=0; i<bar_ft.size(); i++)
+    	std::cout << ' ' << bar_ft[i];
+  	std::cout << '\n';
+	std::cout << "now calling the non-member function overload of swap:\n";
+	std::swap(foo_std, bar_std);
+	ft::swap(foo_ft, bar_ft);
+	std::cout << "foo_std contains:";
+	for (unsigned i=0; i<foo_std.size(); i++)
+		std::cout << ' ' << foo_std[i];
+	std::cout << '\n';
+	std::cout << "foo_ft  contains:";
+	for (unsigned i=0; i<foo_ft.size(); i++)
+		std::cout << ' ' << foo_ft[i];
+	std::cout << '\n';
+	std::cout << "bar_std contains:";
+	for (unsigned i=0; i<bar_std.size(); i++)
+    	std::cout << ' ' << bar_std[i];
+  	std::cout << '\n';
+	std::cout << "bar_ft contains:";
+	for (unsigned i=0; i<bar_ft.size(); i++)
+    	std::cout << ' ' << bar_ft[i];
+  	std::cout << '\n';
+}
+
+void	vector_relational_operators()
+{
+
+}
+
+void    list_tests()
+{
+	list_constructor();
+	list_assigment_opperator();
+	list_push(); 
+	list_assign();
+	list_insert();
+	list_erase();
+	list_swap();
+	list_clear();
+	list_resize();
+	list_splice();
+	list_remove();
+	list_unique();
+	list_merge();
+	list_sort();
+	list_reverse();
+	list_relational_operators();
+	list_swap_list();
+}
+
 void	vector_tests()
 {
     std::cout << "PERFORMING VECTOR TESTS:" << std::endl;
@@ -1338,7 +1421,9 @@ void	vector_tests()
 	vector_assign();
 	vector_push_n_pop_back();
 	vector_insert();
-	vector_
+	vector_erase();
+	vector_swap();
+	vector_relational_operators();
 }
 int    main(int argc, char **argv)
 {
