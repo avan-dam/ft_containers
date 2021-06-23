@@ -1339,6 +1339,7 @@ void 	vector_erase()
 
 void	vector_swap()
 {
+	std::cout << "calling vector_swap functions" << std::endl;
 	std::vector<int> foo_std (3,100);   // three ints with a value of 100
 	ft::vector<int> foo_ft (3,100);   // three ints with a value of 100
 	std::vector<int> bar_std (5,200);   // five ints with a value of 200
@@ -1386,7 +1387,33 @@ void	vector_swap()
 
 void	vector_relational_operators()
 {
+	std::cout << "calling vector_relational_operators functions" << std::endl;
+	std::cout << "calling list list_relational_operators fucntions" << std::endl;
+	ft::vector<int> ft_vectort1(1, 100);
+	ft::vector<int> ft_vector2(1, 100);
+	ft_vectort1.push_back (3);
+  	ft_vector2.push_back (3);
+	ft_vectort1.push_back (4);
+  	ft_vector2.push_back (1);
+	std::vector<int> std_vector1(1, 100);
+	std::vector<int> std_vector2(1, 100);
+	std_vector1.push_back (3);
+  	std_vector2.push_back (3);
+	std_vector1.push_back (4);
+  	std_vector2.push_back (1);
+	if (ft_vectort1>ft_vector2) std::cout << "ft_vector1 is more than ft_vector2\n";
+	else
+		std::cout << "ft_vector1 is NOT more than ft_vector2\n";
+	if (std_vector1>std_vector2) std::cout << "std_vector1 is more than std_vector2\n";
+	else
+		std::cout << "std_vector1 is NOT more than std_vector2\n";
 
+	if (ft_vectort1==ft_vector2) std::cout << "ft_vectort1 is the same as than ft_vector2\n";
+	else
+		std::cout << "ft_vectort1 is NOT the same as  than ft_vector2\n";
+	if (std_vector1==std_vector2) std::cout << "std_vector1 is the same as  than std_vector2\n";
+	else
+		std::cout << "std_vector1 is NOT the same as  than std_vector2\n";
 }
 
 void    list_tests()

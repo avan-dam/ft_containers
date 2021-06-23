@@ -358,18 +358,20 @@ bool operator!=(const vector<T>& lhs, const vector<T>& rhs)
 template <typename T>
 bool operator>(const vector<T>& lhs, const vector<T>& rhs)
 {
-	typename ft::vector<T>::iterator lhs_it = lhs.begin();
-	typename ft::vector<T>::iterator rhs_it = rhs.begin();
+	ft::vector<T> lhs_copy(lhs);
+	ft::vector<T> rhs_copy(rhs);
+	typename ft::vector<T>::iterator lhs_it = lhs_copy.begin();
+	typename ft::vector<T>::iterator rhs_it = rhs_copy.begin();
 	unsigned int i = 0;
-	while (lhs_it != lhs.end() && rhs_it != rhs.end() && i < lhs.size())
+	while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
 	{
-		if (lhs[i] > rhs[i])
+		if (lhs_copy[i] > rhs_copy[i])
 			return true;
 		lhs_it++;
 		rhs_it++;
 		i++;
 	}
-	if (lhs_it != lhs.end())
+	if (lhs_it != lhs_copy.end())
 		return true;
 	return false;
 }
@@ -377,18 +379,20 @@ bool operator>(const vector<T>& lhs, const vector<T>& rhs)
 template <typename T>
 bool operator<(const vector<T>& lhs, const vector<T>& rhs)
 {
-	typename ft::vector<T>::iterator lhs_it = lhs.begin();
-	typename ft::vector<T>::iterator rhs_it = rhs.begin();
+	ft::vector<T> lhs_copy(lhs);
+	ft::vector<T> rhs_copy(rhs);
+	typename ft::vector<T>::iterator lhs_it = lhs_copy.begin();
+	typename ft::vector<T>::iterator rhs_it = rhs_copy.begin();
 	unsigned int i = 0;
-	while (lhs_it != lhs.end() && rhs_it != rhs.end() && i < lhs.size())
+	while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
 	{
-		if (lhs[i] < rhs[i])
+		if (lhs_copy[i] < rhs_copy[i])
 			return true;
 		lhs_it++;
 		rhs_it++;
 		i++;
 	}
-	if (rhs_it != rhs.end())
+	if (rhs_it != rhs_copy.end())
 		return true;
 	return false;
 }
