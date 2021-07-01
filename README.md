@@ -1,3 +1,5 @@
+# ft_containers
+
 The multiple available containers in C++ all have a very different usage. 
 To make sure you understand them all, let’s re-implement them!
 
@@ -9,7 +11,7 @@ I have included a main which compares my containers with STL containers
 To test run the following commands in the terminal
 
 ```
-git clone //https://github.com/avan-dam/ft_containers.git
+git clone https://github.com/avan-dam/ft_containers.git
 cd ft_containers
 make
 ```
