@@ -26,10 +26,16 @@ To test run the following commands in the terminal
 
 ```
 git clone //https://github.com/avan-dam/ft_containers.git
-git clone https://github.com/avan-dam/ft_containers.git
 cd ft_containers
 make
 ```
+
+To test run
+```
+./ft_containers
+```
 This can be seen in the screenshot below
-![Screenshot 2021-06-30 at 19 13 27](https://user-images.githubusercontent.com/61982496/124003480-47c1a080-d9d7-11eb-9ebe-c6aa65a9beb9.png)
+
+<img width="550" alt="Screenshot 2021-07-05 at 19 28 15" src="https://user-images.githubusercontent.com/61982496/124504153-2d1c6c80-ddc7-11eb-968f-a5486570267b.png">
+
 Currently working on this project (incomplete)! 
