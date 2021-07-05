@@ -1,0 +1,35 @@
+# ft_containers
+
+The multiple available containers in C++ all have a very different usage. 
+To make sure you understand them all, let’s re-implement some of them!
+
+
+**Subject:**
+In this project, you will implement the various container types of the C++ standard template library
+- member functions, Non-member and overloads are expected.
+- respect the naming
+- You must justify your inner data structure for each container (using a simple array for a map is not ok).
+- If the container has an iterator system, you must implement it. 
+- Iterators_traits, reverse_iterator, enable_if, is_integral, equal/lexicographical compare, std::pair, std::make_pair, must be reimplemented.
+- You cannot implement more public functions than the ones offered in the standard containers. Everything else must be private or protected. Each public function/- variable must be justified.
+- For non-member overloads, the keyword friend is allowed. Each use of friend must be justified and will be checked during evaluation.
+- You must turn in the following containers and their associated functions:
+  - Vector
+  - Stack
+  - Map
+- Your stack will use your vector class as default underlaying container, it must still be compatible with others containers like the STL one.
+- You are allowed to use the STD library
+
+**Usage:**
+I have included a main which compares my containers with STL containers
+To test run the following commands in the terminal
+
+```
+git clone //https://github.com/avan-dam/ft_containers.git
+git clone https://github.com/avan-dam/ft_containers.git
+cd ft_containers
+make
+```
+This can be seen in the screenshot below
+![Screenshot 2021-06-30 at 19 13 27](https://user-images.githubusercontent.com/61982496/124003480-47c1a080-d9d7-11eb-9ebe-c6aa65a9beb9.png)
+Currently working on this project (incomplete)! 
