@@ -120,3 +120,33 @@ relational operators (list)
 Relational operators for list (function )
 swap (list)
 Exchanges the contents of two lists (function template )
+
+
+    template< class Iter, bool B >
+    struct iterator_traits {    };
+
+    template <class Iter>
+    struct iterator_traits<Iter, true> { typedef int type; };
+
+    struct input_iterator_tag { };
+    struct output_iterator_tag { };
+    struct forward_iterators_tag : public input_iterator_tag { };
+    struct bidirectional_iterator_tag : public forward_iterators_tag { };
+    struct random_access_iterator_tag : public bidirectional_iterator_tag { };
+    struct contiguous_iterator_tag: public random_access_iterator_tag { };
+
+    template <typename T>
+    struct is_iterator { static const bool value = false; };
+
+    template <>
+    struct is_iterator<input_iterator_tag> { static const bool value = true; };
+    template <>
+    struct is_iterator<output_iterator_tag> { static const bool value = true; };
+    template <>
+    struct is_iterator<forward_iterators_tag> { static const bool value = true; };
+    template <>
+    struct is_iterator<bidirectional_iterator_tag> { static const bool value = true; };
+    template <>
+    struct is_iterator<random_access_iterator_tag> { static const bool value = true; };
+    template <>
+    struct is_iterator<contiguous_iterator_tag> { static const bool value = true; };
