@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:49:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/07/06 19:49:11 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/06 19:55:09 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ class random_access_iterator
            _vct -= off;
             return (*this);}
 	private:
-    P		_vct;
+   		pointer		_vct;
 };
 
 

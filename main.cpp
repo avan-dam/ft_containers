@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/07/06 19:51:28 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/06 19:52:53 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,7 @@ void	vector_push_n_pop_back()
     	sum_ft+=second_ft.back();
     	second_ft.pop_back();
   	}
-	result_of_function_call(sum_ft, sum_std, "Adding up all elements");
+	result_of_function_call(sum_ft, sum_std, "adding up all elements");
 	same_vecor_ft_std_int(second_std, second_ft, "second_std", "second_ft");
 }
 
