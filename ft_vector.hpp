@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/07/05 18:54:15 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/06 19:51:46 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,22 @@
 
 
 namespace ft {
-template <class T, class Alloc = std::allocator<T> >
+template <typename T, class Alloc = std::allocator<T> >
 class vector
     {
     public:
-		typedef	T														value_type; 
-		typedef Alloc													allocator_type;
-        typedef	T&														reference;
-        typedef const T&												const_reference;
-        typedef	T*														pointer;
-        typedef	const T*												const_pointer;
-		typedef	random_access_iterator<value_type>						iterator;
-		// typedef													const_iterator;
-		typedef	reverse_random_access_iterator<value_type>				reverse_iterator;
-		// typedef													const_reverse_iterator;
-		typedef	typename ft::iterator_traits<iterator>::difference_type	difference_type;
-		typedef unsigned int 											size_type; 
+		typedef	T															value_type; 
+		typedef Alloc														allocator_type;
+        typedef	T&															reference;
+        typedef const T&													const_reference;
+        typedef	T*															pointer;
+        typedef	const T*													const_pointer;
+		typedef	random_access_iterator<T, T*, T&>							iterator;
+		typedef	random_access_iterator<T, const T*, const T&>			const_iterator;
+		typedef	reverse_random_access_iterator<T, T*, T&>					reverse_iterator;
+		typedef	reverse_random_access_iterator<T, const T*, const T&>	const_reverse_iterator;
+		typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
+		typedef unsigned int 												size_type; 
         
     public:
 		/* Constructors, deconstructor and assignment operator*/
@@ -98,17 +98,17 @@ class vector
 
 
 		/* Iterators */
-		iterator begin() { return iterator(&_vector[0]); }
-		// const_iterator begin() const;
+		const_iterator begin() const { return const_iterator(_vector); }
+		iterator begin() { return iterator(_vector); }
 		
+		const_iterator end() const { return const_iterator(&_vector[_size]); }
 		iterator end() { return iterator(&_vector[_size]); }
-		// const_iterator end() const;
 		
 		reverse_iterator rbegin()  {if (_size == 0) return reverse_iterator(0); return reverse_iterator(&_vector[_size - 1]);}
-		// const_reverse_iterator rbegin() const;
+		const_reverse_iterator rbegin() const {if (_size == 0) return const_reverse_iterator(0); return const_reverse_iterator(&_vector[_size - 1]);}
 		
 		reverse_iterator rend() {if (_size == 0) return reverse_iterator(0);  return reverse_iterator(&_vector[-1]);}
-		// const_reverse_iterator rend() const;
+		const_reverse_iterator rend() const {if (_size == 0) return const_reverse_iterator(0);  return const_reverse_iterator(&_vector[-1]);}
 
 
 		/* capacity */
@@ -233,12 +233,6 @@ class vector
 			insert_vector_helper(newvector, position);
 		}
 
-		iterator erase (iterator position)
-		{
-			iterator pos_nxt = position;
-			pos_nxt++;
-			return (erase(position, pos_nxt));
-		}
 		iterator erase (iterator first, iterator last)
 		{
 			size_type		size_delete = 0;
@@ -258,13 +252,21 @@ class vector
 				loop++;
 				i++;
 			}
-			iterator ret = (&_vector[i]);//+1?
+			loop = begin();
+			for (size_type k = 0; k != i; k++)
+				loop++;
 			while (i < _size)
 			{
 				_vector[i] = copyvector[i + size_delete];
 				i++;
 			}
-			return (ret);
+			return (loop);
+		}
+		iterator erase (iterator position)
+		{
+			iterator pos_nxt = position;
+			pos_nxt++;
+			return (erase(position, pos_nxt));
 		}
 
 		void swap (vector& x)
@@ -308,15 +310,19 @@ class vector
 		
 		iterator	insert_vector_helper(ft::vector<T,Alloc> newvector, iterator position)
 		{
-			vector<T,Alloc>		vector_start(begin(), position);
-			vector<T,Alloc>		vector_end(position, end());
+			vector<T,Alloc>					vector_start(begin(), position);
+			vector<T,Alloc>					vector_end(position, end());
+			ft::vector<T,Alloc>::iterator	ret;
+
 			if (!empty())
 				clear();
 			insert_newvector(vector_start);
 			insert_newvector(newvector);
-			position = &_vector[_size - 1];
+			ret = begin();
+			for (unsigned int i = 0; i != _size - 1; i++)
+				ret++;
 			insert_newvector(vector_end);
-			return (position);
+			return (ret);
 		}
     };
 

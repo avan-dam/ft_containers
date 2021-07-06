@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/07/05 19:14:04 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/06 19:51:28 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,26 @@ bool	same_vecor_ft_std_int(std::vector<T> std, ft::vector<T> ft, std::string nam
 		it_r_std++;
 		it_r_ft++;
 	}
+ 	typename std::vector<T>::const_iterator c_it_std = std.begin();
+ 	typename ft::vector<T>::const_iterator c_it_ft = ft.begin();
+	while (c_it_std != std.end() && c_it_ft != ft.end())
+	{
+		if (*c_it_std != *c_it_ft)
+			return (print_false(std, ft, name_ft, name_std));
+		c_it_std++;
+		c_it_ft++;
+	}
+ 	typename std::vector<T>::const_reverse_iterator c_it_r_std = std.rbegin();
+ 	typename ft::vector<T>::const_reverse_iterator c_it_r_ft = ft.rbegin();
+	while (c_it_r_std != std.rend() && c_it_r_ft != ft.rend())
+	{
+		if (*c_it_r_std != *c_it_r_ft)
+			return (print_false(std, ft, name_ft, name_std));
+		c_it_r_std++;
+		c_it_r_ft++;
+	}
+
+
 	return (print_true(name_ft, name_std));
 }
 
