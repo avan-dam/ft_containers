@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/07/07 19:17:30 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/07 19:22:26 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void    stack_tests()
 	std::cout << "calling push()" << std::endl;
 	for (int i=0; i<5; ++i) mystack1_std.push(i);
 	for (int i=0; i<5; ++i) mystack1_ft.push(i);
-	std::cout << "testinh pop() and top() and empty()" << std::endl;
+	std::cout << "testing pop() and top() and empty()" << std::endl;
 	while (!mystack1_std.empty() && !mystack1_ft.empty())
   	{
 		result_of_function_call(mystack_std.top(), mystack_ft.top(), "top()");
