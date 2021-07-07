@@ -6,16 +6,16 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/07/07 13:08:20 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/07 18:45:47 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_VECTOR_HPP
 # define FT_VECTOR_HPP
 
-#include "../../iterators/random_access_iterator.hpp"
-#include "../../utils/traits.hpp"
-#include "../../utils/more.hpp"
+#include "../iterators/random_access_iterator.hpp"
+#include "../utils/traits.hpp"
+#include "../utils/more.hpp"
 
 namespace ft {
 template <typename T, class Alloc = std::allocator<T> >
@@ -57,9 +57,13 @@ class vector
 			int i;
 
 			i = 0;
-			_size = 0;
 			_size = distance(first, last);
             _capacity = _size;
+			if (_size == 0)
+			{
+				_vector = nullptr;
+				return;
+			}
             _vector = new value_type[_capacity];
 			for (InputIterator n = first; n != last; n++)
             {
@@ -73,6 +77,11 @@ class vector
             _size = x.size();
 			_alloc = x._alloc;
             _capacity = x.size();
+			if (_size == 0)
+			{
+				_vector = nullptr;
+				return;
+			}
             _vector = new value_type[_capacity];  
             for (size_t i = 0; i < _size; i++)
                 _vector[i] = x[i];
@@ -132,12 +141,9 @@ class vector
 		{
 			if (n > _capacity)
 			{
-				vector<T,Alloc>		tmp;
+				vector<T,Alloc>		tmp(begin(), end());
 				if (_capacity != 0 && _size != 0 && _vector != nullptr)
-				{
-					tmp.assign(begin(), end());
-	            	delete [] _vector;
-				}
+					delete [] _vector;
 				_capacity = n;
 				_vector = new value_type[_capacity];
             	for (size_t i = 0; i < _size; i++)
@@ -191,8 +197,8 @@ class vector
 		void push_back (const value_type& val)
 		{
 			reserve(_size + 1);
+			_vector[_size] = val;
 			_size++;
-			_vector[_size - 1] = val;
 		}
 
 		void	pop_back()	{	_size--; }
@@ -301,12 +307,13 @@ class vector
 
 			if (!empty())
 				clear();
-			insert_newvector(vector_start);
-			insert_newvector(newvector);
-			ret = begin();
-			for (size_t i = 0; i != _size - 1; i++)
-				ret++;
-			insert_newvector(vector_end);
+			if (!vector_start.empty())
+				insert_newvector(vector_start);
+			if (!newvector.empty())
+				insert_newvector(newvector);
+			ret = iterator(&_vector[_size - 1]);
+			if (!vector_end.empty())
+				insert_newvector(vector_end);
 			return (ret);
 		}
     };

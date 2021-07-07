@@ -6,13 +6,16 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/07/07 12:58:11 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/07 19:17:30 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "containers/vector/ft_vector.hpp"
+#include "containers/ft_vector.hpp"
+#include "containers/ft_stack.hpp"
 #include <math.h>
 #include <vector>
+#include <list>
+#include <stack>
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      /* Red */
@@ -101,7 +104,65 @@ bool	same_vecor_ft_std_int(std::vector<T> std, ft::vector<T> ft, std::string nam
 
 void    stack_tests()
 {
-    std::cout << "PERFORMING STACK TESTS:" << std::endl;
+    std::cout << "\n\nPERFORMING STACK TESTS:" << std::endl;
+	std::cout << "calling constructors" << std::endl;
+	std::list<int> list_std(1, 1);
+  	std::vector<int> myvector_std (2,200);        // vector with 2 elements
+  	ft::vector<int> myvector_ft (2,200);        // vector with 2 elements
+	std::stack<int,std::list<int> > first_std(list_std);  // empty stack using vector
+	ft::stack<int,std::list<int> > first_ft(list_std);  // empty stack using vector
+  	std::stack<int,std::vector<int> > second_std (myvector_std);
+  	ft::stack<int,std::vector<int> > second_ft (myvector_std);
+	std::cout << "calling size size()" << std::endl;
+	result_of_function_call(first_std.size(), first_ft.size(), "size()");
+	result_of_function_call(second_std.size(), second_ft.size(), "size()");
+	std::cout << "calling empty()" << std::endl;
+	result_of_function_call(first_std.empty(), first_ft.empty(), "empty()");
+	result_of_function_call(second_std.empty(), second_ft.empty(), "empty()");
+  	std::stack<int> mystack_std;
+  	ft::stack<int> mystack_ft;
+
+	std::cout << "calling push()" << std::endl;
+  	mystack_std.push(10);
+  	mystack_ft.push(10);
+  	mystack_std.push(20);
+  	mystack_ft.push(20);
+
+	std::cout << "calling top()" << std::endl;
+	mystack_std.top() -= 5;
+	mystack_ft.top() -= 5;
+	result_of_function_call(mystack_std.top(), mystack_ft.top(), "top()");
+
+	std::stack<int> mystack1_std;
+	ft::stack<int> mystack1_ft;
+
+	std::cout << "calling push()" << std::endl;
+	for (int i=0; i<5; ++i) mystack1_std.push(i);
+	for (int i=0; i<5; ++i) mystack1_ft.push(i);
+	std::cout << "testinh pop() and top() and empty()" << std::endl;
+	while (!mystack1_std.empty() && !mystack1_ft.empty())
+  	{
+		result_of_function_call(mystack_std.top(), mystack_ft.top(), "top()");
+    	mystack1_std.pop();
+		mystack1_ft.pop();
+  	}
+	result_of_function_call(mystack1_std.empty(), mystack1_ft.empty(), "empty()");
+
+	std::cout << "stack relational operator tests:" << std::endl;
+	std::vector<int> vec_std(2, 20);
+	ft::vector<int> vec_ft(2, 20);
+	std::stack<int,std::vector<int> > ft1 (vec_std);
+  	ft::stack<int,ft::vector<int> > std1;
+	std::stack<int,std::vector<int> > ft2 (vec_std);
+  	ft::stack<int,ft::vector<int> > std2;
+	for (int i=0; i<1; ++i) ft2.push(2);
+	for (int i=0; i<1; ++i) std2.push(2);
+	result_of_function_call((ft1>ft2), (std1>std2), ">");
+	result_of_function_call((ft1<ft2), (std1<std2), "<");
+	result_of_function_call((ft1>=ft2), (std1>=std2), ">=");
+	result_of_function_call((ft1<=ft2), (std1<=std2), "<=");
+	result_of_function_call((ft1==ft2), (std1==std2), "==");
+	result_of_function_call((ft1!=ft2), (std1!=std2), "!=");
 }
 
 void    map_tests()
@@ -163,6 +224,7 @@ void	vector_capacity()
 
 	for (int i=1;i<10;i++) third_std.push_back(i);
 	for (int i=1;i<10;i++) third_ft.push_back(i);
+	std::cout << "until here" << std::endl;
 	third_std.resize(5);
 	third_ft.resize(5);
 	third_std.resize(4,100);
@@ -369,7 +431,7 @@ void 	vector_erase()
 	result_of_function_call(*result_std, *result_ft, "erase");
 	first_std = myvector_std.end(); first_std--;
 	first_ft = myvector_ft.end(); first_ft--;
-	myvector_std.erase (first_std);  // erase the first 3 elements:
+	myvector_std.erase (first_std);
 	myvector_ft.erase (first_ft);
 	same_vecor_ft_std_int(myvector_std, myvector_ft, "myvector_std", "myvector_ft");
 }
@@ -432,11 +494,13 @@ int    main(int argc, char **argv)
     {
         if (argc == 1 || strcmp(argv[1], "vector") == 0)
             vector_tests();
-    //     else if (argc == 1 || strcmp(argv[1], "map") == 0)
-    //         map_tests();
-    //     else if (argc == 1 || strcmp(argv[1], "stack") == 0)
-    //         stack_tests();
-        else
+        // if (argc == 1 || strcmp(argv[1], "map") == 0)
+        //     map_tests();
+		if (argc == 1 || strcmp(argv[1], "stack") == 0)
+            stack_tests();
+        else if (argc == 2 && strcmp(argv[1], "vector") != 0
+			&& strcmp(argv[1], "map") == 0 
+			&& strcmp(argv[1], "stack") == 0)
            std::cout << "invalid arguments" << std::endl;
     }
     else
