@@ -6,11 +6,11 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/07/06 19:52:53 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/07 12:58:11 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_vector.hpp"
+#include "containers/vector/ft_vector.hpp"
 #include <math.h>
 #include <vector>
 
@@ -160,9 +160,9 @@ void	vector_capacity()
 	std::cout << "\nResize function:" << std::endl;
 	std::vector<int> third_std;
 	ft::vector<int> third_ft;
+
 	for (int i=1;i<10;i++) third_std.push_back(i);
 	for (int i=1;i<10;i++) third_ft.push_back(i);
-
 	third_std.resize(5);
 	third_ft.resize(5);
 	third_std.resize(4,100);

@@ -6,16 +6,16 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/07/06 19:51:46 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/07 12:59:33 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_VECTOR_HPP
 # define FT_VECTOR_HPP
 
-#include "random_access_iterator.hpp"
-#include "traits.hpp"
-
+#include "../../iterators/random_access_iterator.hpp"
+#include "../../utils/traits.hpp"
+#include "../../utils/more.hpp"
 
 namespace ft {
 template <typename T, class Alloc = std::allocator<T> >
@@ -29,11 +29,11 @@ class vector
         typedef	T*															pointer;
         typedef	const T*													const_pointer;
 		typedef	random_access_iterator<T, T*, T&>							iterator;
-		typedef	random_access_iterator<T, const T*, const T&>			const_iterator;
+		typedef	random_access_iterator<T, const T*, const T&>				const_iterator;
 		typedef	reverse_random_access_iterator<T, T*, T&>					reverse_iterator;
-		typedef	reverse_random_access_iterator<T, const T*, const T&>	const_reverse_iterator;
+		typedef	reverse_random_access_iterator<T, const T*, const T&>		const_reverse_iterator;
 		typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
-		typedef unsigned int 												size_type; 
+		typedef size_t		 												size_type; 
         
     public:
 		/* Constructors, deconstructor and assignment operator*/
@@ -46,7 +46,7 @@ class vector
             _size = n;
             _capacity = n;
             _vector = new value_type[_capacity];
-            for (unsigned int i = 0; i < n; i++)
+            for (size_t i = 0; i < n; i++)
                 _vector[i] = val;
         }
 		
@@ -58,8 +58,7 @@ class vector
 
 			i = 0;
 			_size = 0;
-			for (InputIterator n = first; n != last; n++)
-				_size++;
+			_size = distance(first, last);
             _capacity = _size;
             _vector = new value_type[_capacity];
 			for (InputIterator n = first; n != last; n++)
@@ -75,7 +74,7 @@ class vector
 			_alloc = x._alloc;
             _capacity = x.size();
             _vector = new value_type[_capacity];  
-            for (unsigned int i = 0; i < _size; i++)
+            for (size_t i = 0; i < _size; i++)
                 _vector[i] = x[i];
             return;
         }
@@ -91,7 +90,7 @@ class vector
                 delete [] _vector;
                 _vector = new value_type[_capacity];
             }
-            for (unsigned int i = 0; i < _size; i++)
+            for (size_t i = 0; i < _size; i++)
                 _vector[i] = x[i];
 		    return *this;
         }
@@ -107,8 +106,8 @@ class vector
 		reverse_iterator rbegin()  {if (_size == 0) return reverse_iterator(0); return reverse_iterator(&_vector[_size - 1]);}
 		const_reverse_iterator rbegin() const {if (_size == 0) return const_reverse_iterator(0); return const_reverse_iterator(&_vector[_size - 1]);}
 		
-		reverse_iterator rend() {if (_size == 0) return reverse_iterator(0);  return reverse_iterator(&_vector[-1]);}
-		const_reverse_iterator rend() const {if (_size == 0) return const_reverse_iterator(0);  return const_reverse_iterator(&_vector[-1]);}
+		reverse_iterator rend() {return reverse_iterator(_vector - 1);}
+		const_reverse_iterator rend() const {return const_reverse_iterator(_vector - 1);}
 
 
 		/* capacity */
@@ -134,12 +133,15 @@ class vector
 		{
 			if (n > _capacity)
 			{
-				vector<T,Alloc>		tmp(begin(), end());
+				vector<T,Alloc>		tmp;
 				if (_capacity != 0 && _size != 0 && _vector != nullptr)
+				{
+					tmp.assign(begin(), end());
 	            	delete [] _vector;
+				}
 				_capacity = n;
 				_vector = new value_type[_capacity];
-            	for (unsigned int i = 0; i < _size; i++)
+            	for (size_t i = 0; i < _size; i++)
                		_vector[i] = tmp[i];
 			}
 		}
@@ -171,7 +173,7 @@ class vector
 				_size++;
 			_capacity = _size;
             _vector = new value_type[_capacity];
-            for (unsigned int i = 0; i < _size; i++)
+            for (size_t i = 0; i < _size; i++)
             {
 			    _vector[i] = *first;
 				first++;
@@ -183,35 +185,18 @@ class vector
             _capacity = n;
             delete [] _vector;
             _vector = new value_type[_capacity];
-            for (unsigned int i = 0; i < _size; i++)
+            for (size_t i = 0; i < _size; i++)
                 _vector[i] = val;
         }
 
 		void push_back (const value_type& val)
 		{
-			vector<T,Alloc>		newvector(begin(), end());
-
-			if (_vector != nullptr && _capacity != 0)
-            	delete [] _vector;
-			if (_size == _capacity)
-	            _capacity++;
-            _size++;
-            _vector = new value_type[_capacity];
-            for (unsigned int i = 0; i < _size - 1; i++)
-			    _vector[i] = newvector[i];
+			reserve(_size + 1);
+			_size++;
 			_vector[_size - 1] = val;
 		}
 
-		void	pop_back()
-		{
-			ft::vector<T,Alloc> tmp(begin(), end());
-			_size--;
-			_capacity--;
-			delete [] _vector;
-			_vector = new value_type[_capacity];
-       		for (unsigned int i = 0; i < _size; i++)
-            	_vector[i] = tmp[i];
-		}
+		void	pop_back()	{	_size--; }
 
 		iterator insert (iterator position, const value_type& val)
 		{
@@ -319,7 +304,7 @@ class vector
 			insert_newvector(vector_start);
 			insert_newvector(newvector);
 			ret = begin();
-			for (unsigned int i = 0; i != _size - 1; i++)
+			for (size_t i = 0; i != _size - 1; i++)
 				ret++;
 			insert_newvector(vector_end);
 			return (ret);
@@ -336,7 +321,7 @@ class vector
 			return false;
 		typename ft::vector<T,Alloc>::iterator lhs_it = lhs_copy.begin();
 		typename ft::vector<T,Alloc>::iterator rhs_it = rhs_copy.begin();
-		unsigned int i = 0;
+		size_t i = 0;
 		while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
 		{
 			if (lhs[i] != rhs[i])
@@ -361,7 +346,7 @@ class vector
 		ft::vector<T,Alloc> rhs_copy(rhs);
 		typename ft::vector<T,Alloc>::iterator lhs_it = lhs_copy.begin();
 		typename ft::vector<T,Alloc>::iterator rhs_it = rhs_copy.begin();
-		unsigned int i = 0;
+		size_t i = 0;
 		while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
 		{
 			if (lhs_copy[i] > rhs_copy[i])
@@ -382,7 +367,7 @@ class vector
 		ft::vector<T,Alloc> rhs_copy(rhs);
 		typename ft::vector<T,Alloc>::iterator lhs_it = lhs_copy.begin();
 		typename ft::vector<T,Alloc>::iterator rhs_it = rhs_copy.begin();
-		unsigned int i = 0;
+		size_t i = 0;
 		while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
 		{
 			if (lhs_copy[i] < rhs_copy[i])
