@@ -40,3 +40,7 @@ This can be seen in the screenshot below
 <img width="550" alt="Screenshot 2021-07-05 at 19 28 15" src="https://user-images.githubusercontent.com/61982496/124504153-2d1c6c80-ddc7-11eb-968f-a5486570267b.png">
 
 Currently working on this project (incomplete)! 
+
+- [x] Vector
+- [x] Stack
+- [ ] Map
