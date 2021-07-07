@@ -5,8 +5,9 @@ To make sure you understand them all, let’s re-implement some of them accordin
 
 
 **Subject:**
+
 In this project, you will implement the various container types of the C++ standard template library
-- member functions, Non-member and overloads are expected.
+- Member functions, Non-member and overloads are expected.
 - respect the naming
 - You must justify your inner data structure for each container (using a simple array for a map is not ok).
 - If the container has an iterator system, you must implement it. 
