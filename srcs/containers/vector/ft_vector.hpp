@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/07/07 12:59:33 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/07/07 13:08:20 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,12 @@ class vector
 		
 		const_iterator end() const { return const_iterator(&_vector[_size]); }
 		iterator end() { return iterator(&_vector[_size]); }
-		
-		reverse_iterator rbegin()  {if (_size == 0) return reverse_iterator(0); return reverse_iterator(&_vector[_size - 1]);}
-		const_reverse_iterator rbegin() const {if (_size == 0) return const_reverse_iterator(0); return const_reverse_iterator(&_vector[_size - 1]);}
+	
+		reverse_iterator rbegin()  {return reverse_iterator(&_vector[_size - 1]);}
+		const_reverse_iterator rbegin() const  {return const_reverse_iterator(&_vector[_size - 1]);}
 		
 		reverse_iterator rend() {return reverse_iterator(_vector - 1);}
 		const_reverse_iterator rend() const {return const_reverse_iterator(_vector - 1);}
-
 
 		/* capacity */
         size_type size() const  { return (_size); }
@@ -284,6 +283,7 @@ class vector
 		size_type		_capacity;
 		allocator_type	_alloc;
 
+		/* helper functions */
 		void	insert_newvector(ft::vector<T,Alloc> newvector)
 		{
 			if (newvector.size() == 0)
