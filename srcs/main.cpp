@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/05 20:15:32 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 22:39:43 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,20 @@ void    map_tests()
 	m2.insert ( std::pair<char,int>('a',2) );
 	m.insert ( ft::pair<char,int>('c',500) );
 	m2.insert ( std::pair<char,int>('c',500) );
+	m.insert ( ft::pair<char,int>('l',100) );
+	m2.insert ( std::pair<char,int>('l',100) );
+	m.insert ( ft::pair<char,int>('d',2) );
+	m2.insert ( std::pair<char,int>('d',2) );
+	m.insert ( ft::pair<char,int>('p',500) );
+	m2.insert ( std::pair<char,int>('p',500) );
+
+	m2.insert ( std::pair<char,int>('y',500) );
+	m.insert ( ft::pair<char,int>('y',500) );
+	m2.insert ( std::pair<char,int>('f',100) );
+	m.insert ( ft::pair<char,int>('f',100) );
+	m2.insert ( std::pair<char,int>('h',2) );
+	m.insert ( ft::pair<char,int>('h',2) );
+
 
 	std::map<char,int>::iterator it=m2.begin();
 	std::cout << "it = begin() it->first " << it->first << std::endl;
@@ -189,14 +203,14 @@ void    map_tests()
 	std::cout << "it = begin() it->first " << it2->first << std::endl;
 	ft::map<char,int>::iterator it3=m.end();
 	std::cout << "it = end() it->first " << it3->first << std::endl;
-	it3--;
-	std::cout << "it = end() it->first " << it3->first << std::endl;
 
-	for (std::map<char,int>::iterator it=m2.begin(); it!=m2.end(); ++it)
-    std::cout << it->first << " => " << it->second << '\n';
+	for (std::map<char,int>::iterator itz=m2.begin(); itz!=m2.end(); ++itz)
+    std::cout << " " <<itz->first << " => " << itz->second;
+	std::cout <<  std::endl;
 
-	for (ft::map<char,int>::iterator it=m.begin(); it!=m.end(); ++it)
-    std::cout << it->first << " =me> " << it->second << '\n';
+	for (ft::map<char,int>::iterator itp=m.begin(); itp!=m.end(); ++itp)
+    std::cout << " " << itp->first << " => " << itp->second;
+	std::cout <<  std::endl;
 }
 
 void vector_constructor()

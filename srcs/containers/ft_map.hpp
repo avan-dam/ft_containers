@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 20:17:51 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 22:47:02 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,50 +49,6 @@ class map
     public:
         explicit map (const key_compare& comp = key_compare(), 
         const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _root_node(nullptr), _size(0) {}
-
-        // template <class InputIterator>
-        // map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
-        // const allocator_type& alloc = allocator_type(), 
-        // typename ft::enable_if<ft::is_iterator<InputIterator>::value >::type* = 0) : 
-        // _alloc(alloc), _compare(comp)
-        // { //_size
-        //     node current;
-        //     node newroot;
-
-        //     if (first == last)
-        //     {    
-        //         _root_node = nullptr;
-        //         return;
-        //     }
-    	// 	_root_node = new node(first.get_key(), first.get_data());
-        //     // check if only one node;
-        //     current = first++;
-        //     newroot = _root_node;
-        //     while (current != last)
-        //     {
-        //         while (key_compare(current.get_key(), newroot.get_key()))
-        //         {
-        //             if (newroot.left == nullptr)
-        //             {
-        //                 newroot.left = new node(current.get_key(), current.get_data());
-        //                 current++;
-        //                 newroot = _root_node;
-        //             }
-        //             newroot = newroot.left;
-        //         }
-        //         while (!key_compare(current.get_key(), newroot.get_key()))
-        //         {
-        //             if (newroot.right == nullptr)
-        //             {
-        //                 newroot.right = new node(current.get_key(), current.get_data());
-        //                 current++;
-        //                 newroot = _root_node;
-        //             }
-        //             newroot = newroot.right;
-        //         }
-        //     }            
-        // }
-        // map (const map& x)
 
         iterator begin()
         {
@@ -139,22 +95,22 @@ class map
         {
             if (_root_node == nullptr)
             {
-                _root_node = new node(val.first, val.second);
+                _root_node = new node(val.first, val.second, nullptr);
                 iterator ity(_root_node);
                 return (make_pair(ity, true));
             }
             iterator ity(_root_node);
             node *current_root = _root_node;
-            while (current_root)
+            while (current_root != nullptr)
             {
                 if (val.first == current_root->first)
                     break ;
-                else if (val.first < current_root->first)
+                // else if (val.first < current_root->first)
+                else if (_compare(val.first, current_root->first))
                 {
                     if (current_root->get_left() == nullptr)
                     {
-                        current_root->_left = new node(val.first, val.second);
-                        std::cout << "val.first [" << val.first << "] added as the left of " << current_root->first << std::endl;
+                        current_root->_left = new node(val.first, val.second, current_root);
                         return (make_pair(ity, true));
                     }
                     current_root = current_root->get_left();
@@ -163,8 +119,7 @@ class map
                 {
                     if (current_root->get_right() == nullptr)
                     {
-                        current_root->_left = new node(val.first, val.second);
-                        std::cout << "val.first [" << val.first << "] added as the right of " << current_root->first << std::endl;
+                        current_root->_right = new node(val.first, val.second, current_root);
                         return (make_pair(ity, true));
                     }
                     current_root = current_root->get_right();
