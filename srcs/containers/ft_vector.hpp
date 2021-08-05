@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/07/07 18:45:47 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 15:15:03 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 # define FT_VECTOR_HPP
 
 #include "../iterators/random_access_iterator.hpp"
-#include "../utils/traits.hpp"
+#include "../utils/type_traits.hpp"
 #include "../utils/more.hpp"
+#include "../utils/ft_pair.hpp" // TAKE THIS OUT ONLY NEEDED FOR MAP
 
 namespace ft {
-template <typename T, class Alloc = std::allocator<T> >
+template <class T, class Alloc = std::allocator<T> >
 class vector
     {
     public:
@@ -213,7 +214,6 @@ class vector
 			vector<T,Alloc>		newvector(n, val);
 			insert_vector_helper(newvector, position);
 			return ;
-
 		}
 		template <class InputIterator>
         void insert (InputIterator position, InputIterator first, InputIterator last,

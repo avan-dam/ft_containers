@@ -6,20 +6,26 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/07/07 19:22:26 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 18:50:14 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "containers/ft_vector.hpp"
 #include "containers/ft_stack.hpp"
+#include "containers/ft_map.hpp"
 #include <math.h>
 #include <vector>
 #include <list>
 #include <stack>
+#include <map>
+
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      /* Red */
 #define GREEN   "\033[32m"      /* Green */
+
+
+// compare timings
 
 template <class T>
 void	result_of_function_call(T result_std , T result_ft, std::string function_name)
@@ -97,8 +103,6 @@ bool	same_vecor_ft_std_int(std::vector<T> std, ft::vector<T> ft, std::string nam
 		c_it_r_std++;
 		c_it_r_ft++;
 	}
-
-
 	return (print_true(name_ft, name_std));
 }
 
@@ -168,6 +172,18 @@ void    stack_tests()
 void    map_tests()
 {
     std::cout << "PERFORMING MAP TESTS:" << std::endl;
+	ft::map<char, int> m;
+	std::map<char, int> m2;
+
+	m.insert ( ft::pair<char,int>('a',100) );
+	m2.insert ( std::pair<char,int>('a',100) );
+
+	std::map<char,int>::iterator it=m2.begin();
+	std::cout << "it = begin() it->first " << it->first << std::endl;
+
+	ft::map<char,int>::iterator it2=m.begin();
+	std::cout << "it = begin() it->first " << it2->first << std::endl;
+
 }
 
 void vector_constructor()
@@ -492,15 +508,15 @@ int    main(int argc, char **argv)
 {
     if (argc == 1 || argc == 2)
     {
-        if (argc == 1 || strcmp(argv[1], "vector") == 0)
-            vector_tests();
-        // if (argc == 1 || strcmp(argv[1], "map") == 0)
-        //     map_tests();
-		if (argc == 1 || strcmp(argv[1], "stack") == 0)
-            stack_tests();
+        // if (argc == 1 || strcmp(argv[1], "vector") == 0)
+            // vector_tests();
+        if (argc == 1 || strcmp(argv[1], "map") == 0)
+            map_tests();
+		// if (argc == 1 || strcmp(argv[1], "stack") == 0)
+            // stack_tests();
         else if (argc == 2 && strcmp(argv[1], "vector") != 0
-			&& strcmp(argv[1], "map") == 0 
-			&& strcmp(argv[1], "stack") == 0)
+			&& strcmp(argv[1], "map") != 0 
+			&& strcmp(argv[1], "stack") != 0)
            std::cout << "invalid arguments" << std::endl;
     }
     else
