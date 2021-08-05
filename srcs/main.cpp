@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/05 18:50:14 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 20:15:32 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,15 +175,28 @@ void    map_tests()
 	ft::map<char, int> m;
 	std::map<char, int> m2;
 
-	m.insert ( ft::pair<char,int>('a',100) );
-	m2.insert ( std::pair<char,int>('a',100) );
+	m.insert ( ft::pair<char,int>('b',100) );
+	m2.insert ( std::pair<char,int>('b',100) );
+	m.insert ( ft::pair<char,int>('a',2) );
+	m2.insert ( std::pair<char,int>('a',2) );
+	m.insert ( ft::pair<char,int>('c',500) );
+	m2.insert ( std::pair<char,int>('c',500) );
 
 	std::map<char,int>::iterator it=m2.begin();
 	std::cout << "it = begin() it->first " << it->first << std::endl;
 
 	ft::map<char,int>::iterator it2=m.begin();
 	std::cout << "it = begin() it->first " << it2->first << std::endl;
+	ft::map<char,int>::iterator it3=m.end();
+	std::cout << "it = end() it->first " << it3->first << std::endl;
+	it3--;
+	std::cout << "it = end() it->first " << it3->first << std::endl;
 
+	for (std::map<char,int>::iterator it=m2.begin(); it!=m2.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+	for (ft::map<char,int>::iterator it=m.begin(); it!=m.end(); ++it)
+    std::cout << it->first << " =me> " << it->second << '\n';
 }
 
 void vector_constructor()

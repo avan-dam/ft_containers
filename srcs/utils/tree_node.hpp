@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 13:21:47 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 18:53:10 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 20:19:49 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ class tree_node
 		{
 			if (this != source)
 			{
-				first = source.first;
-				second = source.second;
-				_left = source._left;
-				_right = source._right;
+				first   = source.first;
+				second  = source.second;
+				_left   = source._left;
+				_right  = source._right;
 			}
 			return *this;
 		}
@@ -72,11 +72,5 @@ class tree_node
         //     return;
         // }
 };
-
-template<class Key, class T>
-std::ostream& operator<<(std::ostream & out, const tree_node<Key, T> &o) {
-	out << o.getsecond();
-	return out;
-}
 
 # endif

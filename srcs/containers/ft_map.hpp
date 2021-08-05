@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 18:45:10 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 20:17:51 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,21 @@ class map
             return (ret);
         }
 
+        iterator end() // needs to be one further
+        {
+            iterator ret(_root_node);
+            while (ret.right_exists())
+                ret++;
+            return (ret);
+        }
+
+        const_iterator end() const  // needs to be one further
+        {
+            const_iterator ret(_root_node);
+            while (ret.right_exists())
+                ret++;
+            return (ret);
+        }
 
         // mapped_type& operator[] (const key_type& k)
         // {
@@ -125,14 +140,37 @@ class map
             if (_root_node == nullptr)
             {
                 _root_node = new node(val.first, val.second);
+                iterator ity(_root_node);
+                return (make_pair(ity, true));
             }
             iterator ity(_root_node);
-            return (make_pair(ity, true));
-            // if (first == last)
-            // {     // _size
-            //     _root_node = nullptr;
-            //     return;
-            // }
+            node *current_root = _root_node;
+            while (current_root)
+            {
+                if (val.first == current_root->first)
+                    break ;
+                else if (val.first < current_root->first)
+                {
+                    if (current_root->get_left() == nullptr)
+                    {
+                        current_root->_left = new node(val.first, val.second);
+                        std::cout << "val.first [" << val.first << "] added as the left of " << current_root->first << std::endl;
+                        return (make_pair(ity, true));
+                    }
+                    current_root = current_root->get_left();
+                }
+                else
+                {
+                    if (current_root->get_right() == nullptr)
+                    {
+                        current_root->_left = new node(val.first, val.second);
+                        std::cout << "val.first [" << val.first << "] added as the right of " << current_root->first << std::endl;
+                        return (make_pair(ity, true));
+                    }
+                    current_root = current_root->get_right();
+                }
+            }
+            
     		// _root_node = new node(first.get_key(), first.get_data());
             // // check if only one node;
             // current = first++;
@@ -160,7 +198,7 @@ class map
             //         newroot = newroot.right;
             //     }
             // }            
-   
+            return (make_pair(ity, true));
         }
     };
 }      

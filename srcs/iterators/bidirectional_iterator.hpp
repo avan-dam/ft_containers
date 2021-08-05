@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 14:24:39 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 18:52:38 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/05 20:22:57 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ class bidirectional_iterator
     	node_ptr operator->() { return _tree_node; }
     	bidirectional_iterator& operator++() { _tree_node = _tree_node->get_right(); return *this; }
     	bidirectional_iterator operator++(int) { bidirectional_iterator tmp = *this; _tree_node = _tree_node->get_right(); return tmp; }
-		bidirectional_iterator& operator--() { _tree_node = _tree_node->get_left(); return *this; }
-    	bidirectional_iterator operator--(int) {  bidirectional_iterator tmp = *this; _tree_node = _tree_node->get_left(); return tmp; }
+		bidirectional_iterator& operator--() {_tree_node = _tree_node->get_left(); return *this; }
+    	bidirectional_iterator operator--(int) {bidirectional_iterator tmp = *this; _tree_node = _tree_node->get_left(); return tmp; }
 		bool operator!=(const bidirectional_iterator& rhs) { return _tree_node != rhs._tree_node; }
 		bool operator==(const bidirectional_iterator& rhs) { return _tree_node == rhs._tree_node; }		
 		bidirectional_iterator() : _tree_node(nullptr) {}
@@ -56,7 +56,7 @@ class bidirectional_iterator
 		node * get_tree_node() const {return(_tree_node);}
 
 		node	*_tree_node;
-};
+    };
 }
 
 #endif
