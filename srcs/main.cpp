@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/05 22:39:43 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/10 15:11:15 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,10 +175,20 @@ void    map_tests()
 	ft::map<char, int> m;
 	std::map<char, int> m2;
 
+	std::map<char,int>::iterator it=m2.end();
+	std::cout << "stdit = begin() it->first " << it->first << std::endl;
+
+	ft::map<char,int>::iterator it3=m.end();
+	std::cout << "it = end() it->first " << it3->first << std::endl;
+
+	// std::cout << "here" << std::endl;
 	m.insert ( ft::pair<char,int>('b',100) );
 	m2.insert ( std::pair<char,int>('b',100) );
+	// std::cout << "here3" << std::endl;
 	m.insert ( ft::pair<char,int>('a',2) );
 	m2.insert ( std::pair<char,int>('a',2) );
+	// std::cout << "here" << std::endl;
+
 	m.insert ( ft::pair<char,int>('c',500) );
 	m2.insert ( std::pair<char,int>('c',500) );
 	m.insert ( ft::pair<char,int>('l',100) );
@@ -195,22 +205,50 @@ void    map_tests()
 	m2.insert ( std::pair<char,int>('h',2) );
 	m.insert ( ft::pair<char,int>('h',2) );
 
-
-	std::map<char,int>::iterator it=m2.begin();
-	std::cout << "it = begin() it->first " << it->first << std::endl;
-
-	ft::map<char,int>::iterator it2=m.begin();
-	std::cout << "it = begin() it->first " << it2->first << std::endl;
-	ft::map<char,int>::iterator it3=m.end();
-	std::cout << "it = end() it->first " << it3->first << std::endl;
-
+	std::cout << "std:" << std::endl;
 	for (std::map<char,int>::iterator itz=m2.begin(); itz!=m2.end(); ++itz)
     std::cout << " " <<itz->first << " => " << itz->second;
 	std::cout <<  std::endl;
 
+	std::cout << "ft:" << std::endl;
 	for (ft::map<char,int>::iterator itp=m.begin(); itp!=m.end(); ++itp)
-    std::cout << " " << itp->first << " => " << itp->second;
+    std::cout << " " <<itp->first << " => " << itp->second;
 	std::cout <<  std::endl;
+
+	std::cout << "std:" << std::endl;
+	for (std::map<char,int>::iterator itz=m2.end(); itz!=m2.begin(); --itz)
+    std::cout << " " <<itz->first << " => " << itz->second;
+	std::cout <<  std::endl;
+
+	std::cout << "ft:" << std::endl;
+	for (ft::map<char,int>::iterator itp=m.end(); itp!=m.begin(); --itp)
+    std::cout << " " <<itp->first << " => " << itp->second;
+	std::cout <<  std::endl;
+	
+
+	std::map<char,int> secondstd (m2.begin(),m2.end());
+	ft::map<char,int> secondft (m.begin(),m.end());
+	std::cout << "std:" << std::endl;
+	for (std::map<char,int>::iterator itz=secondstd.begin(); itz!=secondstd.end(); ++itz)
+    std::cout << " " <<itz->first << " => " << itz->second;
+	std::cout <<  std::endl;
+
+	std::cout << "ft:" << std::endl;
+	for (ft::map<char,int>::iterator itp=secondft.begin(); itp!=secondft.end(); ++itp)
+    std::cout << " " <<itp->first << " => " << itp->second;
+	std::cout <<  std::endl;
+
+	std::map<char,int> thirdstd (secondstd);
+	ft::map<char,int> thirdft (secondft);
+	for (std::map<char,int>::iterator itz=thirdstd.begin(); itz!=thirdstd.end(); ++itz)
+    std::cout << " " <<itz->first << " => " << itz->second;
+	std::cout <<  std::endl;
+
+	std::cout << "ft:" << std::endl;
+	for (ft::map<char,int>::iterator itp=thirdft.begin(); itp!=thirdft.end(); ++itp)
+    std::cout << " " <<itp->first << " => " << itp->second;
+	std::cout <<  std::endl;
+	// 	while (1) {}
 }
 
 void vector_constructor()

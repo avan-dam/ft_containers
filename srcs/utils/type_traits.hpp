@@ -16,6 +16,7 @@ namespace ft {
 	    static const bool value = is_iterator;
     };
 
+    // template <typename Key, typename T>
     template <typename T>
     struct is_iterator { static const bool value = false; };
     template <>
@@ -26,6 +27,8 @@ namespace ft {
     struct is_iterator<std::forward_iterator_tag> : public iterator_result<true, std::forward_iterator_tag> {};
     template <>
     struct is_iterator<std::bidirectional_iterator_tag> : public iterator_result<true, std::bidirectional_iterator_tag> {};
+    // template <typename Key, typename T>
+    // struct is_iterator<ft::bidirectional_iterator_tag<Key, T, T*, T&>> : public iterator_result<true, ft::bidirectional_iterator_tag<Key, T, T*, T&>> {};
     template <>
     struct is_iterator<std::random_access_iterator_tag> : public iterator_result<true, std::random_access_iterator_tag> {};
     template <class T>
@@ -74,6 +77,7 @@ namespace ft {
 		    typedef T*	                						        pointer;
 		    typedef T&	                    					        reference;
 		    typedef random_access_iterator_tag 				            iterator_category;
+		    // typedef bidirectional_iterator_tag 				            iterator_category;
         };
     template <class T>
     class iterator_traits<const T*> {
@@ -83,6 +87,7 @@ namespace ft {
 		    typedef const T*               						        pointer;
 		    typedef const T&                 					        reference;
 		    typedef random_access_iterator_tag 				            iterator_category;
+		    // typedef bidirectional_iterator_tag 				            iterator_category;
         };
 }
 

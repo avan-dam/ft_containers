@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 22:47:02 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/10 15:12:48 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,45 +40,77 @@ class map
 		typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
 		typedef size_t		 												size_type;
         typedef	tree_node<Key, T>                                           node;
+        typedef	tree_node<Key, T>*                                           node_ptr;
     private:
     	allocator_type	_alloc;
         key_compare     _compare;
-        node            *_root_node;
+        node_ptr        _root_node;
         size_type       _size;
     
     public:
         explicit map (const key_compare& comp = key_compare(), 
-        const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _root_node(nullptr), _size(0) {}
-
-        iterator begin()
+        const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _size(0) 
         {
-            iterator ret(_root_node);
-            while (ret.left_exists())
-                ret--;
+            _root_node = new node(nullptr);
+        }
+
+        // typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+        template <class InputIterator>
+        map (InputIterator first, InputIterator last,
+        const key_compare& comp = key_compare(),
+        const allocator_type& alloc = allocator_type(),
+        typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+        : _alloc(alloc), _compare(comp)
+        {
+	        for (InputIterator it = first; it!=last; ++it)
+            {   
+                ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
+                insert(p);
+            }
+        }
+
+        map (const map& x)
+        {
+            for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
+            {   
+                ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
+                insert(p);
+            }
+        }
+
+        iterator        begin()
+        {
+            node_ptr _current_node = _root_node;
+            while (_current_node->_left != nullptr)
+                _current_node = _current_node->_left;
+            iterator ret(_current_node);
             return (ret);
         }
 
-        const_iterator begin() const
+        const_iterator  begin() const
         {
-            const_iterator ret(_root_node);
-            while (ret.left_exists())
-                ret--;
+            node_ptr _current_node = _root_node;
+            while (_current_node->_left != nullptr)
+                _current_node = _current_node->_left;
+            const_iterator ret(_current_node);
             return (ret);
         }
 
-        iterator end() // needs to be one further
+        iterator        end()
         {
-            iterator ret(_root_node);
-            while (ret.right_exists())
-                ret++;
+            node_ptr _current_node = _root_node;
+            while (_current_node->_right != nullptr)
+                _current_node = _current_node->_right;
+            iterator ret(_current_node);
             return (ret);
         }
 
-        const_iterator end() const  // needs to be one further
+        const_iterator  end() const
         {
-            const_iterator ret(_root_node);
-            while (ret.right_exists())
-                ret++;
+            node_ptr _current_node = _root_node;
+            while (_current_node->_right != nullptr)
+                _current_node = _current_node->_right;
+            const_iterator ret(_current_node);
             return (ret);
         }
 
@@ -93,66 +125,48 @@ class map
 
         pair<iterator,bool> insert (const value_type& val)
         {
-            if (_root_node == nullptr)
+            if (_root_node == nullptr || _root_node->_end_node == true)
             {
                 _root_node = new node(val.first, val.second, nullptr);
+                _root_node->_right = new node(_root_node);
+                _root_node->_right->_end_node = true;
                 iterator ity(_root_node);
                 return (make_pair(ity, true));
             }
             iterator ity(_root_node);
-            node *current_root = _root_node;
+            node_ptr current_root = _root_node;
             while (current_root != nullptr)
             {
-                if (val.first == current_root->first)
-                    break ;
-                // else if (val.first < current_root->first)
-                else if (_compare(val.first, current_root->first))
+                if (_compare(val.first, current_root->first))
                 {
                     if (current_root->get_left() == nullptr)
                     {
                         current_root->_left = new node(val.first, val.second, current_root);
+                        current_root = current_root->get_left();
                         return (make_pair(ity, true));
                     }
                     current_root = current_root->get_left();
                 }
                 else
                 {
-                    if (current_root->get_right() == nullptr)
+                    if (current_root->get_right() == nullptr || current_root->get_right()->is_end_node() == true)
                     {
-                        current_root->_right = new node(val.first, val.second, current_root);
+                        if (current_root->get_right() == nullptr)
+                            current_root->_right = new node(val.first, val.second, current_root);
+                        else 
+                        {
+                            current_root = current_root->_right;
+                            current_root->first = val.first;
+                            current_root->second = val.second;
+                            current_root->_end_node = false;
+                            current_root->_right = new node (current_root);
+                            current_root->_right->_end_node = true;
+                        }
                         return (make_pair(ity, true));
                     }
                     current_root = current_root->get_right();
                 }
-            }
-            
-    		// _root_node = new node(first.get_key(), first.get_data());
-            // // check if only one node;
-            // current = first++;
-            // newroot = _root_node;
-            // while (current != last)
-            // {
-            //     while (key_compare(current.get_key(), newroot.get_key()))
-            //     {
-            //         if (newroot.left == nullptr)
-            //         {
-            //             newroot.left = new node(current.get_key(), current.get_data());
-            //             current++;
-            //             newroot = _root_node;
-            //         }
-            //         newroot = newroot.left;
-            //     }
-            //     while (!key_compare(current.get_key(), newroot.get_key()))
-            //     {
-            //         if (newroot.right == nullptr)
-            //         {
-            //             newroot.right = new node(current.get_key(), current.get_data());
-            //             current++;
-            //             newroot = _root_node;
-            //         }
-            //         newroot = newroot.right;
-            //     }
-            // }            
+            }       
             return (make_pair(ity, true));
         }
     };
