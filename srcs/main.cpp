@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/10 15:11:15 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/10 15:47:39 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,10 @@ void    map_tests()
 	ft::map<char,int>::iterator it3=m.end();
 	std::cout << "it = end() it->first " << it3->first << std::endl;
 
+	std::cout << "size of mine should be 0 is " << m.size() << std::endl;
+	std::cout << "size of theirs should be 0 is " << m2.size() << std::endl;
+	std::cout << "empty of mine is " << m.empty() << std::endl;
+	std::cout << "empty of theirs is " << m2.empty() << std::endl;
 	// std::cout << "here" << std::endl;
 	m.insert ( ft::pair<char,int>('b',100) );
 	m2.insert ( std::pair<char,int>('b',100) );
@@ -248,6 +252,11 @@ void    map_tests()
 	for (ft::map<char,int>::iterator itp=thirdft.begin(); itp!=thirdft.end(); ++itp)
     std::cout << " " <<itp->first << " => " << itp->second;
 	std::cout <<  std::endl;
+
+	std::cout << "size of mine is " << thirdft.size() << std::endl;
+	std::cout << "size of theirs is " << thirdstd.size() << std::endl;
+	std::cout << "empty of mine is " << thirdft.empty() << std::endl;
+	std::cout << "empty of theirs is " << thirdstd.empty() << std::endl;
 	// 	while (1) {}
 }
 

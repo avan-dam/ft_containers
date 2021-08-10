@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/10 15:12:48 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/10 15:51:53 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,11 @@ class map
                 insert(p);
             }
         }
+        
+        // ~map()
+        // {
+        //     clear();
+        // }
 
         iterator        begin()
         {
@@ -123,8 +128,29 @@ class map
             // return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
         // }
 
+
+        // capacity
+        size_type size() const
+        {
+            size_type   ret;
+
+            ret = 0;
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+                ret++;
+            return (ret);
+        }
+
+        bool empty() const
+        {
+            if (size() == 0)
+                return (true);
+            return (false);
+        }
+
+        // modifiers
         pair<iterator,bool> insert (const value_type& val)
         {
+            // if key already in map then do something?? use key_comp
             if (_root_node == nullptr || _root_node->_end_node == true)
             {
                 _root_node = new node(val.first, val.second, nullptr);
@@ -169,6 +195,13 @@ class map
             }       
             return (make_pair(ity, true));
         }
+
+
+        // void    clear()
+        // {
+        //     node_ptr start = *(begin());
+        //     (void)start;
+        // }
     };
 }      
 

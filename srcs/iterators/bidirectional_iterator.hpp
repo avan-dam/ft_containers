@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 14:24:39 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/10 15:05:26 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/10 15:32:43 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ class bidirectional_iterator
 		typedef P								pointer;
 		typedef	tree_node<Key, T>				node;
 		typedef tree_node<Key, T>*				node_ptr;
+		typedef tree_node<Key, T>&				node_ref;
 
     	node_ptr operator->() {		return _tree_node;	}
+    	node_ptr operator*() {		return _tree_node;	}
 	
     	bidirectional_iterator& operator++() 
         {
