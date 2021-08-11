@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/11 14:24:10 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/11 14:42:16 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,7 +297,43 @@ void    map_tests()
 	ft::map<char,int>::iterator itd=fourthft.begin();
 	std::cout << "it = begin() it->first " << itd->first << std::endl;
 	
-	while (1) {}
+	std::cout << "std max size is  " << fourthstd.max_size() << std::endl;
+	std::cout << "my max size is  " << fourthft.max_size() << std::endl;
+
+
+
+  	std::map<char,std::string> mymapstd;
+  	std::map<char,std::string> mymapft;
+
+  	mymapstd['a']="an element";
+  	mymapft['a']="an element";
+  	mymapstd['b']="another element";
+  	mymapft['b']="another element";
+  	mymapstd['c']=mymapstd['b'];
+  	mymapft['c']=mymapft['b'];
+  
+	std::cout << "mymapstd['a'] is " << mymapstd['a'] << '\n';
+	std::cout << "mymapft['a'] is " << mymapft['a'] << '\n';
+  	std::cout << "mymapstd['b'] is " << mymapstd['b'] << '\n';
+  	std::cout << "mymapft['b'] is " << mymapft['b'] << '\n';
+  	std::cout << "mymapstd['c'] is " << mymapstd['c'] << '\n';
+  	std::cout << "mymapft['c'] is " << mymapft['c'] << '\n';
+  	std::cout << "mymapstd['d'] is " << mymapstd['d'] << '\n';
+  	std::cout << "mymapft['d'] is " << mymapft['d'] << '\n';
+
+  	std::cout << "mymapstd now contains " << mymapstd.size() << " elements.\n";
+  	std::cout << "mymapft now contains " << mymapft.size() << " elements.\n";
+
+  	std::cout << "mymapstd now .count('c') " << mymapstd.count('c') << " elements.\n";
+  	std::cout << "mymapft now .count('c') " << mymapft.count('c') << " elements.\n";
+  	std::cout << "mymapstd now .count('y') " << mymapstd.count('y') << " elements.\n";
+  	std::cout << "mymapft now .count('y') " << mymapft.count('y') << " elements.\n";
+
+  	std::cout << "mymapstd now .count('c') " << mymapstd.find('c')->first << " elements.\n";
+  	std::cout << "mymapft now .count('c') " << mymapft.find('c')->first << " elements.\n";
+  	std::cout << "mymapstd now .count('y') " << mymapstd.find('y')->first << " elements.\n";
+  	std::cout << "mymapft now .count('y') " << mymapft.find('y')->first << " elements.\n";	
+	// while (1) {}
 }
 
 void vector_constructor()

@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/11 14:23:49 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/11 14:42:52 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,15 +166,6 @@ class map
             return (ret);    
         }
 
-        // mapped_type& operator[] (const key_type& k)
-        // {
-        //     if (_root_node->_key == k)
-        //         return   _root_node->_data;
-            // else 
-            // return NULL;             
-            // return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
-        // }
-
 
         // capacity
         size_type size() const
@@ -197,15 +188,32 @@ class map
             return (false);
         }
 
+       	size_type max_size() const { return _alloc.max_size(); }
+
+        //element accessors
+        mapped_type& operator[] (const key_type& k)
+        {
+        //     if (_root_node->_key == k)
+        //         return   _root_node->_data;
+            // else 
+            // return NULL;             
+            return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+        }
+
         // modifiers
         pair<iterator,bool> insert (const value_type& val)
-        {
+        { // return values wrong
             // if key already in map then do something?? use key_comp
             if (_root_node == nullptr || _root_node->_end_node == true)
             {
                 _root_node = new node(val.first, val.second, nullptr);
                 _root_node->_right = new node(_root_node);
                 _root_node->_right->_end_node = true;
+                iterator ity(_root_node);
+                return (make_pair(ity, true));
+            }
+            if (count(val.first) == 1)
+            {
                 iterator ity(_root_node);
                 return (make_pair(ity, true));
             }
@@ -263,6 +271,40 @@ class map
             }
             delete (*last);
             _root_node = nullptr;
+        }
+        
+        //operations
+        size_type count (const key_type& k) const
+        {
+            size_type ret;
+
+            ret = 0;
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first == k)
+                    ret++; 
+            }
+            return (ret);
+        }
+
+        iterator find (const key_type& k)
+        {
+            for (typename ft::map<Key,T>::iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first == k)
+                    return(it); 
+            }
+            return (end());
+        }
+        
+        const_iterator find (const key_type& k) const
+        {
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first == k)
+                    return(it); 
+            }
+            return (end());  
         }
     };
 }      
