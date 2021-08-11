@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/10 15:51:53 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/11 14:23:49 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ class map
 		typedef	typename allocator_type::const_pointer     					const_pointer; 
  		typedef	bidirectional_iterator <Key, T, T*, T&>						iterator;
 		typedef	bidirectional_iterator <Key, T, const T*, const T&>			const_iterator;
-		// typedef	reverse_bidirectional_iterator<T, T*, T&>					reverse_iterator;
-		// typedef	reverse_bidirectional_iterator<T, const T*, const T&>		const_reverse_iterator;
+		typedef	reverse_bidirectional_iterator<Key, T, T*, T&>					reverse_iterator;
+		typedef	reverse_bidirectional_iterator<Key, T, const T*, const T&>		const_reverse_iterator;
 		typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
 		typedef size_t		 												size_type;
         typedef	tree_node<Key, T>                                           node;
@@ -52,6 +52,7 @@ class map
         const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _size(0) 
         {
             _root_node = new node(nullptr);
+            _root_node->_end_node = true;
         }
 
         // typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
@@ -78,11 +79,22 @@ class map
             }
         }
         
-        // ~map()
-        // {
-        //     clear();
-        // }
+        ~map()
+        {
+            clear();
+        }
 
+        map& operator= (const map& x)
+        {
+            clear();
+            for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
+            {   
+                ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
+                insert(p);
+            }
+        }
+
+        // iterators
         iterator        begin()
         {
             node_ptr _current_node = _root_node;
@@ -119,6 +131,41 @@ class map
             return (ret);
         }
 
+        reverse_iterator rbegin()
+        {
+            node_ptr _current_node = _root_node;
+            while (_current_node->_right != nullptr && _current_node->_right->_end_node == false)
+                _current_node = _current_node->_right;
+            reverse_iterator ret(_current_node);
+            return (ret);
+        }
+
+        const_reverse_iterator rbegin() const
+        {
+            node_ptr _current_node = _root_node;
+            while (_current_node->_right != nullptr && _current_node->_right->_end_node == false)
+                _current_node = _current_node->_right;
+            const_reverse_iterator ret(_current_node);
+            return (ret);
+        }
+
+        reverse_iterator rend()
+        {
+            node_ptr _current_node = _root_node;
+            while (_current_node->_left != nullptr)
+                _current_node = _current_node->_left;
+            reverse_iterator ret(_current_node);
+            return (ret);    
+        }
+        const_reverse_iterator rend() const
+        {
+            node_ptr _current_node = _root_node;
+            while (_current_node->_left != nullptr)
+                _current_node = _current_node->_left;
+            const_reverse_iterator ret(_current_node);
+            return (ret);    
+        }
+
         // mapped_type& operator[] (const key_type& k)
         // {
         //     if (_root_node->_key == k)
@@ -135,6 +182,9 @@ class map
             size_type   ret;
 
             ret = 0;
+            // std::cout << "here" << std::endl;
+            if (_root_node == nullptr)
+                return (ret);
             for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
                 ret++;
             return (ret);
@@ -196,12 +246,24 @@ class map
             return (make_pair(ity, true));
         }
 
-
-        // void    clear()
-        // {
-        //     node_ptr start = *(begin());
-        //     (void)start;
-        // }
+        void    clear()
+        {
+            if (empty())
+                return;
+            iterator prev = begin();
+            iterator nxt = prev;
+            iterator last = end();
+            delete (*prev);
+            nxt++;
+            while (nxt != last)
+            {
+                prev = nxt;
+                ++nxt;
+                delete (*prev);
+            }
+            delete (*last);
+            _root_node = nullptr;
+        }
     };
 }      
 

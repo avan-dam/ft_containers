@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/10 15:47:39 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/11 14:24:10 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,13 +185,10 @@ void    map_tests()
 	std::cout << "size of theirs should be 0 is " << m2.size() << std::endl;
 	std::cout << "empty of mine is " << m.empty() << std::endl;
 	std::cout << "empty of theirs is " << m2.empty() << std::endl;
-	// std::cout << "here" << std::endl;
 	m.insert ( ft::pair<char,int>('b',100) );
 	m2.insert ( std::pair<char,int>('b',100) );
-	// std::cout << "here3" << std::endl;
 	m.insert ( ft::pair<char,int>('a',2) );
 	m2.insert ( std::pair<char,int>('a',2) );
-	// std::cout << "here" << std::endl;
 
 	m.insert ( ft::pair<char,int>('c',500) );
 	m2.insert ( std::pair<char,int>('c',500) );
@@ -202,30 +199,30 @@ void    map_tests()
 	m.insert ( ft::pair<char,int>('p',500) );
 	m2.insert ( std::pair<char,int>('p',500) );
 
-	m2.insert ( std::pair<char,int>('y',500) );
-	m.insert ( ft::pair<char,int>('y',500) );
-	m2.insert ( std::pair<char,int>('f',100) );
-	m.insert ( ft::pair<char,int>('f',100) );
-	m2.insert ( std::pair<char,int>('h',2) );
-	m.insert ( ft::pair<char,int>('h',2) );
+	m2.insert ( std::pair<char,int>('y',500));
+	m.insert ( ft::pair<char,int>('y',500));
+	m2.insert ( std::pair<char,int>('f',100));
+	m.insert ( ft::pair<char,int>('f',100));
+	m2.insert ( std::pair<char,int>('h',2));
+	m.insert ( ft::pair<char,int>('h',2));
 
-	std::cout << "std:" << std::endl;
-	for (std::map<char,int>::iterator itz=m2.begin(); itz!=m2.end(); ++itz)
+	std::cout << "reverse_iterator std:" << std::endl;
+	for (std::map<char,int>::const_reverse_iterator itz=m2.rbegin(); itz!=m2.rend(); ++itz)
     std::cout << " " <<itz->first << " => " << itz->second;
 	std::cout <<  std::endl;
 
-	std::cout << "ft:" << std::endl;
-	for (ft::map<char,int>::iterator itp=m.begin(); itp!=m.end(); ++itp)
+	std::cout << "reverse_iterator ft:" << std::endl;
+	for (ft::map<char,int>::const_reverse_iterator itp=m.rbegin(); itp!=m.rend(); ++itp)
     std::cout << " " <<itp->first << " => " << itp->second;
 	std::cout <<  std::endl;
 
 	std::cout << "std:" << std::endl;
-	for (std::map<char,int>::iterator itz=m2.end(); itz!=m2.begin(); --itz)
+	for (std::map<char,int>::const_iterator itz=m2.end(); itz!=m2.begin(); --itz)
     std::cout << " " <<itz->first << " => " << itz->second;
 	std::cout <<  std::endl;
 
 	std::cout << "ft:" << std::endl;
-	for (ft::map<char,int>::iterator itp=m.end(); itp!=m.begin(); --itp)
+	for (ft::map<char,int>::const_iterator itp=m.end(); itp!=m.begin(); --itp)
     std::cout << " " <<itp->first << " => " << itp->second;
 	std::cout <<  std::endl;
 	
@@ -244,6 +241,7 @@ void    map_tests()
 
 	std::map<char,int> thirdstd (secondstd);
 	ft::map<char,int> thirdft (secondft);
+	std::cout << "std:" << std::endl;
 	for (std::map<char,int>::iterator itz=thirdstd.begin(); itz!=thirdstd.end(); ++itz)
     std::cout << " " <<itz->first << " => " << itz->second;
 	std::cout <<  std::endl;
@@ -253,11 +251,53 @@ void    map_tests()
     std::cout << " " <<itp->first << " => " << itp->second;
 	std::cout <<  std::endl;
 
+	thirdstd.clear();
+	thirdft.clear();
+
 	std::cout << "size of mine is " << thirdft.size() << std::endl;
 	std::cout << "size of theirs is " << thirdstd.size() << std::endl;
 	std::cout << "empty of mine is " << thirdft.empty() << std::endl;
 	std::cout << "empty of theirs is " << thirdstd.empty() << std::endl;
-	// 	while (1) {}
+
+	std::map<char,int> fourthstd = secondstd;
+	ft::map<char,int> fourthft = secondft;
+
+	std::cout << "std:" << std::endl;
+	for (std::map<char,int>::iterator itz=fourthstd.begin(); itz!=fourthstd.end(); ++itz)
+    std::cout << " " <<itz->first << " => " << itz->second;
+	std::cout <<  std::endl;
+
+	std::cout << "ft:" << std::endl;
+	for (ft::map<char,int>::iterator itp=fourthft.begin(); itp!=fourthft.end(); ++itp)
+    std::cout << " " <<itp->first << " => " << itp->second;
+	std::cout <<  std::endl;
+
+	std::map<char,int>::reverse_iterator it1=fourthstd.rend();
+	std::cout << "stdit = rend() it->first " << it1->first << std::endl;
+
+	ft::map<char,int>::reverse_iterator it2=fourthft.rend();
+	std::cout << "it = rend() it->first " << it2->first << std::endl;
+
+	std::map<char,int>::reverse_iterator it7=fourthstd.rbegin();
+	std::cout << "stdit = rbegin() it->first " << it7->first << std::endl;
+
+	ft::map<char,int>::reverse_iterator it8=fourthft.rbegin();
+	std::cout << "it = rbegin() it->first " << it8->first << std::endl;
+
+
+	std::map<char,int>::iterator ita=fourthstd.end();
+	std::cout << "stdit = end() ita->first " << ita->first << std::endl;
+
+	ft::map<char,int>::iterator itb=fourthft.end();
+	std::cout << "it = end() it->first " << itb->first << std::endl;
+
+	std::map<char,int>::iterator itc=fourthstd.begin();
+	std::cout << "stdit = begin() it->first " << itc->first << std::endl;
+
+	ft::map<char,int>::iterator itd=fourthft.begin();
+	std::cout << "it = begin() it->first " << itd->first << std::endl;
+	
+	while (1) {}
 }
 
 void vector_constructor()
@@ -378,12 +418,8 @@ void	vector_assign()
 	ft::vector<int>::iterator it_ft =first_ft.begin(); it_ft++;
 	second_std.assign (it,first_std.end());
 	second_ft.assign (it_ft ,first_ft.end());
-	int myints[] = {1776,7,4};
-  	third_std.assign (myints,myints+3);   // assigning from array.
-  	third_ft.assign (myints,myints+3);
 	same_vecor_ft_std_int(first_std, first_ft, "first_std", "first_ft");
 	same_vecor_ft_std_int(second_std, second_ft, "second_std", "second_ft");
-	same_vecor_ft_std_int(third_std, third_ft, "third_std", "third_ft");
 }
 
 void	vector_push_n_pop_back()
@@ -583,11 +619,11 @@ int    main(int argc, char **argv)
     if (argc == 1 || argc == 2)
     {
         // if (argc == 1 || strcmp(argv[1], "vector") == 0)
-            // vector_tests();
+        //     vector_tests();
         if (argc == 1 || strcmp(argv[1], "map") == 0)
             map_tests();
 		// if (argc == 1 || strcmp(argv[1], "stack") == 0)
-            // stack_tests();
+        //     stack_tests();
         else if (argc == 2 && strcmp(argv[1], "vector") != 0
 			&& strcmp(argv[1], "map") != 0 
 			&& strcmp(argv[1], "stack") != 0)

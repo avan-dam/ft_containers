@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 15:15:03 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/11 13:50:18 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ class vector
 		/* Modifiers*/
 		template <class InputIterator>
         void assign (InputIterator first, InputIterator last,
-                    typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
 		{
 			if (_size > 0 && _size < max_size())
 				clear();
@@ -217,7 +217,8 @@ class vector
 		}
 		template <class InputIterator>
         void insert (InputIterator position, InputIterator first, InputIterator last,
-                    typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+                    typename ft::enable_if<ft::is_iterator<InputIterator>::value >::type* = 0)
+                    // typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
 		{
 			vector<T,Alloc>		newvector(first, last);
 			insert_vector_helper(newvector, position);
