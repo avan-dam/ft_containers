@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/11 14:42:52 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/12 18:56:49 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,24 @@ template < class Key, class T, class Compare = less<Key>, class Alloc = std::all
 class map
     {
     public:
-       	typedef	Key															key_type; 
-		typedef	T															mapped_type; 
-		typedef	pair<const key_type, mapped_type>							value_type; 
-		typedef	Compare														key_compare; 
-		// typedef		Nested function class to compare elements		    	value_compare; 
-		typedef	Alloc														allocator_type; 
-		typedef	typename allocator_type::reference							reference; 
-		typedef	typename allocator_type::const_reference					const_reference; 
-		typedef	typename allocator_type::pointer     			    		pointer; 
-		typedef	typename allocator_type::const_pointer     					const_pointer; 
- 		typedef	bidirectional_iterator <Key, T, T*, T&>						iterator;
-		typedef	bidirectional_iterator <Key, T, const T*, const T&>			const_iterator;
-		typedef	reverse_bidirectional_iterator<Key, T, T*, T&>					reverse_iterator;
-		typedef	reverse_bidirectional_iterator<Key, T, const T*, const T&>		const_reverse_iterator;
-		typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
-		typedef size_t		 												size_type;
-        typedef	tree_node<Key, T>                                           node;
-        typedef	tree_node<Key, T>*                                           node_ptr;
+       	typedef	Key													                        		key_type; 
+		typedef	T														                        	mapped_type; 
+		typedef	pair<const key_type, mapped_type>						                        	value_type; 
+		typedef	Compare														                        key_compare; 
+		// typedef		Nested function class to compare elements		    	                    value_compare; 
+		typedef	Alloc														                        allocator_type; 
+		typedef	typename allocator_type::reference							                        reference; 
+		typedef	typename allocator_type::const_reference					                        const_reference; 
+		typedef	typename allocator_type::pointer     			    		                        pointer; 
+		typedef	typename allocator_type::const_pointer     					                        const_pointer; 
+ 		typedef	bidirectional_iterator <value_type, value_type*, value_type&>						iterator;
+		typedef	bidirectional_iterator <value_type, const value_type*, const value_type&>			const_iterator;
+		typedef	reverse_bidirectional_iterator<value_type, value_type*, value_type&>				reverse_iterator;
+		typedef	reverse_bidirectional_iterator<value_type, const value_type*, const value_type&>    const_reverse_iterator;
+		typedef	typename ft::iterator_traits<iterator>::difference_type		                        difference_type;
+		typedef size_t		 												                        size_type;
+        typedef	tree_node<value_type>                                                               node;
+        typedef	tree_node<value_type>*                                                              node_ptr;
     private:
     	allocator_type	_alloc;
         key_compare     _compare;
@@ -53,6 +53,7 @@ class map
         {
             _root_node = new node(nullptr);
             _root_node->_end_node = true;
+            _root_node->_start_node = true;
         }
 
         // typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
@@ -72,6 +73,7 @@ class map
 
         map (const map& x)
         {
+            _root_node = nullptr;
             for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
             {   
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
@@ -98,7 +100,7 @@ class map
         iterator        begin()
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr)
+            while (_current_node->_left != nullptr && _current_node->_left->_start_node == false)
                 _current_node = _current_node->_left;
             iterator ret(_current_node);
             return (ret);
@@ -107,7 +109,7 @@ class map
         const_iterator  begin() const
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr)
+            while (_current_node->_left != nullptr && _current_node->_left->_start_node == false)
                 _current_node = _current_node->_left;
             const_iterator ret(_current_node);
             return (ret);
@@ -192,42 +194,56 @@ class map
 
         //element accessors
         mapped_type& operator[] (const key_type& k)
-        {
-        //     if (_root_node->_key == k)
-        //         return   _root_node->_data;
-            // else 
-            // return NULL;             
-            return ((*((this->insert(make_pair(k,mapped_type()))).first)).second);
+        {           
+            return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
         }
 
         // modifiers
         pair<iterator,bool> insert (const value_type& val)
-        { // return values wrong
-            // if key already in map then do something?? use key_comp
+        {
+            iterator ret;
             if (_root_node == nullptr || _root_node->_end_node == true)
             {
-                _root_node = new node(val.first, val.second, nullptr);
+                _root_node = new node(val, nullptr);
                 _root_node->_right = new node(_root_node);
                 _root_node->_right->_end_node = true;
-                iterator ity(_root_node);
-                return (make_pair(ity, true));
+                _root_node->_left = new node(_root_node);
+                _root_node->_left->_start_node = true;
+                iterator ity = begin();
+                ft::pair<iterator, bool>  p(ity, true);
+                return (p);
             }
-            if (count(val.first) == 1)
-            {
-                iterator ity(_root_node);
-                return (make_pair(ity, true));
-            }
-            iterator ity(_root_node);
+            iterator ity = begin();
+            ft::pair<iterator, bool> p(ity, true);
+            if (find(val.first) != end()) // if a node with that key already exists do not insert a new one
+                return (ft::pair<iterator, bool> (find(val.first), false));
             node_ptr current_root = _root_node;
             while (current_root != nullptr)
             {
-                if (_compare(val.first, current_root->first))
+                if (_compare(val.first, current_root->_data.first))
                 {
-                    if (current_root->get_left() == nullptr)
+                    if (current_root->get_left() == nullptr || current_root->get_left()->is_start_node() == true)
                     {
-                        current_root->_left = new node(val.first, val.second, current_root);
-                        current_root = current_root->get_left();
-                        return (make_pair(ity, true));
+                        if (current_root->get_left() == nullptr)
+                        {    
+                            current_root->_left = new node(val, current_root);
+                            ret = iterator(current_root->_left);
+                            return (ft::pair<iterator, bool>(ret, true));
+                        }
+                        else
+                        {
+                            node_ptr old = current_root->_left;
+                            delete (old);
+                            current_root->_left = new node(val, current_root);
+                            // ret = iterator(current_root->_left);
+                            current_root = current_root->_left;
+                            current_root->_start_node = false;
+                            current_root->_left = new node (current_root);
+                            current_root = current_root->_left;
+                            current_root->_start_node = true;
+                            return (ft::pair<iterator, bool>((iterator)current_root, true));
+                        }
+                        // return (make_pair<iterator, bool>(ret, true));
                     }
                     current_root = current_root->get_left();
                 }
@@ -236,23 +252,126 @@ class map
                     if (current_root->get_right() == nullptr || current_root->get_right()->is_end_node() == true)
                     {
                         if (current_root->get_right() == nullptr)
-                            current_root->_right = new node(val.first, val.second, current_root);
+                        {    
+                            current_root->_right = new node(val, current_root);
+                            ret = iterator(current_root->_right);
+                        }
                         else 
                         {
+                            node_ptr old = current_root->_right;
+                            delete (old);
+                            current_root->_right = new node(val, current_root);
+                            ret = iterator(current_root->_right);
                             current_root = current_root->_right;
-                            current_root->first = val.first;
-                            current_root->second = val.second;
                             current_root->_end_node = false;
                             current_root->_right = new node (current_root);
-                            current_root->_right->_end_node = true;
+                            current_root = current_root->_right;
+                            current_root->_end_node = true;
                         }
-                        return (make_pair(ity, true));
+                        return (ft::pair<iterator, bool> (ret, true));
                     }
                     current_root = current_root->get_right();
                 }
-            }       
-            return (make_pair(ity, true));
+            }      
+            return (p);
         }
+
+
+
+        iterator insert (iterator position, const value_type& val)
+        {
+            iterator ret;
+            if (_root_node == nullptr || _root_node->_end_node == true)
+            {
+                _root_node = new node(val, nullptr);
+                _root_node->_right = new node(_root_node);
+                _root_node->_right->_end_node = true;
+                _root_node->_left = new node(_root_node);
+                _root_node->_left->_start_node = true;
+                return (begin());
+            }
+            iterator ity = begin();
+            if (find(val.first) != end()) // if a node with that key already exists do not insert a new one
+                return (find(val.first));
+            node_ptr current_root = position.get_node();
+            while (current_root != nullptr)
+            {
+                if (_compare(val.first, current_root->_data.first))
+                {
+                    if (current_root->get_left() == nullptr || current_root->get_left()->is_start_node() == true)
+                    {
+                        if (current_root->get_left() == nullptr)
+                        {    
+                            current_root->_left = new node(val, current_root);
+                            ret = iterator(current_root->_left);
+                            return (ret);
+                        }
+                        else
+                        {
+                            node_ptr old = current_root->_left;
+                            delete (old);
+                            current_root->_left = new node(val, current_root);
+                            // ret = iterator(current_root->_left);
+                            current_root = current_root->_left;
+                            current_root->_start_node = false;
+                            current_root->_left = new node (current_root);
+                            current_root = current_root->_left;
+                            current_root->_start_node = true;
+                            return (ret);
+                        }
+                        // return (make_pair<iterator, bool>(ret, true));
+                    }
+                    current_root = current_root->get_left();
+                }
+                else
+                {
+                    if (current_root->get_right() == nullptr || current_root->get_right()->is_end_node() == true)
+                    {
+                        if (current_root->get_right() == nullptr)
+                        {    
+                            current_root->_right = new node(val, current_root);
+                            ret = iterator(current_root->_right);
+                        }
+                        else 
+                        {
+                            node_ptr old = current_root->_right;
+                            delete (old);
+                            current_root->_right = new node(val, current_root);
+                            ret = iterator(current_root->_right);
+                            current_root = current_root->_right;
+                            current_root->_end_node = false;
+                            current_root->_right = new node (current_root);
+                            current_root = current_root->_right;
+                            current_root->_end_node = true;
+                        }
+                        return (ret);
+                    }
+                    current_root = current_root->get_right();
+                }
+            }
+            ft::pair<iterator, bool> p = insert(val);      
+            return (p.first);
+        }
+
+
+        template <class InputIterator>
+        void insert (InputIterator first, InputIterator last,
+        typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
+        {
+            for (typename ft::map<Key,T>::const_iterator it = first; it!=last; ++it)
+            {   
+                ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
+                insert(p);
+            }
+        }
+
+
+
+
+
+
+
+
 
         void    clear()
         {
@@ -261,17 +380,28 @@ class map
             iterator prev = begin();
             iterator nxt = prev;
             iterator last = end();
-            delete (*prev);
+            delete (prev.get_node());
             nxt++;
             while (nxt != last)
             {
                 prev = nxt;
                 ++nxt;
-                delete (*prev);
+                delete (prev.get_node());
             }
-            delete (*last);
+            delete (last.get_node()); // FIND ANOTHER WAY CANNOT IMPLEMENT THIS AS PUBLIC MEMBER
             _root_node = nullptr;
         }
+        
+        //observers
+        key_compare key_comp() const
+        {
+            return (_compare);
+        }
+
+        // value_compare value_comp() const
+        // {
+        //     return (_compare);
+        // }
         
         //operations
         size_type count (const key_type& k) const
@@ -306,6 +436,48 @@ class map
             }
             return (end());  
         }
+
+        iterator lower_bound (const key_type& k)
+        {
+            for (typename ft::map<Key,T>::iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first >= k)
+                    return(it); 
+            }
+            return (end());  
+        }
+
+        const iterator lower_bound (const key_type& k) const
+        {
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first >= k)
+                    return(it); 
+            }
+            return (end());  
+        }
+
+        iterator upper_bound (const key_type& k)
+        {
+            for (typename ft::map<Key,T>::iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first > k)
+                    return(it); 
+            }
+            return (end());  
+        }
+
+        const iterator upper_bound (const key_type& k) const
+        {
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+            {   
+                if (it->first > k)
+                    return(it); 
+            }
+            return (end());  
+        }
+		/* Allocator */
+		allocator_type get_allocator() const { return _alloc; }
     };
 }      
 

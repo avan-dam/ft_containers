@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/11 14:42:16 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/12 18:56:08 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,141 +169,35 @@ void    stack_tests()
 	result_of_function_call((ft1!=ft2), (std1!=std2), "!=");
 }
 
-void    map_tests()
+void	map_key_compare()
 {
-    std::cout << "PERFORMING MAP TESTS:" << std::endl;
-	ft::map<char, int> m;
-	std::map<char, int> m2;
+	std::map<char,int> mymapstd1;
+	ft::map<char,int> mymapft1;
 
-	std::map<char,int>::iterator it=m2.end();
-	std::cout << "stdit = begin() it->first " << it->first << std::endl;
+  	mymapstd1['a']=100;
+  	mymapft1['a']=100;
+	mymapstd1['b']=200;
+	mymapft1['b']=200;
+	mymapstd1['c']=300;
+	mymapft1['c']=300;
 
-	ft::map<char,int>::iterator it3=m.end();
-	std::cout << "it = end() it->first " << it3->first << std::endl;
+	std::cout << "now reverse" << std::endl;
+	std::cout << "mymapft1['a']" << mymapft1['a'] << std::endl;
+	std::cout << "mymapft1['b']" << mymapft1['b'] << std::endl;
+	std::cout << "mymapft1['c']" << mymapft1['c'] << std::endl;
 
-	std::cout << "size of mine should be 0 is " << m.size() << std::endl;
-	std::cout << "size of theirs should be 0 is " << m2.size() << std::endl;
-	std::cout << "empty of mine is " << m.empty() << std::endl;
-	std::cout << "empty of theirs is " << m2.empty() << std::endl;
-	m.insert ( ft::pair<char,int>('b',100) );
-	m2.insert ( std::pair<char,int>('b',100) );
-	m.insert ( ft::pair<char,int>('a',2) );
-	m2.insert ( std::pair<char,int>('a',2) );
-
-	m.insert ( ft::pair<char,int>('c',500) );
-	m2.insert ( std::pair<char,int>('c',500) );
-	m.insert ( ft::pair<char,int>('l',100) );
-	m2.insert ( std::pair<char,int>('l',100) );
-	m.insert ( ft::pair<char,int>('d',2) );
-	m2.insert ( std::pair<char,int>('d',2) );
-	m.insert ( ft::pair<char,int>('p',500) );
-	m2.insert ( std::pair<char,int>('p',500) );
-
-	m2.insert ( std::pair<char,int>('y',500));
-	m.insert ( ft::pair<char,int>('y',500));
-	m2.insert ( std::pair<char,int>('f',100));
-	m.insert ( ft::pair<char,int>('f',100));
-	m2.insert ( std::pair<char,int>('h',2));
-	m.insert ( ft::pair<char,int>('h',2));
-
-	std::cout << "reverse_iterator std:" << std::endl;
-	for (std::map<char,int>::const_reverse_iterator itz=m2.rbegin(); itz!=m2.rend(); ++itz)
-    std::cout << " " <<itz->first << " => " << itz->second;
-	std::cout <<  std::endl;
-
-	std::cout << "reverse_iterator ft:" << std::endl;
-	for (ft::map<char,int>::const_reverse_iterator itp=m.rbegin(); itp!=m.rend(); ++itp)
-    std::cout << " " <<itp->first << " => " << itp->second;
-	std::cout <<  std::endl;
-
-	std::cout << "std:" << std::endl;
-	for (std::map<char,int>::const_iterator itz=m2.end(); itz!=m2.begin(); --itz)
+  	std::cout << "std:" << std::endl;
+	for (std::map<char,int>::const_iterator itz=mymapstd1.begin(); itz!=mymapstd1.end(); ++itz)
     std::cout << " " <<itz->first << " => " << itz->second;
 	std::cout <<  std::endl;
 
 	std::cout << "ft:" << std::endl;
-	for (ft::map<char,int>::const_iterator itp=m.end(); itp!=m.begin(); --itp)
-    std::cout << " " <<itp->first << " => " << itp->second;
-	std::cout <<  std::endl;
-	
-
-	std::map<char,int> secondstd (m2.begin(),m2.end());
-	ft::map<char,int> secondft (m.begin(),m.end());
-	std::cout << "std:" << std::endl;
-	for (std::map<char,int>::iterator itz=secondstd.begin(); itz!=secondstd.end(); ++itz)
-    std::cout << " " <<itz->first << " => " << itz->second;
-	std::cout <<  std::endl;
-
-	std::cout << "ft:" << std::endl;
-	for (ft::map<char,int>::iterator itp=secondft.begin(); itp!=secondft.end(); ++itp)
+	for (ft::map<char,int>::const_iterator itp=mymapft1.begin(); itp!=mymapft1.end(); ++itp)
     std::cout << " " <<itp->first << " => " << itp->second;
 	std::cout <<  std::endl;
 
-	std::map<char,int> thirdstd (secondstd);
-	ft::map<char,int> thirdft (secondft);
-	std::cout << "std:" << std::endl;
-	for (std::map<char,int>::iterator itz=thirdstd.begin(); itz!=thirdstd.end(); ++itz)
-    std::cout << " " <<itz->first << " => " << itz->second;
-	std::cout <<  std::endl;
-
-	std::cout << "ft:" << std::endl;
-	for (ft::map<char,int>::iterator itp=thirdft.begin(); itp!=thirdft.end(); ++itp)
-    std::cout << " " <<itp->first << " => " << itp->second;
-	std::cout <<  std::endl;
-
-	thirdstd.clear();
-	thirdft.clear();
-
-	std::cout << "size of mine is " << thirdft.size() << std::endl;
-	std::cout << "size of theirs is " << thirdstd.size() << std::endl;
-	std::cout << "empty of mine is " << thirdft.empty() << std::endl;
-	std::cout << "empty of theirs is " << thirdstd.empty() << std::endl;
-
-	std::map<char,int> fourthstd = secondstd;
-	ft::map<char,int> fourthft = secondft;
-
-	std::cout << "std:" << std::endl;
-	for (std::map<char,int>::iterator itz=fourthstd.begin(); itz!=fourthstd.end(); ++itz)
-    std::cout << " " <<itz->first << " => " << itz->second;
-	std::cout <<  std::endl;
-
-	std::cout << "ft:" << std::endl;
-	for (ft::map<char,int>::iterator itp=fourthft.begin(); itp!=fourthft.end(); ++itp)
-    std::cout << " " <<itp->first << " => " << itp->second;
-	std::cout <<  std::endl;
-
-	std::map<char,int>::reverse_iterator it1=fourthstd.rend();
-	std::cout << "stdit = rend() it->first " << it1->first << std::endl;
-
-	ft::map<char,int>::reverse_iterator it2=fourthft.rend();
-	std::cout << "it = rend() it->first " << it2->first << std::endl;
-
-	std::map<char,int>::reverse_iterator it7=fourthstd.rbegin();
-	std::cout << "stdit = rbegin() it->first " << it7->first << std::endl;
-
-	ft::map<char,int>::reverse_iterator it8=fourthft.rbegin();
-	std::cout << "it = rbegin() it->first " << it8->first << std::endl;
-
-
-	std::map<char,int>::iterator ita=fourthstd.end();
-	std::cout << "stdit = end() ita->first " << ita->first << std::endl;
-
-	ft::map<char,int>::iterator itb=fourthft.end();
-	std::cout << "it = end() it->first " << itb->first << std::endl;
-
-	std::map<char,int>::iterator itc=fourthstd.begin();
-	std::cout << "stdit = begin() it->first " << itc->first << std::endl;
-
-	ft::map<char,int>::iterator itd=fourthft.begin();
-	std::cout << "it = begin() it->first " << itd->first << std::endl;
-	
-	std::cout << "std max size is  " << fourthstd.max_size() << std::endl;
-	std::cout << "my max size is  " << fourthft.max_size() << std::endl;
-
-
-
-  	std::map<char,std::string> mymapstd;
-  	std::map<char,std::string> mymapft;
+	std::map<char,std::string>	mymapstd;
+  	ft::map<char,std::string>	mymapft;
 
   	mymapstd['a']="an element";
   	mymapft['a']="an element";
@@ -311,29 +205,310 @@ void    map_tests()
   	mymapft['b']="another element";
   	mymapstd['c']=mymapstd['b'];
   	mymapft['c']=mymapft['b'];
+	std::cout << "mymapft1['a']" << mymapft['a'] << std::endl;
+	std::cout << "mymapft1['b']" << mymapft['b'] << std::endl;
+	std::cout << "mymapft1['c']" << mymapft['c'] << std::endl;
+	std::map<char,int>::key_compare mycompstd = mymapstd.key_comp();
+	ft::map<char,int>::key_compare mycompft = mymapft.key_comp();
+  	// std::cout << "std:" << std::endl;
+	// for (std::map<char,std::string>::const_iterator itz=mymapstd.begin(); itz!=mymapstd.end(); ++itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "ft:" << std::endl;
+	// for (ft::map<char,std::string>::const_iterator ity=mymapft.begin(); ity!=mymapft.end(); ++ity)
+    // std::cout << " " <<ity->first << " => " << ity->second;
+	// std::cout <<  std::endl;
+
+  std::cout << "mymapstd contains:\n";
+  char highest = mymapstd1.rbegin()->first;     // key value of last element
+  std::map<char,int>::iterator it = mymapstd1.begin();
+  do {
+    std::cout << it->first << " => " << it->second << '\n';
+  } while ( mycompstd((*it++).first, highest) );
+  std::cout << '\n';
+  std::cout << "mymapft contains:\n";
+  char highesty = mymapft1.rbegin()->first;     // key value of last element
+  ft::map<char,int>::iterator ity = mymapft1.begin();
+  do {
+    std::cout << ity->first << " => " << ity->second << '\n';
+  } while ( mycompft((*ity++).first, highesty) );
+  std::cout << '\n';
+
+	// std::cout << "value comp" << std::endl;
+    // std::map<char,int> mymapstd2;
+    // ft::map<char,int> mymapft2;
+
+	// mymapstd2['x']=1001;
+	// mymapft2['x']=1001;
+	// mymapstd2['y']=2002;
+	// mymapft2['y']=2002;
+	// mymapstd2['z']=3003;
+	// mymapft2['z']=3003;
+
+	// std::cout << "mymap contains:\n";
+
+	// std::pair<char,int> higheststd1 = *mymapstd2.rbegin();          // last element
+	// ft::pair<char,int> highestft1 = *mymapft2.rbegin();          // last element
+
+	// std::map<char,int>::iterator itstd1 = mymapstd2.begin();
+	// do {
+    // 	std::cout << itstd1->first << " => " << itstd1->second << '\n';
+	// } while ( mymapstd2.value_comp()(*itstd1++, higheststd1) );
+
+	// ft::map<char,int>::iterator itftd1 = mymapft2.begin();
+	// do {
+    // 	std::cout << itftd1->first << " => " << itftd1->second << '\n';
+	// } while ( mymapft2.value_comp()(*itftd1++, highestft1) );
+}
+
+void	map_insert_tests()
+{
+	std::map<char,int> mymapstd;
+	ft::map<char,int> mymapft;
+
+	// first insert function version (single parameter):
+	mymapstd.insert ( std::pair<char,int>('a',100) );
+	mymapft.insert ( ft::pair<char,int>('a',100) );
+	mymapstd.insert ( std::pair<char,int>('z',200) );
+	mymapft.insert ( ft::pair<char,int>('z',200) );
+
+	std::pair<std::map<char,int>::iterator,bool> retstd;
+	retstd = mymapstd.insert ( std::pair<char,int>('z',500) );
+	if (retstd.second==false) {
+    std::cout << "element 'z' already existed";
+    std::cout << " with a value of " << retstd.first->second << '\n';
+  	}
+	ft::pair<ft::map<char,int>::iterator,bool> retft;
+	retft = mymapft.insert ( ft::pair<char,int>('z',500) );
+	if (retft.second==false) {
+    std::cout << "element 'z' already existed";
+    std::cout << " with a value of " << retft.first->second << '\n';
+  	}
+
+	// second insert function version (with hint position):
+  std::map<char,int>::iterator itstd = mymapstd.begin();
+  ft::map<char,int>::iterator itft = mymapft.begin();
+  mymapstd.insert (itstd, std::pair<char,int>('b',300));  // max efficiency inserting
+  mymapft.insert (itft, ft::pair<char,int>('b',300));  // max efficiency inserting
+  mymapstd.insert (itstd, std::pair<char,int>('c',400));  // no max efficiency inserting
+  mymapft.insert (itft, ft::pair<char,int>('c',400));  // no max efficiency inserting
+
+  // third insert function version (range insertion):
+  std::map<char,int> anothermap;
+  ft::map<char,int> anothermapft;
+  anothermap.insert(mymapstd.begin(),mymapstd.find('c'));
+  anothermapft.insert(mymapft.begin(),mymapft.find('c'));
+
+  // showing contents:
+  std::cout << "mymap contains:\n";
+  for (itstd=mymapstd.begin(); itstd!=mymapstd.end(); ++itstd)
+    std::cout << itstd->first << " => " << itstd->second << '\n';
+  std::cout << "mymap FT contains:\n";
+  for (itft=mymapft.begin(); itft!=mymapft.end(); ++itft)
+    std::cout << itft->first << " => " << itft->second << '\n';
+  std::cout << "anothermap contains:\n";
+  for (itstd=anothermap.begin(); itstd!=anothermap.end(); ++itstd)
+    std::cout << itstd->first << " => " << itstd->second << '\n';
+  std::cout << "anothermap FT contains:\n";
+  for (itft=anothermapft.begin(); itft!=anothermapft.end(); ++itft)
+    std::cout << itft->first << " => " << itft->second << '\n';
+
+	std::map<char,int>::iterator itlowstd;
+	ft::map<char,int>::iterator itlowft;
+	itlowstd = mymapstd.upper_bound('b');
+	itlowft = mymapft.upper_bound('b');
+	std::cout << "itlowstd: " << itlowstd->first << std::endl;
+	std::cout << "itlowft: " << itlowft->first << std::endl;
+}
+
+void    map_tests()
+{
+    std::cout << "PERFORMING MAP TESTS:" << std::endl;
+	// ft::map<char, int> m;
+	// std::map<char, int> m2;
+
+	// std::map<char,int>::iterator it=m2.end();
+	// std::cout << "stdit = begin() it->first " << it->first << std::endl;
+
+	// ft::map<char,int>::iterator it3=m.end();
+	// std::cout << "it = end() it->first " << it3->first << std::endl;
+
+	// std::cout << "size of mine should be 0 is " << m.size() << std::endl;
+	// std::cout << "size of theirs should be 0 is " << m2.size() << std::endl;
+	// std::cout << "empty of mine is " << m.empty() << std::endl;
+	// std::cout << "empty of theirs is " << m2.empty() << std::endl;
+	// m.insert ( ft::pair<char,int>('b',100) );
+	// m2.insert ( std::pair<char,int>('b',100) );
+	// m.insert ( ft::pair<char,int>('a',2) );
+	// m2.insert ( std::pair<char,int>('a',2) );
+
+	// m.insert ( ft::pair<char,int>('c',500) );
+	// m2.insert ( std::pair<char,int>('c',500) );
+	// m.insert ( ft::pair<char,int>('l',100) );
+	// m2.insert ( std::pair<char,int>('l',100) );
+	// m.insert ( ft::pair<char,int>('d',2) );
+	// m2.insert ( std::pair<char,int>('d',2) );
+	// m.insert ( ft::pair<char,int>('p',500) );
+	// m2.insert ( std::pair<char,int>('p',500) );
+
+	// m2.insert ( std::pair<char,int>('y',500));
+	// m.insert ( ft::pair<char,int>('y',500));
+	// m2.insert ( std::pair<char,int>('f',100));
+	// m.insert ( ft::pair<char,int>('f',100));
+	// m2.insert ( std::pair<char,int>('h',2));
+	// m.insert ( ft::pair<char,int>('h',2));
+
+	// std::cout << "reverse_iterator std:" << std::endl;
+	// for (std::map<char,int>::const_reverse_iterator itz=m2.rbegin(); itz!=m2.rend(); ++itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "reverse_iterator ft:" << std::endl;
+	// for (ft::map<char,int>::const_reverse_iterator itp=m.rbegin(); itp!=m.rend(); ++itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "std:" << std::endl;
+	// for (std::map<char,int>::const_iterator itz=m2.end(); itz!=m2.begin(); --itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "ft:" << std::endl;
+	// for (ft::map<char,int>::const_iterator itp=m.end(); itp!=m.begin(); --itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "reverse_iterator backwards std:" << std::endl;
+	// for (std::map<char,int>::const_reverse_iterator itz=m2.rend(); itz!=m2.rbegin(); --itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "reverse_iterator ft:" << std::endl;
+	// for (ft::map<char,int>::const_reverse_iterator itp=m.rend(); itp!=m.rbegin(); --itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "std:" << std::endl;
+	// for (std::map<char,int>::const_iterator itz=m2.begin(); itz!=m2.end(); ++itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "ft:" << std::endl;
+	// for (ft::map<char,int>::const_iterator itp=m.begin(); itp!=m.end(); ++itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// std::map<char,int> secondstd (m2.begin(),m2.end());
+	// ft::map<char,int> secondft (m.begin(),m.end());
+	// std::cout << "std:" << std::endl;
+	// for (std::map<char,int>::iterator itz=secondstd.begin(); itz!=secondstd.end(); ++itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "ft:" << std::endl;
+	// for (ft::map<char,int>::iterator itp=secondft.begin(); itp!=secondft.end(); ++itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// std::map<char,int> thirdstd (secondstd);
+	// ft::map<char,int> thirdft (secondft);
+	// std::cout << "std:" << std::endl;
+	// for (std::map<char,int>::reverse_iterator itz=thirdstd.rbegin(); itz!=thirdstd.rend(); ++itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "ft:" << std::endl;
+	// for (ft::map<char,int>::reverse_iterator itp=thirdft.rbegin(); itp!=thirdft.rend(); ++itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// thirdstd.clear();
+	// thirdft.clear();
+
+	// std::cout << "size of mine is " << thirdft.size() << std::endl;
+	// std::cout << "size of theirs is " << thirdstd.size() << std::endl;
+	// std::cout << "empty of mine is " << thirdft.empty() << std::endl;
+	// std::cout << "empty of theirs is " << thirdstd.empty() << std::endl;
+
+	// std::map<char,int> fourthstd = secondstd;
+	// ft::map<char,int> fourthft = secondft;
+
+	// std::cout << "std:" << std::endl;
+	// for (std::map<char,int>::iterator itz=fourthstd.begin(); itz!=fourthstd.end(); ++itz)
+    // std::cout << " " <<itz->first << " => " << itz->second;
+	// std::cout <<  std::endl;
+
+	// std::cout << "ft:" << std::endl;
+	// for (ft::map<char,int>::iterator itp=fourthft.begin(); itp!=fourthft.end(); ++itp)
+    // std::cout << " " <<itp->first << " => " << itp->second;
+	// std::cout <<  std::endl;
+
+	// std::map<char,int>::reverse_iterator it1=m2.rend();
+	// std::cout << "stdit = rend() it->first " << it1->first << std::endl;
+
+	// ft::map<char,int>::reverse_iterator it2=m.rend();
+	// std::cout << "it = rend() it->first " << it2->first << std::endl;
+
+	// std::map<char,int>::reverse_iterator it7=m2.rbegin();
+	// std::cout << "stdit = rbegin() it->first " << it7->first << std::endl;
+
+	// ft::map<char,int>::reverse_iterator it8=m.rbegin();
+	// std::cout << "it = rbegin() it->first " << it8->first << std::endl;
+
+	// std::map<char,int>::iterator ita=m2.end();
+	// std::cout << "stdit = end() ita->first [" << ita->first << "]second is " << ita->second << std::endl;
+	// ita--;
+	// std::cout << "stdit = end-- MINUS 1() ita->first [" << ita->first << "]second is " << ita->second << std::endl;
+	// ft::map<char,int>::iterator itb=m.end();
+	// std::cout << "it = end() it->first [" << itb->first << "]second is " << itb->second<< std::endl;
+	// itb--;
+	// std::cout << "it = end()-- MINUS 1() it->first [" << itb->first << "]second is " << itb->second<< std::endl;
+	// std::map<char,int>::iterator itc=m2.begin();
+	// std::cout << "stdit = begin() it->first " << itc->first << std::endl;
+
+	// ft::map<char,int>::iterator itd=m.begin();
+	// std::cout << "it = begin() it->first " << itd->first << std::endl;
+	
+	// std::cout << "std max size is  " << fourthstd.max_size() << std::endl;
+	// std::cout << "my max size is  " << fourthft.max_size() << std::endl;
+
+
+
+  	// std::map<char,std::string> mymapstd;
+  	// ft::map<char,std::string> mymapft;
+
+  	// mymapstd['a']="an element";
+  	// mymapft['a']="an element";
+  	// mymapstd['b']="another element";
+  	// mymapft['b']="another element";
+  	// mymapstd['c']=mymapstd['b'];
+  	// mymapft['c']=mymapft['b'];
   
-	std::cout << "mymapstd['a'] is " << mymapstd['a'] << '\n';
-	std::cout << "mymapft['a'] is " << mymapft['a'] << '\n';
-  	std::cout << "mymapstd['b'] is " << mymapstd['b'] << '\n';
-  	std::cout << "mymapft['b'] is " << mymapft['b'] << '\n';
-  	std::cout << "mymapstd['c'] is " << mymapstd['c'] << '\n';
-  	std::cout << "mymapft['c'] is " << mymapft['c'] << '\n';
-  	std::cout << "mymapstd['d'] is " << mymapstd['d'] << '\n';
-  	std::cout << "mymapft['d'] is " << mymapft['d'] << '\n';
+	// std::cout << "mymapstd['a'] is " << mymapstd['a'] << '\n';
+	// std::cout << "mymapft['a'] is " << mymapft['a'] << '\n';
+  	// std::cout << "mymapstd['b'] is " << mymapstd['b'] << '\n';
+  	// std::cout << "mymapft['b'] is " << mymapft['b'] << '\n';
+  	// std::cout << "mymapstd['c'] is " << mymapstd['c'] << '\n';
+  	// std::cout << "mymapft['c'] is " << mymapft['c'] << '\n';
+  	// std::cout << "mymapstd['d'] is " << mymapstd['d'] << '\n';
+  	// std::cout << "mymapft['d'] is " << mymapft['d'] << '\n';
 
-  	std::cout << "mymapstd now contains " << mymapstd.size() << " elements.\n";
-  	std::cout << "mymapft now contains " << mymapft.size() << " elements.\n";
+  	// std::cout << "mymapstd now contains " << mymapstd.size() << " elements.\n";
+  	// std::cout << "mymapft now contains " << mymapft.size() << " elements.\n";
 
-  	std::cout << "mymapstd now .count('c') " << mymapstd.count('c') << " elements.\n";
-  	std::cout << "mymapft now .count('c') " << mymapft.count('c') << " elements.\n";
-  	std::cout << "mymapstd now .count('y') " << mymapstd.count('y') << " elements.\n";
-  	std::cout << "mymapft now .count('y') " << mymapft.count('y') << " elements.\n";
+  	// std::cout << "mymapstd now .count('c') " << mymapstd.count('c') << " elements.\n";
+  	// std::cout << "mymapft now .count('c') " << mymapft.count('c') << " elements.\n";
+  	// std::cout << "mymapstd now .count('y') " << mymapstd.count('y') << " elements.\n";
+  	// std::cout << "mymapft now .count('y') " << mymapft.count('y') << " elements.\n";
 
-  	std::cout << "mymapstd now .count('c') " << mymapstd.find('c')->first << " elements.\n";
-  	std::cout << "mymapft now .count('c') " << mymapft.find('c')->first << " elements.\n";
-  	std::cout << "mymapstd now .count('y') " << mymapstd.find('y')->first << " elements.\n";
-  	std::cout << "mymapft now .count('y') " << mymapft.find('y')->first << " elements.\n";	
-	// while (1) {}
+  	// std::cout << "mymapstd now .count('c') " << mymapstd.find('c')->first << " elements.\n";
+  	// std::cout << "mymapft now .count('c') " << mymapft.find('c')->first << " elements.\n";
+  	// std::cout << "mymapstd now .count('y') " << mymapstd.find('y')->first << " elements.\n";
+  	// std::cout << "mymapft now .count('y') " << mymapft.find('y')->first << " elements.\n";
+
+	// map_key_compare();
+	map_insert_tests();
 }
 
 void vector_constructor()

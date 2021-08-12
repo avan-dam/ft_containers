@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 14:24:39 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/11 14:13:44 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/12 17:52:25 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <iostream>
 
 namespace ft {
-template <typename Key, typename T, typename P, typename R>
+template <typename T, typename P, typename R>
 class bidirectional_iterator
 {
     public:
@@ -27,14 +27,14 @@ class bidirectional_iterator
 		typedef T								value_type;
 		typedef R								reference;
 		typedef P								pointer;
-		typedef	tree_node<Key, T>				node;
-		typedef tree_node<Key, T>*				node_ptr;
-		typedef tree_node<Key, T>&				node_ref;
-		typedef bidirectional_iterator<Key, T, const T*, const T&>	const_type;
+		typedef	tree_node<T>					node;
+		typedef tree_node<T>*					node_ptr;
+		typedef tree_node<T>&					node_ref;
+		typedef bidirectional_iterator<T, const T*, const T&>	const_type;
 
-		operator const_type() const { return const_type(_tree_node); }	/* for casting to const */
-    	node_ptr operator->() {		return _tree_node;	}
-    	node_ptr operator*() {		return _tree_node;	}
+		operator const_type() const {   return const_type(_tree_node);  }	/* for casting to const */
+    	pointer operator->()        {   return &(_tree_node->_data);	}
+    	reference operator*()       {	return (_tree_node->_data);	    }
 	
     	bidirectional_iterator& operator++() 
         {
@@ -56,6 +56,7 @@ class bidirectional_iterator
             }
             return *this; 
         }
+
     	bidirectional_iterator operator++(int) {
 			bidirectional_iterator tmp = *this;
             if (_tree_node->_right != nullptr)
@@ -133,27 +134,32 @@ class bidirectional_iterator
 		}
 		~bidirectional_iterator() {}
 	
+		node_ptr	get_node()
+		{
+			return (_tree_node);
+		}
 	public:
 		node_ptr	_tree_node;
     };
 
-template <typename Key, typename T, typename P, typename R>
+template <typename T, typename P, typename R>
 class reverse_bidirectional_iterator
 	{
     public:
-		typedef std::bidirectional_iterator_tag	iterator_category;
-		typedef ptrdiff_t						difference_type;
-		typedef T								value_type;
-		typedef R								reference;
-		typedef P								pointer;
-		typedef	tree_node<Key, T>				node;
-		typedef tree_node<Key, T>*				node_ptr;
-		typedef tree_node<Key, T>&				node_ref;
-		typedef reverse_bidirectional_iterator<Key, T, const T*, const T&>	const_type;
+		typedef std::bidirectional_iterator_tag							iterator_category;
+		typedef ptrdiff_t												difference_type;
+		typedef T														value_type;
+		typedef R														reference;
+		typedef P														pointer;
+		typedef	tree_node<T>											node;
+		typedef tree_node<T>*											node_ptr;
+		typedef tree_node<T>&											node_ref;
+		typedef reverse_bidirectional_iterator<T, const T*, const T&>	const_type;
 
 		operator const_type() const { return const_type(_tree_node); }	/* for casting to const */
-    	node_ptr operator->() {		return _tree_node;	}
-    	node_ptr operator*() {		return _tree_node;	}
+    	pointer operator->() {		return (&_tree_node->_data);	}
+    	reference operator*() {		return _tree_node->_data;	}
+    	// node_ptr operator*() {		return _tree_node;	}
 
 			
     	reverse_bidirectional_iterator& operator--() 

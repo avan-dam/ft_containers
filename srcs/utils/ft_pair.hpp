@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:51:31 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/05 18:01:13 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/12 18:23:34 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ template <class T1, class T2> struct pair
         second_type second;
         
         // constructors
-        pair() {}
+        pair() : first(), second() {}
         template<class U, class V>
         pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
         pair (const first_type& a, const second_type& b) : first(a), second(b) {}
@@ -39,6 +39,12 @@ template <class T1, class T2> struct pair
             return *this;
         }
 };
+
+    template <class T1, class T2>
+    pair<T1,T2> make_pair (T1 x, T2 y)
+    {
+        return (ft::pair<T1, T2>(x, y));
+    }
 
 	template <class T1, class T2>
 	bool operator==(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
@@ -63,22 +69,6 @@ template <class T1, class T2> struct pair
     template <class T1, class T2>
     bool operator>= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
     {   return !(lhs<rhs);  }
-    
-
-    template <class T1, class T2>
-    pair<T1,T2> make_pair (T1 x, T2 y)
-    {
-        pair<T1, T2> p(x, y);
-        return (p);
-    }
 }
 
 #endif
-
-
-// template <class T1, class T2> 
-// struct pair
-// {
-    //     T1  first;
-    //     T2  second;
-    // }
