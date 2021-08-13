@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 14:24:39 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/12 17:52:25 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/13 10:35:34 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,17 +121,14 @@ class bidirectional_iterator
 		bool operator!=(const bidirectional_iterator& rhs) { return _tree_node != rhs._tree_node; }
 		bool operator==(const bidirectional_iterator& rhs) { return _tree_node == rhs._tree_node; }		
 		bidirectional_iterator() : _tree_node(nullptr) {}
-		bidirectional_iterator(node_ptr source) : _tree_node(source) {}
+		bidirectional_iterator(const node_ptr source) : _tree_node(source) {}
 		bidirectional_iterator & operator=(const bidirectional_iterator& source)
 		{
 			if (_tree_node != source._tree_node)
 				_tree_node = source._tree_node;
 			return *this;
 		}
-		bidirectional_iterator(const bidirectional_iterator & source) // check this
-		{
-			_tree_node = node_ptr(source._tree_node);
-		}
+		bidirectional_iterator(bidirectional_iterator const & source) : _tree_node(node_ptr(source._tree_node)) {}
 		~bidirectional_iterator() {}
 	
 		node_ptr	get_node()
@@ -159,8 +156,6 @@ class reverse_bidirectional_iterator
 		operator const_type() const { return const_type(_tree_node); }	/* for casting to const */
     	pointer operator->() {		return (&_tree_node->_data);	}
     	reference operator*() {		return _tree_node->_data;	}
-    	// node_ptr operator*() {		return _tree_node;	}
-
 			
     	reverse_bidirectional_iterator& operator--() 
         {
@@ -247,19 +242,20 @@ class reverse_bidirectional_iterator
 		bool operator!=(const reverse_bidirectional_iterator& rhs) { return _tree_node != rhs._tree_node; }
 		bool operator==(const reverse_bidirectional_iterator& rhs) { return _tree_node == rhs._tree_node; }		
 		reverse_bidirectional_iterator() : _tree_node(nullptr) {}
-		reverse_bidirectional_iterator(node_ptr source) : _tree_node(source) {}
+		reverse_bidirectional_iterator(const node_ptr source) : _tree_node(source) {}
 		reverse_bidirectional_iterator & operator=(const reverse_bidirectional_iterator& source)
 		{
 			if (_tree_node != source._tree_node)
 				_tree_node = source._tree_node;
 			return *this;
 		}
-		reverse_bidirectional_iterator(const reverse_bidirectional_iterator & source) // check this
-		{
-			_tree_node = node_ptr(source._tree_node);
-		}
+		reverse_bidirectional_iterator(reverse_bidirectional_iterator const & source) : _tree_node(node_ptr(source._tree_node)) {}
 		~reverse_bidirectional_iterator() {}
-
+	
+		node_ptr	get_node()
+		{
+			return (_tree_node);
+		}
 	public:
 		node_ptr	_tree_node;
 

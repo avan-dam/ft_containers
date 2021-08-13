@@ -6,12 +6,16 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:51:31 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/12 18:23:34 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/13 11:04:21 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PAIR_HPP
 # define FT_PAIR_HPP
+
+#include <utility>
+#include <iostream>
+// #include "../containers/ft_map.hpp"
 
 namespace ft {
 template <class T1, class T2> struct pair 
@@ -25,6 +29,8 @@ template <class T1, class T2> struct pair
         
         // constructors
         pair() : first(), second() {}
+        // template< class U, class V >
+        // pair(const std::pair<U,V>& pr) : first(pr.first), second(pr.second) {}
         template<class U, class V>
         pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
         pair (const first_type& a, const second_type& b) : first(a), second(b) {}

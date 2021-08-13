@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/12 18:56:49 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/13 10:41:13 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ class map
         size_type       _size;
     
     public:
+        /* constructors */
         explicit map (const key_compare& comp = key_compare(), 
         const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _size(0) 
         {
@@ -56,7 +57,6 @@ class map
             _root_node->_start_node = true;
         }
 
-        // typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
         template <class InputIterator>
         map (InputIterator first, InputIterator last,
         const key_compare& comp = key_compare(),
@@ -96,7 +96,7 @@ class map
             }
         }
 
-        // iterators
+        /* iterators */
         iterator        begin()
         {
             node_ptr _current_node = _root_node;
@@ -169,7 +169,7 @@ class map
         }
 
 
-        // capacity
+        /* capacity */
         size_type size() const
         {
             size_type   ret;
@@ -192,13 +192,13 @@ class map
 
        	size_type max_size() const { return _alloc.max_size(); }
 
-        //element accessors
+        /* element accessors */
         mapped_type& operator[] (const key_type& k)
         {           
             return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
         }
 
-        // modifiers
+        /* modifiers */
         pair<iterator,bool> insert (const value_type& val)
         {
             iterator ret;
@@ -358,7 +358,7 @@ class map
         void insert (InputIterator first, InputIterator last,
         typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
         {
-            for (typename ft::map<Key,T>::const_iterator it = first; it!=last; ++it)
+            for (typename ft::map<Key,T>::iterator it = first; it!=last; ++it)
             {   
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
                 insert(p);
@@ -392,7 +392,7 @@ class map
             _root_node = nullptr;
         }
         
-        //observers
+        /* observers */
         key_compare key_comp() const
         {
             return (_compare);
@@ -403,7 +403,7 @@ class map
         //     return (_compare);
         // }
         
-        //operations
+        /* operations */
         size_type count (const key_type& k) const
         {
             size_type ret;
@@ -476,6 +476,22 @@ class map
             }
             return (end());  
         }
+
+        ft::pair<iterator,iterator>             equal_range (const key_type& k)
+        {
+            // for (typename ft::map<Key,T>::iterator it = begin(); it!=end(); ++it)
+            // {   
+            //     if (it->first == k)
+            //     {
+            //         const_iterator itnxt = it;
+            //         itnxt++;
+            //         return(ft::pair<iterator, iterator>(it,itnxt)); 
+            //     }
+            // }
+            // return(ft::pair<iterator, iterator>(upper_bound(k), upper_bound(k)));
+            return(ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
+        }
+    
 		/* Allocator */
 		allocator_type get_allocator() const { return _alloc; }
     };
