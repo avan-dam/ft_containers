@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/20 12:53:13 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/20 18:36:32 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <list>
 #include <stack>
 #include <map>
-
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      /* Red */
@@ -317,17 +316,14 @@ void	map_insert_tests()
 	mymapft.insert ( ft::pair<char,int>('z',200) );
 
 	std::pair<std::map<char,int>::iterator,bool> retstd;
-	retstd = mymapstd.insert ( std::pair<char,int>('z',500) );
-	if (retstd.second==false) {
-    std::cout << "element 'z' already existed";
-    std::cout << " with a value of " << retstd.first->second << '\n';
-  	}
 	ft::pair<ft::map<char,int>::iterator,bool> retft;
+
+	retstd = mymapstd.insert ( std::pair<char,int>('z',500) );
 	retft = mymapft.insert ( ft::pair<char,int>('z',500) );
-	if (retft.second==false) {
-    std::cout << "element 'z' already existed";
-    std::cout << " with a value of " << retft.first->second << '\n';
-  	}
+
+	result_of_function_call(retft.second, retstd.second, "inserting pair");
+	result_of_function_call(retft.first->second, retstd.first->second, "correct value of inserted pair");
+
 
 	// second insert function version (with hint position):
   std::map<char,int>::iterator itstd = mymapstd.begin();
@@ -363,21 +359,14 @@ void	map_equal_range()
 	mymapstd['c']=30;
 	mymapft['c']=30;
 
-//   std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> retstd;
-//   ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> retft;
-//   retstd = mymapstd.equal_range('b');
-//   retft = mymapstd.equal_range('b');
+  std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> retstd;
+  ft::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> retft;
 
-//   std::cout << "lower bound points to: ";
-//   std::cout << retstd.first->first << " => " << retstd.first->second << '\n';
-//   std::cout << "lower bound FT points to: ";
-//   std::cout << retft.first->first << " => " << retft.first->second << '\n';
+  retstd = mymapstd.equal_range('b');
+  retft = mymapft.equal_range('b');
 
-//   std::cout << "upper bound points to: ";
-//   std::cout << retstd.second->first << " => " << retstd.second->second << '\n';
-
-//   std::cout << "upper bound points to: ";
-//   std::cout << retstd.second->first << " => " << retstd.second->second << '\n';
+	result_of_function_call(retft.first->second, retstd.first->second, "upperbounds of equal_range call on map");
+	result_of_function_call(retft.first->first, retstd.first->first, "lowerbounds of equal_range call on map");
 }
 
 void	map_swap()
@@ -434,14 +423,13 @@ void	map_erase()
 
   itstd=mymapstd.find ('e');
   itft=mymapft.find ('e');
-  mymapstd.erase ( itstd, mymapstd.end() );    // erasing by range
-  mymapft.erase ( itft, mymapft.end() );    // erasing by range
+	std::map<char,int>::iterator itstd2=mymapstd.find ('f');;
+	ft::map<char,int>::iterator itft2=mymapft.find ('f');
+  mymapstd.erase ( itstd, itstd2 );    // erasing by range
+  mymapft.erase ( itft, itft2 );    // erasing by range
 
-  // show content:
-  for (itstd=mymapstd.begin(); itstd!=mymapstd.end(); ++itstd)
-    std::cout << itstd->first << " => " << itstd->second << '\n';
-  for (itft=mymapft.begin(); itft!=mymapft.end(); ++itft)
-    std::cout << itft->first << " => " << itft->second << '\n';
+	same_map_ft_std_int(mymapstd, mymapft, "barstd", "barft after erase functions");
+
 }
 
 void    map_tests()
@@ -450,11 +438,8 @@ void    map_tests()
 	ft::map<char, int> m;
 	std::map<char, int> m2;
 
-	std::map<char,int>::iterator it=m2.end();
-	std::cout << "stdit = begin() it->first " << it->first << std::endl;
-
-	ft::map<char,int>::iterator it3=m.end();
-	std::cout << "it = end() it->first " << it3->first << std::endl;
+	result_of_function_call(m.size(), m2.size(), "m2 & m.size()");
+	result_of_function_call(m.empty(), m2.empty(), "m & m2.empty()");
 
 	std::cout << "size of mine should be 0 is " << m.size() << std::endl;
 	std::cout << "size of theirs should be 0 is " << m2.size() << std::endl;
@@ -528,10 +513,10 @@ void    map_tests()
 	result_of_function_call(mymapft4.find('y')->first, mymapstd4.find('y')->first, "mymapft4and mymapstd4 .find('y')->first");
 
 	map_key_compare();
-	// map_insert_tests();
-	// map_equal_range();
-	// map_swap();
-	// map_erase();
+	map_insert_tests();
+	map_equal_range();
+	map_swap();
+	map_erase();
 }
 
 void vector_constructor()
@@ -852,8 +837,8 @@ int    main(int argc, char **argv)
 {
     if (argc == 1 || argc == 2)
     {
-        // if (argc == 1 || strcmp(argv[1], "vector") == 0)
-        //     vector_tests();
+        if (argc == 1 || strcmp(argv[1], "vector") == 0)
+            vector_tests();
         if (argc == 1 || strcmp(argv[1], "map") == 0)
             map_tests();
 		// if (argc == 1 || strcmp(argv[1], "stack") == 0)

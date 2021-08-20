@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/20 12:51:48 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/20 17:28:58 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,10 +402,7 @@ class map
         {
             ft::map<Key,T> tmp;
             if (first != begin())
-            {
-                first--;
                 tmp.insert(begin(), first);
-            } 
             tmp.insert(last, end());
             clear();
             insert(tmp.begin(), tmp.end());

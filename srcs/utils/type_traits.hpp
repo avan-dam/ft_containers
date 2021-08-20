@@ -77,7 +77,6 @@ namespace ft {
 		    typedef T*	                						        pointer;
 		    typedef T&	                    					        reference;
 		    typedef random_access_iterator_tag 				            iterator_category;
-		    // typedef bidirectional_iterator_tag 				            iterator_category;
         };
     template <class T>
     class iterator_traits<const T*> {
@@ -87,7 +86,6 @@ namespace ft {
 		    typedef const T*               						        pointer;
 		    typedef const T&                 					        reference;
 		    typedef random_access_iterator_tag 				            iterator_category;
-		    // typedef bidirectional_iterator_tag 				            iterator_category;
         };
 }
 

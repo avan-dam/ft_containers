@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/20 12:49:16 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/20 18:20:06 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "../iterators/random_access_iterator.hpp"
 #include "../utils/type_traits.hpp"
 #include "../utils/more.hpp"
-#include "../utils/ft_pair.hpp" // TAKE THIS OUT ONLY NEEDED FOR MAP
+#include "../utils/compare.hpp"
 
 namespace ft {
 template <class T, class Alloc = std::allocator<T> >
@@ -35,7 +35,7 @@ class vector
 		typedef	reverse_random_access_iterator<T, const T*, const T&>		const_reverse_iterator;
 		typedef	typename ft::iterator_traits<iterator>::difference_type		difference_type;
 		typedef size_t		 												size_type; 
-        
+
     public:
 		/* Constructors, deconstructor and assignment operator*/
         vector(const allocator_type& alloc = allocator_type()) 
@@ -318,27 +318,13 @@ class vector
 			return (ret);
 		}
     };
-
+// (InputIterator1 first1, InputIterator1 last1,
+//                                 InputIterator2 first2, InputIterator2 last2)
 	/* Non-member function overloads */
 	template <class T, class Alloc>
 	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		ft::vector<T,Alloc> lhs_copy(lhs);
-		ft::vector<T,Alloc> rhs_copy(rhs);
-		if (lhs.size() != rhs.size())
-			return false;
-		typename ft::vector<T,Alloc>::iterator lhs_it = lhs_copy.begin();
-		typename ft::vector<T,Alloc>::iterator rhs_it = rhs_copy.begin();
-		size_t i = 0;
-		while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
-		{
-			if (lhs[i] != rhs[i])
-				return false;
-			lhs_it++;
-			rhs_it++;
-			i++;
-		}
-		return true;
+		return (ft::equal<typename ft::vector<T,Alloc>::const_iterator, typename ft::vector<T,Alloc>::const_iterator>(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class T, class Alloc>
@@ -350,43 +336,16 @@ class vector
 	template <class T, class Alloc>
 	bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		ft::vector<T,Alloc> lhs_copy(lhs);
-		ft::vector<T,Alloc> rhs_copy(rhs);
-		typename ft::vector<T,Alloc>::iterator lhs_it = lhs_copy.begin();
-		typename ft::vector<T,Alloc>::iterator rhs_it = rhs_copy.begin();
-		size_t i = 0;
-		while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
-		{
-			if (lhs_copy[i] > rhs_copy[i])
-				return true;
-			lhs_it++;
-			rhs_it++;
-			i++;
-		}
-		if (lhs_it != lhs_copy.end())
-			return true;
-		return false;
+		if (ft::equal<typename ft::vector<T,Alloc>::const_iterator, typename ft::vector<T,Alloc>::const_iterator>(lhs.begin(), lhs.end(), rhs.begin()) == true ||
+		ft::lexicographical_compare<typename ft::vector<T,Alloc>::const_iterator, typename ft::vector<T,Alloc>::const_iterator>(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()) == true)
+			return false;
+		return true;
 	}
 
 	template <class T, class Alloc>
 	bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		ft::vector<T,Alloc> lhs_copy(lhs);
-		ft::vector<T,Alloc> rhs_copy(rhs);
-		typename ft::vector<T,Alloc>::iterator lhs_it = lhs_copy.begin();
-		typename ft::vector<T,Alloc>::iterator rhs_it = rhs_copy.begin();
-		size_t i = 0;
-		while (lhs_it != lhs_copy.end() && rhs_it != rhs_copy.end() && i < lhs_copy.size())
-		{
-			if (lhs_copy[i] < rhs_copy[i])
-				return true;
-			lhs_it++;
-			rhs_it++;
-			i++;
-		}
-		if (rhs_it != rhs_copy.end())
-			return true;
-		return false;
+		return (ft::lexicographical_compare<typename ft::vector<T,Alloc>::const_iterator, typename ft::vector<T,Alloc>::const_iterator>(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T, class Alloc>
