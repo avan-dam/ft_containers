@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/13 14:25:27 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/20 12:53:13 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,31 +277,31 @@ void	map_key_compare()
 	} while ( mycompft((*ity++).first, highesty) );
 	std::cout << '\n';
 
-	// std::cout << "value comp" << std::endl;
-    // std::map<char,int> mymapstd2;
-    // ft::map<char,int> mymapft2;
+	std::cout << "value comp" << std::endl;
+    std::map<char,int> mymapstd2;
+    ft::map<char,int> mymapft2;
 
-	// mymapstd2['x']=1001;
-	// mymapft2['x']=1001;
-	// mymapstd2['y']=2002;
-	// mymapft2['y']=2002;
-	// mymapstd2['z']=3003;
-	// mymapft2['z']=3003;
+	mymapstd2['x']=1001;
+	mymapft2['x']=1001;
+	mymapstd2['y']=2002;
+	mymapft2['y']=2002;
+	mymapstd2['z']=3003;
+	mymapft2['z']=3003;
 
-	// std::cout << "mymap contains:\n";
+	std::cout << "mymap contains:\n";
 
-	// std::pair<char,int> higheststd1 = *mymapstd2.rbegin();          // last element
-	// ft::pair<char,int> highestft1 = *mymapft2.rbegin();          // last element
+	std::pair<char,int> higheststd1 = *mymapstd2.rbegin();          // last element
+	ft::pair<char,int> highestft1 = *mymapft2.rbegin();          // last element
 
-	// std::map<char,int>::iterator itstd1 = mymapstd2.begin();
-	// do {
-    // 	std::cout << itstd1->first << " => " << itstd1->second << '\n';
-	// } while ( mymapstd2.value_comp()(*itstd1++, higheststd1) );
+	std::map<char,int>::iterator itstd1 = mymapstd2.begin();
+	do {
+    	std::cout << itstd1->first << " => " << itstd1->second << '\n';
+	} while ( mymapstd2.value_comp()(*itstd1++, higheststd1) );
 
-	// ft::map<char,int>::iterator itftd1 = mymapft2.begin();
-	// do {
-    // 	std::cout << itftd1->first << " => " << itftd1->second << '\n';
-	// } while ( mymapft2.value_comp()(*itftd1++, highestft1) );
+	ft::map<char,int>::iterator itftd1 = mymapft2.begin();
+	do {
+    	std::cout << itftd1->first << " => " << itftd1->second << '\n';
+	} while ( mymapft2.value_comp()(*itftd1++, highestft1) );
 }
 
 void	map_insert_tests()
@@ -378,6 +378,70 @@ void	map_equal_range()
 
 //   std::cout << "upper bound points to: ";
 //   std::cout << retstd.second->first << " => " << retstd.second->second << '\n';
+}
+
+void	map_swap()
+{
+	std::map<char,int> foostd,barstd;
+	ft::map<char,int> foofft,barft;
+
+	foostd['x']=100;
+	foofft['x']=100;
+	foostd['y']=200;
+	foofft['y']=200;
+
+	barstd['a']=11;
+	barft['a']=11;
+	barstd['b']=22;
+	barft['b']=22;
+	barstd['c']=33;
+	barft['c']=33;
+
+	foostd.swap(barstd);
+	foofft.swap(barft);
+	same_map_ft_std_int(barstd, barft, "barstd", "barft");
+
+}
+
+void	map_erase()
+{
+	std::map<char,int> mymapstd;
+	ft::map<char,int> mymapft;
+	std::map<char,int>::iterator itstd;
+	ft::map<char,int>::iterator itft;
+
+  // insert some values:
+  mymapstd['a']=10;
+  mymapft['a']=10;
+  mymapstd['b']=20;
+  mymapft['b']=20;
+  mymapstd['c']=30;
+  mymapft['c']=30;
+  mymapstd['d']=40;
+  mymapft['d']=40;
+  mymapstd['e']=50;
+  mymapft['e']=50;
+  mymapstd['f']=60;
+  mymapft['f']=60;
+
+  itstd=mymapstd.find('b');
+  itft=mymapft.find('b');
+  mymapstd.erase (itstd);                   // erasing by iterator
+  mymapft.erase (itft);                   // erasing by iterator
+
+  mymapstd.erase ('c');                  // erasing by key
+  mymapft.erase ('c');                  // erasing by key
+
+  itstd=mymapstd.find ('e');
+  itft=mymapft.find ('e');
+  mymapstd.erase ( itstd, mymapstd.end() );    // erasing by range
+  mymapft.erase ( itft, mymapft.end() );    // erasing by range
+
+  // show content:
+  for (itstd=mymapstd.begin(); itstd!=mymapstd.end(); ++itstd)
+    std::cout << itstd->first << " => " << itstd->second << '\n';
+  for (itft=mymapft.begin(); itft!=mymapft.end(); ++itft)
+    std::cout << itft->first << " => " << itft->second << '\n';
 }
 
 void    map_tests()
@@ -464,8 +528,10 @@ void    map_tests()
 	result_of_function_call(mymapft4.find('y')->first, mymapstd4.find('y')->first, "mymapft4and mymapstd4 .find('y')->first");
 
 	map_key_compare();
-	map_insert_tests();
-	map_equal_range();
+	// map_insert_tests();
+	// map_equal_range();
+	// map_swap();
+	// map_erase();
 }
 
 void vector_constructor()

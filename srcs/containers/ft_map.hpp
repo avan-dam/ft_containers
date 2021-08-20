@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/13 10:41:13 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/20 12:51:48 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class map
 		typedef	T														                        	mapped_type; 
 		typedef	pair<const key_type, mapped_type>						                        	value_type; 
 		typedef	Compare														                        key_compare; 
-		// typedef		Nested function class to compare elements		    	                    value_compare; 
 		typedef	Alloc														                        allocator_type; 
 		typedef	typename allocator_type::reference							                        reference; 
 		typedef	typename allocator_type::const_reference					                        const_reference; 
@@ -41,12 +40,31 @@ class map
 		typedef size_t		 												                        size_type;
         typedef	tree_node<value_type>                                                               node;
         typedef	tree_node<value_type>*                                                              node_ptr;
+    
+    // INNER CLASS VALUE COMPARE 
+    class value_compare : std::binary_function<value_type,value_type,bool>
+    {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+            friend class map;
+        protected:
+            Compare comp;
+            value_compare (Compare c) : comp(c) {} 
+            // constructed with map's comparison object
+        public:
+            typedef bool result_type;
+            typedef value_type first_argument_type;
+            typedef value_type second_argument_type;
+            bool operator() (const value_type& x, const value_type& y) const
+            {
+                return comp(x.first, y.first);
+            }
+    };
+
     private:
     	allocator_type	_alloc;
         key_compare     _compare;
         node_ptr        _root_node;
         size_type       _size;
-    
+
     public:
         /* constructors */
         explicit map (const key_compare& comp = key_compare(), 
@@ -64,8 +82,9 @@ class map
         typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
         : _alloc(alloc), _compare(comp)
         {
+            _root_node = nullptr;
 	        for (InputIterator it = first; it!=last; ++it)
-            {   
+            {
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
                 insert(p);
             }
@@ -167,7 +186,6 @@ class map
             const_reverse_iterator ret(_current_node);
             return (ret);    
         }
-
 
         /* capacity */
         size_type size() const
@@ -276,8 +294,6 @@ class map
             return (p);
         }
 
-
-
         iterator insert (iterator position, const value_type& val)
         {
             iterator ret;
@@ -304,22 +320,20 @@ class map
                         {    
                             current_root->_left = new node(val, current_root);
                             ret = iterator(current_root->_left);
-                            return (ret);
                         }
                         else
                         {
                             node_ptr old = current_root->_left;
                             delete (old);
                             current_root->_left = new node(val, current_root);
-                            // ret = iterator(current_root->_left);
+                            ret = iterator(current_root->_left);
                             current_root = current_root->_left;
                             current_root->_start_node = false;
                             current_root->_left = new node (current_root);
                             current_root = current_root->_left;
                             current_root->_start_node = true;
-                            return (ret);
                         }
-                        // return (make_pair<iterator, bool>(ret, true));
+                        return (ret);
                     }
                     current_root = current_root->get_left();
                 }
@@ -365,17 +379,57 @@ class map
             }
         }
 
+        void swap (map& x)
+        {
+            if (size() == 0)
+            {
+                for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
+                    insert(ft::make_pair(it->first, it->second));
+                x.clear();
+                return;
+            }
+			ft::map<Key, T> tmp(begin(), end());
+            clear();
+            for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
+                insert(ft::make_pair(it->first, it->second));
+            x.clear();
+            for (typename ft::map<Key,T>::const_iterator itp = tmp.begin(); itp!=tmp.end(); ++itp)
+                x.insert(ft::make_pair(itp->first, itp->second));
+        }
 
 
+        void erase (iterator first, iterator last)
+        {
+            ft::map<Key,T> tmp;
+            if (first != begin())
+            {
+                first--;
+                tmp.insert(begin(), first);
+            } 
+            tmp.insert(last, end());
+            clear();
+            insert(tmp.begin(), tmp.end());
+        }
 
+        void erase (iterator position)
+        {
+            iterator posnext = position;
+            posnext++;
+            erase(position, posnext);
+        }
 
-
-
-
+        size_type erase (const key_type& k)
+        {
+            if (count(k) == 0)
+                return (0);
+            iterator it = find(k);
+            erase(it);
+            return (1);
+        }
 
         void    clear()
         {
-            if (empty())
+            if (empty() || _root_node == nullptr)
                 return;
             iterator prev = begin();
             iterator nxt = prev;
@@ -398,10 +452,10 @@ class map
             return (_compare);
         }
 
-        // value_compare value_comp() const
-        // {
-        //     return (_compare);
-        // }
+        value_compare value_comp() const
+        {
+            return (value_compare(_compare));
+        }
         
         /* operations */
         size_type count (const key_type& k) const
@@ -479,18 +533,13 @@ class map
 
         ft::pair<iterator,iterator>             equal_range (const key_type& k)
         {
-            // for (typename ft::map<Key,T>::iterator it = begin(); it!=end(); ++it)
-            // {   
-            //     if (it->first == k)
-            //     {
-            //         const_iterator itnxt = it;
-            //         itnxt++;
-            //         return(ft::pair<iterator, iterator>(it,itnxt)); 
-            //     }
-            // }
-            // return(ft::pair<iterator, iterator>(upper_bound(k), upper_bound(k)));
             return(ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
         }
+        
+        // pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        // {
+        //     return(ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k)));   
+        // }
     
 		/* Allocator */
 		allocator_type get_allocator() const { return _alloc; }

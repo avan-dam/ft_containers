@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/11 13:50:18 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/20 12:49:16 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,3 +412,5 @@ class vector
 }
 
 # endif
+
+// less than uses the lexoco graphical compare
