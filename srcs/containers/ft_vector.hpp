@@ -6,16 +6,16 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/20 18:20:06 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/23 19:08:36 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_VECTOR_HPP
 # define FT_VECTOR_HPP
 
-#include "../iterators/random_access_iterator.hpp"
+// #include "../iterators/randsom_access_iterator.hpp"
 #include "../utils/type_traits.hpp"
-#include "../utils/more.hpp"
+// #include "../utils/more.hpp"
 #include "../utils/compare.hpp"
 
 namespace ft {
@@ -29,7 +29,7 @@ class vector
         typedef const T&													const_reference;
         typedef	T*															pointer;
         typedef	const T*													const_pointer;
-		typedef	random_access_iterator<T, T*, T&>							iterator;
+		typedef random_access_iterator<T, T*, T&>							iterator;
 		typedef	random_access_iterator<T, const T*, const T&>				const_iterator;
 		typedef	reverse_random_access_iterator<T, T*, T&>					reverse_iterator;
 		typedef	reverse_random_access_iterator<T, const T*, const T&>		const_reverse_iterator;
@@ -53,7 +53,7 @@ class vector
 		
 		template <class InputIterator>
         vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
-            typename ft::enable_if<ft::is_iterator<InputIterator>::value >::type* = 0) : _alloc(alloc)
+        typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0) : _alloc(alloc)
         {
 			int i;
 

@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/20 18:36:32 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/26 13:48:43 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,21 @@ template <class Key, class T>
 bool	print_false(std::map<Key, T> std, ft::map<Key, T> ft, std::string name_std, std::string name_ft)
 {
 	std::cout << RED << name_std << " and " << name_ft << " are NOT equal" << std::endl;
+	typename std::map<Key, T>::iterator it_std = std.begin();
+ 	typename ft::map<Key, T>::iterator it_ft = ft.begin();
 	std::cout << "ft  container :";
-	for (unsigned int i = 0; i < ft.size(); i++)
-    	std::cout << ' ' << ft[i];
+	while (it_ft != ft.end())
+	{
+		std::cout << ' ' <<	it_ft->first <<":" << it_ft->second;
+		it_ft++;
+	}
 	std::cout << std::endl;
 	std::cout << "std container :";
-	for (unsigned int i = 0; i < std.size(); i++)
-    	std::cout << ' ' << ft[i];
+	while (it_std != std.end())
+	{
+		std::cout << ' ' <<	it_std->first <<":" << it_std->second;
+		it_std++;
+	}
 	std::cout << RESET << std::endl;
 	return false;
 }
@@ -125,15 +133,20 @@ bool	same_map_ft_std_int(std::map<Key, T> std, ft::map<Key, T> ft, std::string n
 {
 	if (std.size() != ft.size() || ft.empty() != std.empty())
 		return (print_false(std, ft, name_ft, name_std));
- 	typename std::map<Key, T>::iterator it_std = std.begin();
+	if (ft.size() == 0)
+		return (print_true(name_ft, name_std));
+	typename std::map<Key, T>::iterator it_std = std.begin();
  	typename ft::map<Key, T>::iterator it_ft = ft.begin();
+	std::cout << "content is:" <<std::endl;
 	while (it_std != std.end() && it_ft != ft.end())
 	{
 		if (it_ft->first != it_std->first || it_ft->second != it_std->second)
 			return (print_false(std, ft, name_ft, name_std));
+		std::cout << " " << it_ft->first;
 		it_std++;
 		it_ft++;
 	}
+	std::cout << std::endl;
  	typename std::map<Key, T>::reverse_iterator it_r_std = std.rbegin();
  	typename ft::map<Key, T>::reverse_iterator it_r_ft = ft.rbegin();
 	while (it_r_std != std.rend() && it_r_ft != ft.rend())
@@ -404,10 +417,14 @@ void	map_erase()
   mymapft['a']=10;
   mymapstd['b']=20;
   mymapft['b']=20;
-  mymapstd['c']=30;
-  mymapft['c']=30;
-  mymapstd['d']=40;
-  mymapft['d']=40;
+  mymapstd['k']=30;
+  mymapft['k']=30;
+  mymapstd['m']=30;
+  mymapft['m']=30;
+  mymapstd['o']=30;
+  mymapft['o']=30;
+  mymapstd['g']=40;
+  mymapft['g']=40;
   mymapstd['e']=50;
   mymapft['e']=50;
   mymapstd['f']=60;
@@ -423,10 +440,10 @@ void	map_erase()
 
   itstd=mymapstd.find ('e');
   itft=mymapft.find ('e');
-	std::map<char,int>::iterator itstd2=mymapstd.find ('f');;
-	ft::map<char,int>::iterator itft2=mymapft.find ('f');
-  mymapstd.erase ( itstd, itstd2 );    // erasing by range
-  mymapft.erase ( itft, itft2 );    // erasing by range
+	// std::map<char,int>::iterator itstd2=mymapstd.find ('f');;
+	// ft::map<char,int>::iterator itft2=mymapft.find ('f');
+  mymapstd.erase ( mymapstd.begin(), mymapstd.end() );    // erasing by range
+  mymapft.erase ( mymapft.begin(), mymapft.end() );    // erasing by range
 
 	same_map_ft_std_int(mymapstd, mymapft, "barstd", "barft after erase functions");
 
@@ -446,7 +463,7 @@ void    map_tests()
 	std::cout << "empty of mine is " << m.empty() << std::endl;
 	std::cout << "empty of theirs is " << m2.empty() << std::endl;
 	m.insert ( ft::pair<char,int>('b',100) );
-	m2.insert ( std::pair<char,int>('b',100) );
+	m2.insert ( std::pair<char,int>('b',100));
 	m.insert ( ft::pair<char,int>('a',2) );
 	m2.insert ( std::pair<char,int>('a',2) );
 
@@ -465,31 +482,35 @@ void    map_tests()
 	m.insert ( ft::pair<char,int>('f',100));
 	m2.insert ( std::pair<char,int>('h',2));
 	m.insert ( ft::pair<char,int>('h',2));
+	m2.insert ( std::pair<char,int>('e',2));
+	m.insert ( ft::pair<char,int>('e',2));
 
+	m.print_tree();
 	same_map_ft_std_int(m2, m, "m2", "m");
-
+	std::cout << "here tho" << std::endl;
 	std::map<char,int> secondstd (m2.begin(),m2.end());
 	ft::map<char,int> secondft (m.begin(),m.end());
 
 	same_map_ft_std_int(secondstd, secondft, "secondstd", "secondft");
-
-	std::map<char,int> thirdstd (secondstd);
-	ft::map<char,int> thirdft (secondft);
+	std::map<char,int> thirdstd(secondstd);
+	ft::map<char,int> thirdft(secondft);
+	thirdstd.clear();
+	thirdft.clear();
 	same_map_ft_std_int(thirdstd, thirdft, "thirdstd", "thirdft");
 	thirdstd.clear();
 	thirdft.clear();
-	// same_map_ft_std_int(thirdstd, thirdft, "thirdstd", "thirdft");
 
+	// std::cout << "b4 assignment opperator" << std::endl;
 	std::map<char,int> fourthstd = secondstd;
 	ft::map<char,int> fourthft = secondft;
+	std::cout << fourthft.begin()->first << std::endl;
 	same_map_ft_std_int(fourthstd, fourthft, "fourthstd", "fourthft");
 	std::cout << "std max size is  " << fourthstd.max_size() << std::endl;
 	std::cout << "my max size is  " << fourthft.max_size() << std::endl;
 
 	std::map<char,int> fifthstd;
 	ft::map<char,int> fifthft;
-	// same_map_ft_std_int(fifthstd, fifthft, "fifthstd", "fifthft"); 
-	// when empty does not work
+	same_map_ft_std_int(fifthstd, fifthft, "fifthstd", "fifthft"); 
 
   	std::map<char,std::string> mymapstd4;
   	ft::map<char,std::string> mymapft4;
@@ -510,7 +531,6 @@ void    map_tests()
 	result_of_function_call(mymapft4.count('c'), mymapstd4.count('c'), "mymapft4and mymapstd4 .count('c')");
 	result_of_function_call(mymapft4.count('y'), mymapstd4.count('y'), "mymapft4and mymapstd4 .count('y')");
 	result_of_function_call(mymapft4.find('c')->first, mymapstd4.find('c')->first, "mymapft4and mymapstd4 .find('c')->first");
-	result_of_function_call(mymapft4.find('y')->first, mymapstd4.find('y')->first, "mymapft4and mymapstd4 .find('y')->first");
 
 	map_key_compare();
 	map_insert_tests();
@@ -850,6 +870,6 @@ int    main(int argc, char **argv)
     }
     else
         std::cout << "invalid arguments" << std::endl;
-	// while (1) {} // testing mem leaks
+	while (1) {} // testing mem leaks
     return (0);
 }

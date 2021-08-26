@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/20 17:28:58 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/26 13:37:29 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_MAP_HPP
 
 #include "../utils/more.hpp"
+#include "../utils/type_traits.hpp"
 #include "../utils/ft_pair.hpp"
 #include "../utils/tree_node.hpp"
 #include "../iterators/bidirectional_iterator.hpp"
@@ -70,9 +71,10 @@ class map
         explicit map (const key_compare& comp = key_compare(), 
         const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _size(0) 
         {
-            _root_node = new node(nullptr);
-            _root_node->_end_node = true;
-            _root_node->_start_node = true;
+            _root_node = nullptr;
+            // _root_node = new node(nullptr);
+            // _root_node->_end_node = true;
+            // _root_node->_start_node = true;
         }
 
         template <class InputIterator>
@@ -82,6 +84,13 @@ class map
         typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
         : _alloc(alloc), _compare(comp)
         {
+            if (first == last)
+            {
+                _root_node = new node(nullptr);
+                _root_node->_end_node = true;
+                _root_node->_start_node = true;
+                return;
+            }
             _root_node = nullptr;
 	        for (InputIterator it = first; it!=last; ++it)
             {
@@ -93,6 +102,11 @@ class map
         map (const map& x)
         {
             _root_node = nullptr;
+            if (x._root_node == nullptr)
+            {
+                _root_node = nullptr;
+                return;
+            }
             for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
             {   
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
@@ -107,6 +121,13 @@ class map
 
         map& operator= (const map& x)
         {
+            if (x.size() == 0)
+            {
+                _root_node = new node(nullptr);
+                _root_node->_end_node = true;
+                _root_node->_start_node = true;
+                return;
+            }
             clear();
             for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
             {   
@@ -193,7 +214,6 @@ class map
             size_type   ret;
 
             ret = 0;
-            // std::cout << "here" << std::endl;
             if (_root_node == nullptr)
                 return (ret);
             for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
@@ -217,154 +237,68 @@ class map
         }
 
         /* modifiers */
+        // redo insert
         pair<iterator,bool> insert (const value_type& val)
         {
             iterator ret;
+            node_ptr current_root;
             if (_root_node == nullptr || _root_node->_end_node == true)
             {
                 _root_node = new node(val, nullptr);
-                _root_node->_right = new node(_root_node);
-                _root_node->_right->_end_node = true;
-                _root_node->_left = new node(_root_node);
-                _root_node->_left->_start_node = true;
+                        insert_start_node();
+                        insert_end_node();
                 iterator ity = begin();
                 ft::pair<iterator, bool>  p(ity, true);
                 return (p);
             }
             iterator ity = begin();
-            ft::pair<iterator, bool> p(ity, true);
+            ft::pair<iterator, bool> p(ity, false);
             if (find(val.first) != end()) // if a node with that key already exists do not insert a new one
                 return (ft::pair<iterator, bool> (find(val.first), false));
-            node_ptr current_root = _root_node;
+            current_root = _root_node;
+            delete_start_node();
+            delete_end_node();
             while (current_root != nullptr)
             {
-                if (_compare(val.first, current_root->_data.first))
+                if (val.first < current_root->_data.first)
                 {
-                    if (current_root->get_left() == nullptr || current_root->get_left()->is_start_node() == true)
+                    if (current_root->_left == nullptr)
                     {
-                        if (current_root->get_left() == nullptr)
-                        {    
-                            current_root->_left = new node(val, current_root);
-                            ret = iterator(current_root->_left);
-                            return (ft::pair<iterator, bool>(ret, true));
-                        }
-                        else
-                        {
-                            node_ptr old = current_root->_left;
-                            delete (old);
-                            current_root->_left = new node(val, current_root);
-                            // ret = iterator(current_root->_left);
-                            current_root = current_root->_left;
-                            current_root->_start_node = false;
-                            current_root->_left = new node (current_root);
-                            current_root = current_root->_left;
-                            current_root->_start_node = true;
-                            return (ft::pair<iterator, bool>((iterator)current_root, true));
-                        }
-                        // return (make_pair<iterator, bool>(ret, true));
+                        current_root->_left = new node(val, current_root);
+                        current_root = current_root->_left;
+                        ret = iterator(current_root);
+                        insert_start_node();
+                        insert_end_node();
+                        ft::pair<iterator, bool>  p(ret, true);
+                        return (p);
                     }
-                    current_root = current_root->get_left();
+                    current_root = current_root->_left;
                 }
                 else
                 {
-                    if (current_root->get_right() == nullptr || current_root->get_right()->is_end_node() == true)
+                    if (current_root->_right == nullptr)
                     {
-                        if (current_root->get_right() == nullptr)
-                        {    
-                            current_root->_right = new node(val, current_root);
-                            ret = iterator(current_root->_right);
-                        }
-                        else 
-                        {
-                            node_ptr old = current_root->_right;
-                            delete (old);
-                            current_root->_right = new node(val, current_root);
-                            ret = iterator(current_root->_right);
-                            current_root = current_root->_right;
-                            current_root->_end_node = false;
-                            current_root->_right = new node (current_root);
-                            current_root = current_root->_right;
-                            current_root->_end_node = true;
-                        }
-                        return (ft::pair<iterator, bool> (ret, true));
+                        current_root->_right = new node(val, current_root);
+                        current_root = current_root->_right;
+                        ret = iterator(current_root);
+                        insert_end_node();
+                        insert_start_node();
+                        ft::pair<iterator, bool>  p(ret, true);
+                        return (p);
                     }
-                    current_root = current_root->get_right();
+                    current_root = current_root->_right;
                 }
-            }      
+            }    
+            insert_end_node();
+            insert_start_node();  
             return (p);
         }
 
         iterator insert (iterator position, const value_type& val)
         {
-            iterator ret;
-            if (_root_node == nullptr || _root_node->_end_node == true)
-            {
-                _root_node = new node(val, nullptr);
-                _root_node->_right = new node(_root_node);
-                _root_node->_right->_end_node = true;
-                _root_node->_left = new node(_root_node);
-                _root_node->_left->_start_node = true;
-                return (begin());
-            }
-            iterator ity = begin();
-            if (find(val.first) != end()) // if a node with that key already exists do not insert a new one
-                return (find(val.first));
-            node_ptr current_root = position.get_node();
-            while (current_root != nullptr)
-            {
-                if (_compare(val.first, current_root->_data.first))
-                {
-                    if (current_root->get_left() == nullptr || current_root->get_left()->is_start_node() == true)
-                    {
-                        if (current_root->get_left() == nullptr)
-                        {    
-                            current_root->_left = new node(val, current_root);
-                            ret = iterator(current_root->_left);
-                        }
-                        else
-                        {
-                            node_ptr old = current_root->_left;
-                            delete (old);
-                            current_root->_left = new node(val, current_root);
-                            ret = iterator(current_root->_left);
-                            current_root = current_root->_left;
-                            current_root->_start_node = false;
-                            current_root->_left = new node (current_root);
-                            current_root = current_root->_left;
-                            current_root->_start_node = true;
-                        }
-                        return (ret);
-                    }
-                    current_root = current_root->get_left();
-                }
-                else
-                {
-                    if (current_root->get_right() == nullptr || current_root->get_right()->is_end_node() == true)
-                    {
-                        if (current_root->get_right() == nullptr)
-                        {    
-                            current_root->_right = new node(val, current_root);
-                            ret = iterator(current_root->_right);
-                        }
-                        else 
-                        {
-                            node_ptr old = current_root->_right;
-                            delete (old);
-                            current_root->_right = new node(val, current_root);
-                            ret = iterator(current_root->_right);
-                            current_root = current_root->_right;
-                            current_root->_end_node = false;
-                            current_root->_right = new node (current_root);
-                            current_root = current_root->_right;
-                            current_root->_end_node = true;
-                        }
-                        return (ret);
-                    }
-                    current_root = current_root->get_right();
-                }
-            }
-            ft::pair<iterator, bool> p = insert(val);      
-            return (p.first);
+            (void)position;
+            ft::pair<iterator, bool>  p = insert(val);
+            return(p.first);
         }
 
 
@@ -426,20 +360,9 @@ class map
 
         void    clear()
         {
-            if (empty() || _root_node == nullptr)
-                return;
-            iterator prev = begin();
-            iterator nxt = prev;
-            iterator last = end();
-            delete (prev.get_node());
-            nxt++;
-            while (nxt != last)
-            {
-                prev = nxt;
-                ++nxt;
-                delete (prev.get_node());
-            }
-            delete (last.get_node()); // FIND ANOTHER WAY CANNOT IMPLEMENT THIS AS PUBLIC MEMBER
+            delete_start_node();
+            delete_end_node();
+            delete_tree(_root_node);
             _root_node = nullptr;
         }
         
@@ -540,6 +463,80 @@ class map
     
 		/* Allocator */
 		allocator_type get_allocator() const { return _alloc; }
+
+        void    print_tree()
+        {
+            node_ptr current_node = _root_node->_right;
+            while (current_node->_right != nullptr)
+            {
+                current_node = current_node->_right;
+            }
+        }
+        private:
+
+        void delete_tree(node_ptr node)
+        {
+            if (node == NULL) return;
+            delete_tree(node->_left);
+            delete_tree(node->_right);
+            delete node;
+        }
+        
+        void    delete_start_node()
+        {
+            node_ptr current_node;
+
+            current_node = _root_node;
+            if (_root_node == nullptr)
+                return ;
+            while (current_node->_left != nullptr && current_node->_left->_start_node == false)
+                current_node = current_node->_left;
+            if (current_node->_left == nullptr)
+                return ;
+            node_ptr tmp = current_node->_left;
+            current_node->_left = nullptr;
+            delete(tmp);
+        }
+        void    insert_start_node()
+        {
+            node_ptr current_node;
+
+            current_node = _root_node;
+            while (current_node->_left != nullptr)
+                current_node = current_node->_left;
+            current_node->_left = new node (current_node);
+            current_node = current_node->_left;
+            current_node->_start_node = true;
+        }
+        void    delete_end_node()
+        {
+            node_ptr current_node;
+
+            current_node = _root_node;
+            if (_root_node == nullptr)
+                return ;
+            while (current_node->_right != nullptr && current_node->_right->_end_node == false)
+                current_node = current_node->_right;
+            if (current_node->_right == nullptr)
+                return ;
+            node_ptr tmp = current_node->_right;
+            current_node->_right = nullptr;
+            if (tmp->_end_node == true) 
+                delete(tmp);
+        }
+        void    insert_end_node()
+        {
+            node_ptr current_node;
+
+            current_node = _root_node;
+            if (_root_node == nullptr)
+                return;
+            while (current_node->_right != nullptr && current_node->_right->_end_node == false)
+                current_node = current_node->_right;
+            current_node->_right = new node (current_node);
+            current_node = current_node->_right;
+            current_node->_end_node = true;
+        }
     };
 }      
 

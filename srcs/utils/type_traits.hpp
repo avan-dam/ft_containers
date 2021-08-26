@@ -1,6 +1,7 @@
 #ifndef TYPE_TRAITS_HPP
 #define TYPE_TRAITS_HPP
 #include <iostream>
+#include "../iterators/random_access_iterator.hpp"
 
 namespace ft {
     template <bool B>
@@ -87,6 +88,20 @@ namespace ft {
 		    typedef const T&                 					        reference;
 		    typedef random_access_iterator_tag 				            iterator_category;
         };
+
+    template<class InputIterator>
+    typename iterator_traits<InputIterator>::difference_type
+    distance (InputIterator first, InputIterator last)
+    {
+        typename iterator_traits<InputIterator>::difference_type dist = 0;
+        for (InputIterator n = first; n != last; n++)
+            dist++;
+        return (dist);
+    }
+
+    template <class T> struct less : std::binary_function <T,T,bool> {
+    bool operator() (const T& x, const T& y) const {return x<y;}
+    };
 }
 
 #endif 

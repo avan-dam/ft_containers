@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 13:21:47 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/12 10:59:42 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/26 12:20:37 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,37 +68,37 @@ class tree_node
 		// reference operator*() const { return (*_data); }
     	// pointer operator->() { return (&_data); }
 
-        node_ptr    get_left()      
-        {   
-            if (_left)
-                return (_left);    
-            return (nullptr); 
-        }
-        node_ptr    get_right()
-        {   
-            if (_right)
-                return (_right);  
-            return (nullptr);   
-        }
-        node_ptr    get_parent()    
-        {   
-            if (_parent) 
-                return (_parent);   
-            return (nullptr);
-        }
-        bool        is_end_node()  
-        {
-            if (_end_node)
-                return (_end_node);
-            return (false);
-        }
+        // node_ptr    get_left()      
+        // {   
+        //     if (_left != nullptr)
+        //         return (_left);    
+        //     return (nullptr); 
+        // }
+        // node_ptr    get_right()
+        // {   
+        //     if (_right)
+        //         return (_right);  
+        //     return (nullptr);   
+        // }
+        // node_ptr    get_parent()    
+        // {   
+        //     if (_parent) 
+        //         return (_parent);   
+        //     return (nullptr);
+        // }
+        // bool        is_end_node()  
+        // {
+        //     if (_end_node)
+        //         return (_end_node);
+        //     return (false);
+        // }
 
-        bool        is_start_node()  
-        {
-            if (_start_node)
-                return (_start_node);
-            return (false);
-        }
+        // bool        is_start_node()  
+        // {
+        //     if (_start_node)
+        //         return (_start_node);
+        //     return (false);
+        // }
 		// T           getsecond() const {return (second);}
 
 		bool operator==(const tree_node & rhs)
