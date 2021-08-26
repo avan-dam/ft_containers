@@ -6,7 +6,7 @@
 /*   By: avan-dam <avan-dam@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/03/23 14:38:34 by avan-dam      #+#    #+#                 */
-/*   Updated: 2021/08/26 13:48:43 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/26 14:51:13 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,30 +420,26 @@ void	map_erase()
   mymapstd['k']=30;
   mymapft['k']=30;
   mymapstd['m']=30;
-  mymapft['m']=30;
-  mymapstd['o']=30;
-  mymapft['o']=30;
-  mymapstd['g']=40;
-  mymapft['g']=40;
-  mymapstd['e']=50;
-  mymapft['e']=50;
-  mymapstd['f']=60;
-  mymapft['f']=60;
+	mymapft['m']=30;
+	mymapstd['o']=30;
+	mymapft['o']=30;
+	mymapstd['g']=40;
+	mymapft['g']=40;
+	mymapstd['e']=50;
+	mymapft['e']=50;
+	mymapstd['f']=60;
+	mymapft['f']=60;
 
-  itstd=mymapstd.find('b');
-  itft=mymapft.find('b');
-  mymapstd.erase (itstd);                   // erasing by iterator
-  mymapft.erase (itft);                   // erasing by iterator
+	itstd=mymapstd.find('b');
+	itft=mymapft.find('b');
+	mymapstd.erase (itstd);                   // erasing by iterator
+	mymapft.erase (itft);                   // erasing by iterator
 
-  mymapstd.erase ('c');                  // erasing by key
-  mymapft.erase ('c');                  // erasing by key
+	mymapstd.erase ('c');                  // erasing by key
+	mymapft.erase ('c');                  // erasing by key
 
-  itstd=mymapstd.find ('e');
-  itft=mymapft.find ('e');
-	// std::map<char,int>::iterator itstd2=mymapstd.find ('f');;
-	// ft::map<char,int>::iterator itft2=mymapft.find ('f');
-  mymapstd.erase ( mymapstd.begin(), mymapstd.end() );    // erasing by range
-  mymapft.erase ( mymapft.begin(), mymapft.end() );    // erasing by range
+	mymapstd.erase ( mymapstd.begin(), mymapstd.end() );    // erasing by range
+	mymapft.erase ( mymapft.begin(), mymapft.end() );    // erasing by range
 
 	same_map_ft_std_int(mymapstd, mymapft, "barstd", "barft after erase functions");
 

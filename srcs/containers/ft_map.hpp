@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/26 13:37:29 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/08/26 14:55:56 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,6 @@ class map
         }
 
         /* modifiers */
-        // redo insert
         pair<iterator,bool> insert (const value_type& val)
         {
             iterator ret;
@@ -245,8 +244,8 @@ class map
             if (_root_node == nullptr || _root_node->_end_node == true)
             {
                 _root_node = new node(val, nullptr);
-                        insert_start_node();
-                        insert_end_node();
+                insert_start_node();
+                insert_end_node();
                 iterator ity = begin();
                 ft::pair<iterator, bool>  p(ity, true);
                 return (p);
@@ -306,7 +305,7 @@ class map
         void insert (InputIterator first, InputIterator last,
         typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
         {
-            for (typename ft::map<Key,T>::iterator it = first; it!=last; ++it)
+            for (typename ft::map<Key,T>::iterator it = first; it!=last ; ++it)
             {   
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
                 insert(p);
@@ -335,11 +334,14 @@ class map
         void erase (iterator first, iterator last)
         {
             ft::map<Key,T> tmp;
+            
             if (first != begin())
                 tmp.insert(begin(), first);
-            tmp.insert(last, end());
+            if (last != end())
+                tmp.insert(last, end());
             clear();
-            insert(tmp.begin(), tmp.end());
+            if (tmp._root_node != nullptr)
+                insert(tmp.begin(), tmp.end());
         }
 
         void erase (iterator position)
@@ -456,10 +458,10 @@ class map
             return(ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
         }
         
-        // pair<const_iterator,const_iterator> equal_range (const key_type& k) const
-        // {
-        //     return(ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k)));   
-        // }
+        pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        {
+            return(ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k)));   
+        }
     
 		/* Allocator */
 		allocator_type get_allocator() const { return _alloc; }
@@ -472,8 +474,9 @@ class map
                 current_node = current_node->_right;
             }
         }
+        
+        /* privat helper functions */
         private:
-
         void delete_tree(node_ptr node)
         {
             if (node == NULL) return;
