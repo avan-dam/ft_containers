@@ -24,8 +24,7 @@ CXX = clang++
 
 G++ = /usr/local/bin/g++-10
 
-FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
-#  -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -g -fsanitize=address
 
 FILES = srcs/tests/main.cpp
 

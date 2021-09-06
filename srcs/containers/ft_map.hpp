@@ -465,15 +465,6 @@ class map
     
 		/* Allocator */
 		allocator_type get_allocator() const { return _alloc; }
-
-        void    print_tree()
-        {
-            node_ptr current_node = _root_node->_right;
-            while (current_node->_right != nullptr)
-            {
-                current_node = current_node->_right;
-            }
-        }
         
         /* privat helper functions */
         private:

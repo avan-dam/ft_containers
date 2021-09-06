@@ -1,5 +1,6 @@
 
 #include "../containers/ft_vector.hpp"
+#include "../containers/ft_map.hpp"
 #include <iostream>
 #include <fstream>
 #include <sys/time.h>
@@ -44,6 +45,231 @@ void output(vector<T> vct, std::ofstream& myfile)
 	}
     myfile << std::endl;
 }
+
+template <class Key, class T>
+void output_map(map<Key, T> mp, std::ofstream& myfile)
+{
+    myfile << "size is " << mp.size() << std::endl;
+    myfile << "empty is " << mp.empty() << std::endl;
+	if (mp.size() == 0)
+		return;
+ 	typename map<Key, T>::iterator it = mp.begin();
+	while (it != mp.end())
+	{
+        myfile << ' ' << it->first << "=" << it->second;
+		it++;
+	}
+    myfile << std::endl;
+ 	typename map<Key, T>::reverse_iterator itr = mp.rbegin();
+	while (itr != mp.rend())
+	{
+        myfile << ' ' << itr->first << "=" << itr->second;
+		itr++;
+	}
+    myfile << std::endl;
+ 	typename map<Key, T>::const_iterator itc = mp.begin();
+	while (itc != mp.end())
+	{
+        myfile << ' ' << itc->first << "=" << itc->second;
+		itc++;
+	}
+    myfile << std::endl;
+ 	typename map<Key, T>::const_reverse_iterator itrc = mp.rbegin();
+	while (itrc != mp.rend())
+	{
+        myfile << ' ' << itrc->first << "=" << itrc->second;
+		itrc++;
+	}
+    myfile << std::endl;
+}
+
+void		random_map_tests(std::ofstream& myfile)
+{
+    myfile << "PERFORMING MAP TESTS:" << std::endl;
+	map<char, int> m;
+
+	m.insert ( pair<char,int>('b',100) );
+	m.insert ( pair<char,int>('a',2) );
+	m.insert ( pair<char,int>('c',500) );
+	m.insert ( pair<char,int>('l',100) );
+	m.insert ( pair<char,int>('d',2) );
+	m.insert ( pair<char,int>('p',500) );
+	m.insert ( pair<char,int>('y',500));
+	m.insert ( pair<char,int>('f',100));
+	m.insert ( pair<char,int>('h',2));
+	m.insert ( pair<char,int>('e',2));
+
+	output_map(m, myfile);
+	map<char,int> second (m.begin(),m.end());
+
+	output_map(second, myfile);
+	map<char,int> third(second);
+	third.clear();
+	output_map(third, myfile);
+
+	map<char,int> fourth = second;
+	myfile << fourth.begin()->first << std::endl;
+	output_map(fourth, myfile);
+	myfile << fourth.max_size() << std::endl;
+
+	map<char,int> fifth;
+	output_map(fifth, myfile);
+
+  	map<char,std::string> mymap4;
+  	mymap4['a']="an element";
+  	mymap4['b']="another element";
+  	mymap4['c']=mymap4['b'];
+  	
+	myfile << mymap4['a'] << std::endl;
+	myfile << mymap4['b'] << std::endl;
+	myfile << mymap4['c'] << std::endl;
+	myfile << mymap4['d'] << std::endl;
+	output_map(mymap4, myfile);
+	
+	myfile << mymap4.count('c') << std::endl;
+	myfile << mymap4.count('y') << std::endl;
+	myfile << mymap4.find('c')->first << std::endl;
+}
+
+void	map_key_compare(std::ofstream& myfile)
+{
+	map<char,int> mymap1;
+
+  	mymap1['a']=100;
+	mymap1['b']=200;
+	mymap1['c']=300;
+
+	myfile << mymap1['a'] << std::endl;
+	myfile << mymap1['b'] << std::endl;
+	myfile << mymap1['c'] << std::endl;
+
+	output_map(mymap1, myfile);
+
+  	map<char,std::string>	mymap;
+
+  	mymap['a']="an element";
+  	mymap['b']="another element";
+  	mymap['c']=mymap['b'];
+
+	myfile << mymap['a'] << std::endl;
+	myfile << mymap['b'] << std::endl;
+	myfile << mymap['c'] << std::endl;
+
+	map<char,int>::key_compare mycomp = mymap.key_comp();
+
+	myfile << "mymap1 contains:\n";
+	char highesty = mymap1.rbegin()->first;
+	map<char,int>::iterator ity = mymap1.begin();
+  	do {
+    	myfile << ity->first << " => " << ity->second << '\n';
+	} while ( mycomp((*ity++).first, highesty) );
+	myfile << '\n';
+
+	myfile << "value comp" << std::endl;
+    map<char,int> mymap2;
+
+	mymap2['x']=1001;
+	mymap2['y']=2002;
+	mymap2['z']=3003;
+
+	myfile << "mymap contains:\n";
+	pair<char,int> highest1 = *mymap2.rbegin();
+
+	map<char,int>::iterator it1 = mymap2.begin();
+	do {
+    	myfile << it1->first << " => " << it1->second << '\n';
+	} while ( mymap2.value_comp()(*it1++, highest1) );
+}
+
+void	map_insert_tests(std::ofstream& myfile)
+{
+	myfile << "in map insert test" << std::endl;
+	map<char,int> mymap;
+
+	// first insert function version (single parameter):
+	mymap.insert ( pair<char,int>('a',100) );
+	mymap.insert ( pair<char,int>('z',200) );
+
+	pair<map<char,int>::iterator,bool> retft;
+
+	retft = mymap.insert ( pair<char,int>('z',500) );
+
+	myfile << retft.second << std::endl;
+	myfile << retft.first->second << std::endl;
+
+	// second insert function version (with hint position):
+	map<char,int>::iterator it = mymap.begin();
+	mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
+	mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
+
+  // third insert function version (range insertion):
+	map<char,int> anothermap;
+	anothermap.insert(mymap.begin(),mymap.find('c'));
+
+  // showing contents:
+	output_map(mymap, myfile);
+	output_map(anothermap, myfile);
+
+	myfile << mymap.upper_bound('b')->first << std::endl;
+	myfile << mymap.lower_bound('b')->first << std::endl;
+}
+
+void	map_equal_range(std::ofstream& myfile)
+{
+	map<char,int> mymap;
+
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['c']=30;
+
+	pair<map<char,int>::iterator,map<char,int>::iterator> ret;
+
+	ret = mymap.equal_range('b');
+
+	myfile << ret.first->second << std::endl;
+	myfile << ret.first->first << std::endl;
+}
+
+void	map_swap(std::ofstream& myfile)
+{
+	map<char,int> foo,bar;
+
+	foo['x']=100;
+	foo['y']=200;
+
+	bar['a']=11;
+	bar['b']=22;
+	bar['c']=33;
+
+	foo.swap(bar);
+	output_map(foo, myfile);
+	output_map(bar, myfile);
+}
+
+void	map_erase(std::ofstream& myfile)
+{
+	map<char,int> mymap;
+	map<char,int>::iterator it;
+
+  // insert some values:
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['k']=30;
+	mymap['m']=30;
+	mymap['o']=30;
+	mymap['g']=40;
+	mymap['e']=50;
+	mymap['f']=60;
+
+	it=mymap.find('b');
+	mymap.erase (it);  
+
+	mymap.erase ('c');      
+	mymap.erase ( mymap.begin(), mymap.end() );
+
+	output_map(mymap, myfile);
+}
+
 void vector_constructor(std::ofstream& myfile)
 {
 	myfile << "\ncalling vector vector_constructor functions" << std::endl;
@@ -132,7 +358,7 @@ void	vector_assign(std::ofstream& myfile)
 
 void	vector_push_n_pop_back(std::ofstream& myfile)
 {
-	std::cout << "\ncalling vector vector_push_n_pop_back functions" << std::endl;
+	myfile << "\ncalling vector vector_push_n_pop_back functions" << std::endl;
 	vector<int> first;
 
 	for (int i=1;i<10;i++) first.push_back(i);
@@ -229,7 +455,7 @@ void 	vector_erase(std::ofstream& myfile)
 
 void	vector_swap(std::ofstream& myfile)
 {
-	std::cout << "\ncalling vector_swap functions" << std::endl;
+	myfile << "\ncalling vector_swap functions" << std::endl;
 	vector<int> foo (3,100);
 	vector<int> bar (5,200);
 
@@ -266,7 +492,7 @@ void    time_diff(struct timeval begin, struct timeval end)
     myfiletime << elapsed << std::endl;
 }
 
-void vector_tests()
+void vector_tests(std::ofstream& myfile)
 {
     vector_constructor(myfile);
 	vector_assigment_opperator(myfile);
@@ -278,6 +504,16 @@ void vector_tests()
 	vector_erase(myfile);
 	vector_swap(myfile);
 	vector_relational_operators(myfile);
+}
+
+void	map_tests(std::ofstream& myfile)
+{
+	random_map_tests(myfile);
+	map_key_compare(myfile);
+	map_insert_tests(myfile);
+	map_equal_range(myfile);
+	map_swap(myfile);
+	map_erase(myfile);
 }
 
 int main(void)
