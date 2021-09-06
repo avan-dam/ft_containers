@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "containers/ft_vector.hpp"
-#include "containers/ft_stack.hpp"
-#include "containers/ft_map.hpp"
+#include "../containers/ft_vector.hpp"
+#include "../containers/ft_stack.hpp"
+#include "../containers/ft_map.hpp"
 #include <math.h>
 #include <vector>
 #include <list>
