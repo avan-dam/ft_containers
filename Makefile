@@ -12,8 +12,6 @@
 
 NAME = ft_containers
 
-# TEST_NAME = test
-
 FT_NAME = srcs/tests/ft_containers_ft
 
 STD_NAME = srcs/tests/ft_containers_std
@@ -56,6 +54,9 @@ clean_test:
 	rm -rf $(NAME) 
 
 fclean: clean clean_test
-	rm -rf srcs/tests/myfile_ft.txt srcs/tests/myfile_std.txt srcs/tests/myfile_ft_time.txt srcs/tests/myfile_std_time.txt
+	rm -rf
+	srcs/tests/myfile_ft.txt srcs/tests/myfile_std.txt 
+	srcs/tests/myfile_ft_time.txt srcs/tests/myfile_std_time.txt
+	srcs/tests/*.dSYM srcs/containers/*.gch 
 
 re: fclean all
