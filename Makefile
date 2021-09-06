@@ -6,7 +6,7 @@
 #    By: avan-dam <avan-dam@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/23 14:38:29 by avan-dam      #+#    #+#                  #
-#    Updated: 2021/08/26 14:56:18 by ambervandam   ########   odam.nl          #
+#    Updated: 2021/09/06 15:41:53 by ambervandam   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,9 +54,8 @@ clean_test:
 	rm -rf $(NAME) 
 
 fclean: clean clean_test
-	rm -rf
-	srcs/tests/myfile_ft.txt srcs/tests/myfile_std.txt 
-	srcs/tests/myfile_ft_time.txt srcs/tests/myfile_std_time.txt
-	srcs/tests/*.dSYM srcs/containers/*.gch 
+	rm -rf srcs/tests/myfile_ft.txt srcs/tests/myfile_std.txt srcs/tests/myfile_ft_time.txt srcs/tests/myfile_std_time.txt
+
+# srcs/tests/*.dSYM srcs/containers/*.gch 
 
 re: fclean all

@@ -1,6 +1,8 @@
 
 #include <vector>
 #include <map>
+#include <list>
+#include <stack>
 #include <iostream>
 #include <fstream>
 #include <sys/time.h>
@@ -110,7 +112,7 @@ void		random_map_tests(std::ofstream& myfile)
 	map<char,int> fourth = second;
 	myfile << fourth.begin()->first << std::endl;
 	output_map(fourth, myfile);
-	myfile << fourth.max_size() << std::endl;
+	// myfile << fourth.max_size() << std::endl;
 
 	map<char,int> fifth;
 	output_map(fifth, myfile);
@@ -133,6 +135,8 @@ void		random_map_tests(std::ofstream& myfile)
 
 void	map_key_compare(std::ofstream& myfile)
 {
+    myfile << "PERFORMING map key TESTS:" << std::endl;
+
 	map<char,int> mymap1;
 
   	mymap1['a']=100;
@@ -343,7 +347,7 @@ void	vector_assign(std::ofstream& myfile)
 
 void	vector_push_n_pop_back(std::ofstream& myfile)
 {
-	std::cout << "\ncalling vector vector_push_n_pop_back functions" << std::endl;
+	myfile << "\ncalling vector vector_push_n_pop_back functions" << std::endl;
 	vector<int> first;
 
 	for (int i=1;i<10;i++) first.push_back(i);
@@ -440,7 +444,7 @@ void 	vector_erase(std::ofstream& myfile)
 
 void	vector_swap(std::ofstream& myfile)
 {
-	std::cout << "\ncalling vector_swap functions" << std::endl;
+	myfile << "\ncalling vector_swap functions" << std::endl;
 	vector<int> foo (3,100);
 	vector<int> bar (5,200);
 
@@ -515,6 +519,54 @@ void	map_tests(std::ofstream& myfile)
 	map_erase(myfile);
 }
 
+void    stack_tests(std::ofstream& myfile)
+{
+    myfile << "\n\nPERFORMING STACK TESTS:" << std::endl;
+	myfile << "calling constructors" << std::endl;
+	std::list<int> listy(1, 1);
+  	vector<int> myvector (2,200);
+	stack<int,std::list<int> > first(listy);
+  	stack<int,vector<int> > second (myvector);
+	myfile << first.size() << std::endl;
+	myfile << second.size() << std::endl;
+	myfile << first.empty() << std::endl;
+	myfile << second.empty() << std::endl;
+
+  	stack<int> mystack;
+
+	myfile << "calling push()" << std::endl;
+  	mystack.push(10);
+  	mystack.push(20);
+
+	myfile << "calling top()" << std::endl;
+	mystack.top() -= 5;
+	myfile << mystack.top() << std::endl;
+
+	stack<int> mystack1;
+
+	myfile << "calling push()" << std::endl;
+	for (int i=0; i<5; ++i) mystack1.push(i);
+	myfile << "testing pop() and top() and empty()" << std::endl;
+	while (!mystack1.empty())
+  	{
+		myfile << mystack1.top() << std::endl;
+    	mystack1.pop();
+  	}
+	myfile << "mystack1.empty()" << std::endl;
+	myfile << mystack1.empty() << std::endl;
+	myfile << "stack relational operator tests:" << std::endl;
+	vector<int> vec(2, 20);
+  	stack<int,vector<int> > st1;
+  	stack<int,vector<int> > st2;
+	for (int i=0; i<1; ++i) st1.push(2);
+	// myfile << st1>st2 << std::endl;
+	// myfile << st1<st2 << std::endl;
+	// myfile << st1>=st2 << std::endl;
+	// myfile << st1<=st2 << std::endl;
+	// myfile << st1==st2 << std::endl;
+	// myfile << st1!=st2 << std::endl;
+}
+
 int main(void)
 {
     struct timeval begin, end;
@@ -523,6 +575,7 @@ int main(void)
     myfile.open ("srcs/tests/myfile_std.txt");
 	vector_tests(myfile);
 	map_tests(myfile);
+	stack_tests(myfile);
     myfile.close();    
     gettimeofday(&end, 0);
     time_diff(begin, end);

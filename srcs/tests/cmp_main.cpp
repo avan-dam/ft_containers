@@ -6,33 +6,48 @@
 
 void    test_content()
 {
-    std::ifstream in("srcs/tests/myfile_std.txt");
-    std::ifstream in2("srcs/tests/myfile_ft.txt");
+    std::ifstream std("srcs/tests/myfile_std.txt");
+    std::ifstream ft("srcs/tests/myfile_ft.txt");
     int found = 0;
     int i = 0;
+    int nolinesft = 0;
+    int nolinesstd = 0;
+    std::string stdline;
+    std::string ftline;
 
-    while ((!in.eof()) && (!in2.eof())) 
+    while ((!std.eof()) && (!ft.eof())) 
     {
         i++;
-        std::string line,line2;
-        getline(in,line);
-        getline(in2,line2);
-        if(line!=line2){ 
+        getline(ft,ftline);
+        getline(std,stdline);
+        if(ftline!=stdline){ 
            std::cout << "first unequal line is" << std::endl;
-           std::cout << line << std::endl;
+           std::cout << stdline << std::endl;
            std::cout << "and" << std::endl;
-           std::cout << line2 << std::endl;
+           std::cout << ftline << std::endl;
            std::cout << "on line " << i << std::endl;
            found = -1;
            break;
         }
     }
-    in.close();
-    in2.close();
+    while ((!std.eof())) 
+    {
+        getline(std,stdline);
+        nolinesft++;
+    }
+    while ((!ft.eof())) 
+    {
+        getline(ft,ftline);
+        nolinesstd++;
+    }
+    if (nolinesft != nolinesstd)
+        found = -1;
     if (found == 0)
         std::cout << GREEN << "THE CONTENT OF THE FILES ARE EQUAL" << RESET << std::endl;
     else
         std::cout << RED << "THE CONTENT OF THE FILES ARE NOTEQUAL" << RESET << std::endl;
+    std.close();
+    ft.close();
 }
 
 void    test_timing()
@@ -54,6 +69,8 @@ void    test_timing()
         std::cout << RED << "TIME IS TOO SLOW FOR PROJECT SPECIFICATIONS" << RESET << std::endl;
     else
         std::cout << GREEN << "TIME IS GOOD SPEED FOR PROJECT SPECIFICATIONS" << RESET << std::endl;
+    std.close();
+    ft.close();
 }
 
 

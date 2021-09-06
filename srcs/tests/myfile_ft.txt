@@ -252,7 +252,6 @@ empty is 0
  y=500 p=500 l=100 h=2 f=100 e=2 d=2 c=500 b=100 a=2
  a=2 b=100 c=500 d=2 e=2 f=100 h=2 l=100 p=500 y=500
  y=500 p=500 l=100 h=2 f=100 e=2 d=2 c=500 b=100 a=2
-2305843009213693951
 size is 0
 empty is 1
 an element
@@ -268,6 +267,7 @@ empty is 0
 1
 0
 c
+PERFORMING map key TESTS:
 100
 200
 300
@@ -323,3 +323,24 @@ empty is 0
  y=200 x=100
 size is 0
 empty is 1
+
+
+PERFORMING STACK TESTS:
+calling constructors
+1
+2
+0
+0
+calling push()
+calling top()
+15
+calling push()
+testing pop() and top() and empty()
+4
+3
+2
+1
+0
+mystack1.empty()
+1
+stack relational operator tests:
