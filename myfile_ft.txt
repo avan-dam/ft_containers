@@ -1,0 +1,34 @@
+
+calling vector vector_constructor functions
+size is 0
+empty is 1
+capacity is 0
+
+
+
+
+
+size is 4
+empty is 0
+capacity is 4
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+size is 4
+empty is 0
+capacity is 4
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+size is 4
+empty is 0
+capacity is 4
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100
+ 100 100 100 100

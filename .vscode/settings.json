@@ -66,6 +66,8 @@
         "typeinfo": "cpp",
         "__tree": "cpp",
         "map": "cpp",
-        "__memory": "cpp"
+        "__memory": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp"
     }
 }
