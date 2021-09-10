@@ -16,7 +16,10 @@ void output(vector<T> vct, std::ofstream& myfile)
     myfile << "capacity is " << vct.capacity() << std::endl;
 	for (unsigned int i = 0; i < vct.size(); i++)
         myfile << ' ' << vct[i];
+    myfile << "starting" << std::endl;
     myfile << std::endl;
+	if (vct.size() == 0)
+		return;
  	typename vector<T>::iterator it = vct.begin();
 	while (it != vct.end())
 	{
@@ -24,6 +27,7 @@ void output(vector<T> vct, std::ofstream& myfile)
 		it++;
 	}
     myfile << std::endl;
+    myfile << "reverse_iterator" << std::endl;
  	typename vector<T>::reverse_iterator itr = vct.rbegin();
 	while (itr != vct.rend())
 	{
@@ -38,12 +42,15 @@ void output(vector<T> vct, std::ofstream& myfile)
 		itc++;
 	}
     myfile << std::endl;
+    myfile << "const_reverse_iterator" << std::endl;
  	typename vector<T>::const_reverse_iterator itrc = vct.rbegin();
-	while (itrc != vct.rend())
+ 	typename vector<T>::const_reverse_iterator itrce = vct.rend();
+	while (itrc != itrce)
 	{
         myfile << ' ' << *itrc;
 		itrc++;
 	}
+    myfile << "ending" << std::endl;
     myfile << std::endl;
 }
 

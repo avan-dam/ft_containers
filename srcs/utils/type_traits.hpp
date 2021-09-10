@@ -4,11 +4,8 @@
 #include "../iterators/random_access_iterator.hpp"
 
 namespace ft {
-    template <bool B>
-    struct enable_if {};
-
-    template <>
-    struct enable_if<true> { typedef int type; };
+    template<bool Cond, class T = void> struct enable_if {};
+    template<class T> struct enable_if<true, T> { typedef T type; };
 
     template <bool is_iterator, typename T>
     struct iterator_result
@@ -35,7 +32,7 @@ namespace ft {
     template <class T>
     struct is_iterator<ft::random_access_iterator<T, T*, T&> > : public iterator_result<true, ft::random_access_iterator<T, T*, T&> > {};
 
-    template <typename T>
+    template <class T>
     struct is_integral { static const bool value = false; };
     template <>
     struct is_integral<bool> { static const bool value = true; };

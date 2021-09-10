@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 17:37:12 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/20 18:11:42 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/07 16:21:41 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,6 @@ namespace ft {
         }
         return (first2!=last2);
     }
-
-    // template <class InputIterator1, class InputIterator2, class Compare>
-    // bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
-    //                             InputIterator2 first2, InputIterator2 last2,
-    //                             Compare comp)
-    // {
-    // }
-
 
     template <class InputIterator1, class InputIterator2>
     bool equal (InputIterator1 first1, InputIterator1 last1,

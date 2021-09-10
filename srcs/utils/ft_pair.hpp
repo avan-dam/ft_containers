@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:51:31 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/23 19:17:22 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/07 16:03:12 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ template <class T1, class T2> struct pair
         
         // constructors
         pair() : first(), second() {}
-        // template< class U, class V >
-        // pair(const std::pair<U,V>& pr) : first(pr.first), second(pr.second) {}
         template<class U, class V>
         pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
         pair (const first_type& a, const second_type& b) : first(a), second(b) {}

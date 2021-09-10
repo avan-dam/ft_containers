@@ -6,18 +6,18 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/08/26 14:55:56 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/10 12:15:26 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_MAP_HPP
 # define FT_MAP_HPP
 
-#include "../utils/more.hpp"
 #include "../utils/type_traits.hpp"
 #include "../utils/ft_pair.hpp"
 #include "../utils/tree_node.hpp"
 #include "../iterators/bidirectional_iterator.hpp"
+#include "../iterators/reverse_iterator.hpp"
 
 namespace ft {
 template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<pair<const Key,T> > > 
@@ -35,8 +35,8 @@ class map
 		typedef	typename allocator_type::const_pointer     					                        const_pointer; 
  		typedef	bidirectional_iterator <value_type, value_type*, value_type&>						iterator;
 		typedef	bidirectional_iterator <value_type, const value_type*, const value_type&>			const_iterator;
-		typedef	reverse_bidirectional_iterator<value_type, value_type*, value_type&>				reverse_iterator;
-		typedef	reverse_bidirectional_iterator<value_type, const value_type*, const value_type&>    const_reverse_iterator;
+		typedef	reverse_iterator<const_iterator>                                                    const_reverse_iterator;
+		typedef	reverse_iterator<iterator>				                                            reverse_iterator;
 		typedef	typename ft::iterator_traits<iterator>::difference_type		                        difference_type;
 		typedef size_t		 												                        size_type;
         typedef	tree_node<value_type>                                                               node;
@@ -72,9 +72,6 @@ class map
         const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _size(0) 
         {
             _root_node = nullptr;
-            // _root_node = new node(nullptr);
-            // _root_node->_end_node = true;
-            // _root_node->_start_node = true;
         }
 
         template <class InputIterator>
@@ -88,7 +85,7 @@ class map
             {
                 _root_node = new node(nullptr);
                 _root_node->_end_node = true;
-                _root_node->_start_node = true;
+                // _root_node->_start_node = true;
                 return;
             }
             _root_node = nullptr;
@@ -125,7 +122,7 @@ class map
             {
                 _root_node = new node(nullptr);
                 _root_node->_end_node = true;
-                _root_node->_start_node = true;
+                // _root_node->_start_node = true;
                 return;
             }
             clear();
@@ -134,13 +131,14 @@ class map
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
                 insert(p);
             }
+		    return *this;
         }
 
         /* iterators */
         iterator        begin()
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr && _current_node->_left->_start_node == false)
+            while (_current_node->_left != nullptr)// && _current_node->_left->_start_node == false)
                 _current_node = _current_node->_left;
             iterator ret(_current_node);
             return (ret);
@@ -149,7 +147,7 @@ class map
         const_iterator  begin() const
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr && _current_node->_left->_start_node == false)
+            while (_current_node->_left != nullptr)// && _current_node->_left->_start_node == false)
                 _current_node = _current_node->_left;
             const_iterator ret(_current_node);
             return (ret);
@@ -175,37 +173,21 @@ class map
 
         reverse_iterator rbegin()
         {
-            node_ptr _current_node = _root_node;
-            while (_current_node->_right != nullptr && _current_node->_right->_end_node == false)
-                _current_node = _current_node->_right;
-            reverse_iterator ret(_current_node);
-            return (ret);
+            return reverse_iterator(end());
         }
 
         const_reverse_iterator rbegin() const
         {
-            node_ptr _current_node = _root_node;
-            while (_current_node->_right != nullptr && _current_node->_right->_end_node == false)
-                _current_node = _current_node->_right;
-            const_reverse_iterator ret(_current_node);
-            return (ret);
+            return const_reverse_iterator(end());
         }
 
         reverse_iterator rend()
         {
-            node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr)
-                _current_node = _current_node->_left;
-            reverse_iterator ret(_current_node);
-            return (ret);    
+            return reverse_iterator(begin());
         }
         const_reverse_iterator rend() const
         {
-            node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr)
-                _current_node = _current_node->_left;
-            const_reverse_iterator ret(_current_node);
-            return (ret);    
+            return const_reverse_iterator(begin()); 
         }
 
         /* capacity */
@@ -244,7 +226,7 @@ class map
             if (_root_node == nullptr || _root_node->_end_node == true)
             {
                 _root_node = new node(val, nullptr);
-                insert_start_node();
+                // insert_start_node();
                 insert_end_node();
                 iterator ity = begin();
                 ft::pair<iterator, bool>  p(ity, true);
@@ -255,7 +237,7 @@ class map
             if (find(val.first) != end()) // if a node with that key already exists do not insert a new one
                 return (ft::pair<iterator, bool> (find(val.first), false));
             current_root = _root_node;
-            delete_start_node();
+            // delete_start_node();
             delete_end_node();
             while (current_root != nullptr)
             {
@@ -266,7 +248,7 @@ class map
                         current_root->_left = new node(val, current_root);
                         current_root = current_root->_left;
                         ret = iterator(current_root);
-                        insert_start_node();
+                        // insert_start_node();
                         insert_end_node();
                         ft::pair<iterator, bool>  p(ret, true);
                         return (p);
@@ -281,7 +263,7 @@ class map
                         current_root = current_root->_right;
                         ret = iterator(current_root);
                         insert_end_node();
-                        insert_start_node();
+                        // insert_start_node();
                         ft::pair<iterator, bool>  p(ret, true);
                         return (p);
                     }
@@ -289,7 +271,7 @@ class map
                 }
             }    
             insert_end_node();
-            insert_start_node();  
+            // insert_start_node();  
             return (p);
         }
 
@@ -362,7 +344,7 @@ class map
 
         void    clear()
         {
-            delete_start_node();
+            // delete_start_node();
             delete_end_node();
             delete_tree(_root_node);
             _root_node = nullptr;
@@ -476,32 +458,32 @@ class map
             delete node;
         }
         
-        void    delete_start_node()
-        {
-            node_ptr current_node;
+        // void    delete_start_node()
+        // {
+        //     node_ptr current_node;
 
-            current_node = _root_node;
-            if (_root_node == nullptr)
-                return ;
-            while (current_node->_left != nullptr && current_node->_left->_start_node == false)
-                current_node = current_node->_left;
-            if (current_node->_left == nullptr)
-                return ;
-            node_ptr tmp = current_node->_left;
-            current_node->_left = nullptr;
-            delete(tmp);
-        }
-        void    insert_start_node()
-        {
-            node_ptr current_node;
+        //     current_node = _root_node;
+        //     if (_root_node == nullptr)
+        //         return ;
+        //     while (current_node->_left != nullptr && current_node->_left->_start_node == false)
+        //         current_node = current_node->_left;
+        //     if (current_node->_left == nullptr)
+        //         return ;
+        //     node_ptr tmp = current_node->_left;
+        //     current_node->_left = nullptr;
+        //     delete(tmp);
+        // }
+        // void    insert_start_node()
+        // {
+        //     node_ptr current_node;
 
-            current_node = _root_node;
-            while (current_node->_left != nullptr)
-                current_node = current_node->_left;
-            current_node->_left = new node (current_node);
-            current_node = current_node->_left;
-            current_node->_start_node = true;
-        }
+        //     current_node = _root_node;
+        //     while (current_node->_left != nullptr)
+        //         current_node = current_node->_left;
+        //     current_node->_left = new node (current_node);
+        //     current_node = current_node->_left;
+        //     current_node->_start_node = true;
+        // }
         void    delete_end_node()
         {
             node_ptr current_node;
