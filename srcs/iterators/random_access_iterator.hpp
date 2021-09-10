@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:49:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 11:53:55 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/10 12:33:39 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,61 +65,5 @@ class random_access_iterator
 	protected:
    		pointer		_vct;
 };
-
-
-// template <typename T, typename P, typename R>
-// class reverse_random_access_iterator
-// {
-// 	public:
-// 		typedef std::random_access_iterator_tag							iterator_category;
-// 		typedef std::ptrdiff_t											difference_type;
-// 		typedef T														value_type;
-// 		typedef R														reference;
-// 		typedef P														pointer;
-// 		typedef size_t 													size_type; 
-// 		typedef reverse_random_access_iterator<T, const T*, const T&>	const_type;
-
-// 		reverse_random_access_iterator() : _vct(nullptr) {}
-// 		explicit reverse_random_access_iterator(pointer vct) : _vct(vct) {}
-// 		operator const_type() const { return const_type(this->_vct); }	/* for casting to const */
-// 		reverse_random_access_iterator(const reverse_random_access_iterator& source){ _vct = source._vct; }
-// 		reverse_random_access_iterator & operator=(const reverse_random_access_iterator& source)
-// 		{
-// 			if (_vct != source._vct)
-// 				_vct = source._vct;
-// 			return *this;
-// 		}
-// 		~reverse_random_access_iterator() {}
-
-// 		bool operator!=(const reverse_random_access_iterator& rhs) { return !(*this == rhs); }
-// 		bool operator==(const reverse_random_access_iterator& rhs) { return _vct == rhs._vct; }		
-
-// 		reference operator*() const { return (*_vct); }
-//     	pointer operator->() { return (&_vct); }
-
-//     	reverse_random_access_iterator& operator++() { _vct--; return *this; }
-//     	reverse_random_access_iterator operator++(int) { reverse_random_access_iterator tmp = *this; _vct--; return tmp; }
-// 		reverse_random_access_iterator& operator--() { _vct++; return *this; }
-//     	reverse_random_access_iterator operator--(int) {  reverse_random_access_iterator tmp = *this; _vct++; return tmp; }
-		
-// 		reverse_random_access_iterator(value_type* source) : _vct(source) {}
-
-//         difference_type operator+(const reverse_random_access_iterator<T, P, R> &rhs) { return (_vct - rhs._vct); };
-//         reverse_random_access_iterator operator+(const difference_type &off) { return reverse_random_access_iterator<T, P, R>(_vct - off); };
-//         difference_type operator-(const reverse_random_access_iterator<T, P, R> &rhs) { return (_vct + rhs._vct); };
-//         reverse_random_access_iterator operator-(const difference_type &off) { return reverse_random_access_iterator<T, P, R>(_vct + off); };
-//         reverse_random_access_iterator &operator+=(const difference_type &off) {
-//             _vct -= off;
-//             return (*this);
-// 		};
-// 		reverse_random_access_iterator &operator-=(const reverse_random_access_iterator &off) {
-//            _vct += off;
-//             return (*this);}
-// 	private:
-//         pointer		_vct;
-// };
-
-
-
 }
 #endif

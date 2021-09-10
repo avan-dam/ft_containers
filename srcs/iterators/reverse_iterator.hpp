@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/07 16:26:04 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 11:56:30 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/10 12:33:31 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 # define REVERSE_ITERATOR_HPP
 
 #include "../utils/type_traits.hpp"
-// #include "bidirectional_iterator.hpp"
-// #include "random_access_iterator.hpp"
 
 namespace ft {
 template <class Iterator>

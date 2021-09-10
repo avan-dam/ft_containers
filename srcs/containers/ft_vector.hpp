@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 11:41:20 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/10 12:34:14 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,8 +318,7 @@ class vector
 			return (ret);
 		}
     };
-// (InputIterator1 first1, InputIterator1 last1,
-//                                 InputIterator2 first2, InputIterator2 last2)
+
 	/* Non-member function overloads */
 	template <class T, class Alloc>
 	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
@@ -371,5 +370,3 @@ class vector
 }
 
 # endif
-
-// less than uses the lexoco graphical compare
