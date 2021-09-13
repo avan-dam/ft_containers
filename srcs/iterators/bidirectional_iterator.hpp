@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 14:24:39 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 12:33:53 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 17:02:55 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,33 +35,33 @@ class bidirectional_iterator
         bidirectional_iterator& operator++() 
         {  
             node_ptr p;
-            if (_tree_node == nullptr)
+            if (_tree_node == NULL)
             {
-                // if null go to first node
-                while (_tree_node->_left != nullptr && _tree_node->_left->_start_node == false)
+                /* if null go to first node */
+                while (_tree_node->_left != NULL && _tree_node->_left->_start_node == false)
                     _tree_node = _tree_node->_left; 
             }
-            else if (_tree_node->_right != nullptr)
+            else if (_tree_node->_right != NULL)
             {
-                // furthest left node of right subtree
+                /* furthest left node of right subtree */
                 _tree_node = _tree_node->_right;
-                while (_tree_node->_left != nullptr)
+                while (_tree_node->_left != NULL)
                     _tree_node = _tree_node->_left;
             }
             else
             {
-                //  already processed the left subtree, and no right subtree. go to parent
-                // which _tree_node is a left child, stop if parent ==null a non-NULL parent
-                // is the successor. if parent is NULL, the original node
-                // was the last node inorder, and its successor is the end of the list
+                /*  already processed the left subtree, and no right subtree. go to parent */
+                /* which _tree_node is a left child, stop if parent ==null a non-NULL parent */
+                /* is the successor. if parent is NULL, the original node */
+                /* was the last node inorder, and its successor is the end of the list */
                 p = _tree_node->_parent;
-                while (p != nullptr && _tree_node == p->_right)
+                while (p != NULL && _tree_node == p->_right)
                 {
                     _tree_node = p;
                     p = p->_parent;
                 }
-                // if we were previously at the right-most node in
-                // the tree, _tree_node = nullptr, and iterator is end of the list
+                /* if we were previously at the right-most node in */
+                /* the tree, _tree_node = NULL, and iterator is end of the list */
                 _tree_node = p;
             }
         return *this;
@@ -71,21 +71,21 @@ class bidirectional_iterator
         {
             bidirectional_iterator tmp = *this;
             node_ptr p;
-            if (_tree_node == nullptr)
+            if (_tree_node == NULL)
             {
-                while (_tree_node->_left != nullptr && _tree_node->_left->_start_node == false)
+                while (_tree_node->_left != NULL && _tree_node->_left->_start_node == false)
                     _tree_node = _tree_node->_left; 
             }
-            else if (_tree_node->_right != nullptr)
+            else if (_tree_node->_right != NULL)
             {
                 _tree_node = _tree_node->_right;
-                while (_tree_node->_left != nullptr)
+                while (_tree_node->_left != NULL)
                   _tree_node = _tree_node->_left;
             }
             else
             {
                 p = _tree_node->_parent;
-                while (p != nullptr && _tree_node == p->_right)
+                while (p != NULL && _tree_node == p->_right)
                 {
                     _tree_node = p;
                     p = p->_parent;
@@ -97,27 +97,27 @@ class bidirectional_iterator
         bidirectional_iterator& operator--() 
         {
             node_ptr p;
-            if (_tree_node == nullptr)
+            if (_tree_node == NULL)
             {
-                while (_tree_node->_right != nullptr && _tree_node->_right->_end_node == false)
+                while (_tree_node->_right != NULL && _tree_node->_right->_end_node == false)
                     _tree_node = _tree_node->_right; 
             }
-            else if (_tree_node->_left != nullptr)
+            else if (_tree_node->_left != NULL)
             {
                 _tree_node = _tree_node->_left;
-                while (_tree_node->_right != nullptr)
+                while (_tree_node->_right != NULL)
                     _tree_node = _tree_node->_right;
             }
             else
             {
                 p = _tree_node->_parent;
-                while (p != nullptr && _tree_node == p->_left)
+                while (p != NULL && _tree_node == p->_left)
                 {
                     _tree_node = p;
                     p = p->_parent;
                 }
-                // if we were previously at the right-most node in
-                // the tree, _tree_node = nullptr, and iterator is end of the list
+                /* if we were previously at the right-most node in */
+                /* the tree, _tree_node = NULL, and iterator is end of the list */
                 _tree_node = p;
             }
         return *this;
@@ -126,27 +126,27 @@ class bidirectional_iterator
         bidirectional_iterator operator--(int) {
             bidirectional_iterator tmp = *this; 
             node_ptr p;
-            if (_tree_node == nullptr)
+            if (_tree_node == NULL)
             {
-                while (_tree_node->_right != nullptr && _tree_node->_right->_end_node == false)
+                while (_tree_node->_right != NULL && _tree_node->_right->_end_node == false)
                     _tree_node = _tree_node->_right; 
             }
-            else if (_tree_node->_left != nullptr)
+            else if (_tree_node->_left != NULL)
             {
                 _tree_node = _tree_node->_left;
-                while (_tree_node->_right != nullptr)
+                while (_tree_node->_right != NULL)
                     _tree_node = _tree_node->_right;
             }
             else
             {
                 p = _tree_node->_parent;
-                while (p != nullptr && _tree_node == p->_left)
+                while (p != NULL && _tree_node == p->_left)
                 {
                     _tree_node = p;
                     p = p->_parent;
                 }
-                // if we were previously at the right-most node in
-                // the tree, _tree_node = nullptr, and iterator is end of the list
+                /* if we were previously at the right-most node in */
+                /* the tree, _tree_node = NULL, and iterator is end of the list */
                 _tree_node = p;
             }
             return tmp; 
@@ -154,7 +154,7 @@ class bidirectional_iterator
 
         bool operator!=(const bidirectional_iterator& rhs) { return _tree_node != rhs._tree_node; }
         bool operator==(const bidirectional_iterator& rhs) { return _tree_node == rhs._tree_node; }     
-        bidirectional_iterator() : _tree_node(nullptr) {}
+        bidirectional_iterator() : _tree_node(NULL) {}
         bidirectional_iterator(const node_ptr source) : _tree_node(source) {}
         bidirectional_iterator & operator=(const bidirectional_iterator& source)
         {

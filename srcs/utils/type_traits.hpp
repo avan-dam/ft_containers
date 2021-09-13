@@ -25,8 +25,6 @@ namespace ft {
     struct is_iterator<std::forward_iterator_tag> : public iterator_result<true, std::forward_iterator_tag> {};
     template <>
     struct is_iterator<std::bidirectional_iterator_tag> : public iterator_result<true, std::bidirectional_iterator_tag> {};
-    // template <typename Key, typename T>
-    // struct is_iterator<ft::bidirectional_iterator_tag<Key, T, T*, T&>> : public iterator_result<true, ft::bidirectional_iterator_tag<Key, T, T*, T&>> {};
     template <>
     struct is_iterator<std::random_access_iterator_tag> : public iterator_result<true, std::random_access_iterator_tag> {};
     template <class T>

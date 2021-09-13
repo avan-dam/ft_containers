@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:49:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 12:33:39 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 16:29:36 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class random_access_iterator
 		typedef random_access_iterator<T, P, R>					iterator;
 		typedef random_access_iterator<T, const T*, const T&>	const_type;
 
-		random_access_iterator() : _vct(nullptr) {}
+		random_access_iterator() : _vct(NULL) {}
 		explicit random_access_iterator(pointer source) : _vct(source) {}
 		random_access_iterator(const random_access_iterator& source){ _vct = source._vct; }
 		random_access_iterator & operator=(const random_access_iterator& source)

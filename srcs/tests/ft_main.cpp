@@ -120,7 +120,6 @@ void		random_map_tests(std::ofstream& myfile)
 	map<char,int> fourth = second;
 	myfile << fourth.begin()->first << std::endl;
 	output_map(fourth, myfile);
-	// myfile << fourth.max_size() << std::endl;
 
 	map<char,int> fifth;
 	output_map(fifth, myfile);
@@ -198,7 +197,6 @@ void	map_insert_tests(std::ofstream& myfile)
 	myfile << "in map insert test" << std::endl;
 	map<char,int> mymap;
 
-	// first insert function version (single parameter):
 	mymap.insert ( pair<char,int>('a',100) );
 	mymap.insert ( pair<char,int>('z',200) );
 
@@ -209,16 +207,13 @@ void	map_insert_tests(std::ofstream& myfile)
 	myfile << retft.second << std::endl;
 	myfile << retft.first->second << std::endl;
 
-	// second insert function version (with hint position):
 	map<char,int>::iterator it = mymap.begin();
-	mymap.insert (it, pair<char,int>('b',300));  // max efficiency inserting
-	mymap.insert (it, pair<char,int>('c',400));  // no max efficiency inserting
+	mymap.insert (it, pair<char,int>('b',300)); 
+	mymap.insert (it, pair<char,int>('c',400)); 
 
-  // third insert function version (range insertion):
 	map<char,int> anothermap;
 	anothermap.insert(mymap.begin(),mymap.find('c'));
 
-  // showing contents:
 	output_map(mymap, myfile);
 	output_map(anothermap, myfile);
 
@@ -248,6 +243,7 @@ void	map_swap(std::ofstream& myfile)
 
 	foo['x']=100;
 	foo['y']=200;
+	foo['p']=4;
 
 	bar['a']=11;
 	bar['b']=22;
@@ -263,7 +259,6 @@ void	map_erase(std::ofstream& myfile)
 	map<char,int> mymap;
 	map<char,int>::iterator it;
 
-  // insert some values:
 	mymap['a']=10;
 	mymap['b']=20;
 	mymap['k']=30;
@@ -327,12 +322,10 @@ void	vector_capacity(std::ofstream& myfile)
 	for (int i=1;i<10;i++) third.push_back(i);
 	third.resize(5);
 	third.resize(4,100);
-	// myfile << third.capacity() << std::endl;
 	third.resize(10,100);
 	third.resize(12);
 
 	output(third, myfile);
-	// myfile << third.capacity() << std::endl;
 	vector<int>::size_type sz;
 
 	vector<int> foo;
@@ -361,7 +354,7 @@ void	vector_assign(std::ofstream& myfile)
 	vector<int> second;
 	vector<int> third;
 
-	first.assign (7,100);             // 7 ints with a value of 100
+	first.assign (7,100); 
 	vector<int>::iterator it =first.begin(); it++;
 	second.assign (it ,first.end());
 	output(first, myfile);
@@ -437,7 +430,7 @@ void	vector_insert(std::ofstream& myfile)
 	vector<int> myvector (3,100);
 	vector<int>::iterator it;
 
-	it = myvector.begin(); it++; it++; it++; //it_ft++;
+	it = myvector.begin(); it++; it++; it++;
 	it = myvector.insert ( it , 200 );
 	myfile << *it << std::endl;
 	myvector.insert (it,2,300);
@@ -458,7 +451,7 @@ void 	vector_erase(std::ofstream& myfile)
 	vector<int>::iterator first = myvector.begin(); first++;
 	vector<int>::iterator last = myvector.begin(); last++; last++; last++;
 	
-	vector<int>::iterator result = myvector.erase (first,last);  // erase the first 3 elements:
+	vector<int>::iterator result = myvector.erase (first,last);
 	myfile << *result << std::endl;
 	first = myvector.end(); first--;
 	myvector.erase (first);
@@ -485,12 +478,6 @@ void	vector_relational_operators(std::ofstream& myfile)
   	vector2.push_back (3);
 	vectort1.push_back (4);
   	vector2.push_back (4);
-	// myfile << vectort1>vector2 << std::endl;
-	// myfile << vectort1<vector2 << std::endl;
-	// myfile << vectort1>=vector2 << std::endl;
-	// myfile << vectort1<=vector2 << std::endl;
-	// myfile << vectort1==vector2 << std::endl;
-	// myfile << vectort1!=vector2 << std::endl;
 }
 
 
@@ -568,12 +555,6 @@ void    stack_tests(std::ofstream& myfile)
   	stack<int,vector<int> > st1;
   	stack<int,vector<int> > st2;
 	for (int i=0; i<1; ++i) st1.push(2);
-	// myfile << st1>st2 << std::endl;
-	// myfile << st1<st2 << std::endl;
-	// myfile << st1>=st2 << std::endl;
-	// myfile << st1<=st2 << std::endl;
-	// myfile << st1==st2 << std::endl;
-	// myfile << st1!=st2 << std::endl;
 }
 
 int main(void)

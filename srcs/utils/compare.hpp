@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 17:37:12 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/07 16:21:41 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 16:53:32 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ namespace ft {
             ++first1; ++first2;
         }
         return true;   
+    }
+
+    template <class T> void swap ( T& a, T& b )
+    {
+        T c(a); a=b; b=c;
     }
 
 }

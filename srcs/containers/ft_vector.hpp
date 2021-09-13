@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 12:34:14 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 16:57:26 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include "../iterators/reverse_iterator.hpp"
 #include "../utils/type_traits.hpp"
-// #include "../utils/more.hpp"
 #include "../utils/compare.hpp"
 
 namespace ft {
@@ -39,7 +38,7 @@ class vector
     public:
 		/* Constructors, deconstructor and assignment operator*/
         vector(const allocator_type& alloc = allocator_type()) 
-			:  _vector(nullptr), _size(0), _capacity(0), _alloc(alloc) {}
+			:  _vector(NULL), _size(0), _capacity(0), _alloc(alloc) {}
 		
         vector(size_type n, const value_type& val = value_type(),
                 	const allocator_type& alloc = allocator_type()) : _alloc(alloc)
@@ -62,7 +61,7 @@ class vector
             _capacity = _size;
 			if (_size == 0)
 			{
-				_vector = nullptr;
+				_vector = NULL;
 				return;
 			}
             _vector = new value_type[_capacity];
@@ -80,7 +79,7 @@ class vector
             _capacity = x.size();
 			if (_size == 0)
 			{
-				_vector = nullptr;
+				_vector = NULL;
 				return;
 			}
             _vector = new value_type[_capacity];  
@@ -143,7 +142,7 @@ class vector
 			if (n > _capacity)
 			{
 				vector<T,Alloc>		tmp(begin(), end());
-				if (_capacity != 0 && _size != 0 && _vector != nullptr)
+				if (_capacity != 0 && _size != 0 && _vector != NULL)
 					delete [] _vector;
 				_capacity = n;
 				_vector = new value_type[_capacity];
@@ -197,7 +196,13 @@ class vector
 
 		void push_back (const value_type& val)
 		{
-			reserve(_size + 1);
+			if (_size == _capacity)
+			{
+				if (_size == 0)
+					reserve(1);
+				else
+					reserve(_size * 2);
+			}
 			_vector[_size] = val;
 			_size++;
 		}
@@ -218,7 +223,6 @@ class vector
 		template <class InputIterator>
         void insert (InputIterator position, InputIterator first, InputIterator last,
                     typename ft::enable_if<ft::is_iterator<InputIterator>::value >::type* = 0)
-                    // typename ft::enable_if<!ft::is_integral<InputIterator>::value >::type* = 0)
 		{
 			vector<T,Alloc>		newvector(first, last);
 			insert_vector_helper(newvector, position);
@@ -262,17 +266,15 @@ class vector
 
 		void swap (vector& x)
 		{
-			ft::vector<T,Alloc> tmp(begin(), end());	
-			assign(x.begin(), x.end());
-			_size = x._size;
-			x.clear();
-			x.assign(tmp.begin(), tmp.end());
-			x._size = tmp._size;
+			ft::swap(_vector, x._vector);
+			ft::swap(_size, x._size);
+			ft::swap(_capacity, x._capacity);
+			ft::swap(_alloc, x._alloc);
 		}
 		
 		void clear()
 		{
-			if (_capacity != 0 && _vector != nullptr)
+			if (_capacity != 0 && _vector != NULL)
 			{
 				_size = 0;
 				_capacity = 0;
@@ -362,10 +364,10 @@ class vector
 	template <class T, class Alloc>
 	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
 	{
-		ft::vector<T,Alloc> tempthislist(y.begin(), y.end());
-		y.assign(x.begin(), x.end());
-		x.clear();
-		x.assign(tempthislist.begin(), tempthislist.end());
+		ft::swap(y._vector, x._vector);
+		ft::swap(y._size, x._size);
+		ft::swap(y._capacity, x._capacity);
+		ft::swap(y._alloc, x._alloc);
 	}
 }
 

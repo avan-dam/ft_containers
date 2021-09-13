@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 16:03:28 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 16:57:20 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ class map
     {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
         protected:
             Compare comp;
-            // constructed with map's comparison object
         public:
             value_compare (Compare c) : comp(c) {} 
             typedef bool result_type;
@@ -71,7 +70,7 @@ class map
         explicit map (const key_compare& comp = key_compare(), 
         const allocator_type& alloc = allocator_type()) : _alloc(alloc), _size(0), _compare(comp)
         {
-            _root_node = nullptr;
+            _root_node = NULL;
         }
 
         template <class InputIterator>
@@ -83,11 +82,11 @@ class map
         {
             if (first == last)
             {
-                _root_node = new node(nullptr);
+                _root_node = new node(NULL);
                 _root_node->_end_node = true;
                 return;
             }
-            _root_node = nullptr;
+            _root_node = NULL;
 	        for (InputIterator it = first; it!=last; ++it)
             {
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
@@ -97,10 +96,10 @@ class map
 
         map (const map& x)
         {
-            _root_node = nullptr;
-            if (x._root_node == nullptr)
+            _root_node = NULL;
+            if (x._root_node == NULL)
             {
-                _root_node = nullptr;
+                _root_node = NULL;
                 return;
             }
             for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
@@ -119,7 +118,7 @@ class map
         {
             if (x.size() == 0)
             {
-                _root_node = new node(nullptr);
+                _root_node = new node(NULL);
                 _root_node->_end_node = true;
                 return;
             }
@@ -136,7 +135,7 @@ class map
         iterator        begin()
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr)
+            while (_current_node->_left != NULL)
                 _current_node = _current_node->_left;
             iterator ret(_current_node);
             return (ret);
@@ -145,7 +144,7 @@ class map
         const_iterator  begin() const
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_left != nullptr)
+            while (_current_node->_left != NULL)
                 _current_node = _current_node->_left;
             const_iterator ret(_current_node);
             return (ret);
@@ -154,7 +153,7 @@ class map
         iterator        end()
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_right != nullptr)
+            while (_current_node->_right != NULL)
                 _current_node = _current_node->_right;
             iterator ret(_current_node);
             return (ret);
@@ -163,7 +162,7 @@ class map
         const_iterator  end() const
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_right != nullptr)
+            while (_current_node->_right != NULL)
                 _current_node = _current_node->_right;
             const_iterator ret(_current_node);
             return (ret);
@@ -194,7 +193,7 @@ class map
             size_type   ret;
 
             ret = 0;
-            if (_root_node == nullptr)
+            if (_root_node == NULL)
                 return (ret);
             for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
                 ret++;
@@ -221,9 +220,9 @@ class map
         {
             iterator ret;
             node_ptr current_root;
-            if (_root_node == nullptr || _root_node->_end_node == true)
+            if (_root_node == NULL || _root_node->_end_node == true)
             {
-                _root_node = new node(val, nullptr);
+                _root_node = new node(val, NULL);
                 insert_end_node();
                 iterator ity = begin();
                 ft::pair<iterator, bool>  p(ity, true);
@@ -235,11 +234,11 @@ class map
                 return (ft::pair<iterator, bool> (find(val.first), false));
             current_root = _root_node;
             delete_end_node();
-            while (current_root != nullptr)
+            while (current_root != NULL)
             {
                 if (val.first < current_root->_data.first)
                 {
-                    if (current_root->_left == nullptr)
+                    if (current_root->_left == NULL)
                     {
                         current_root->_left = new node(val, current_root);
                         current_root = current_root->_left;
@@ -252,7 +251,7 @@ class map
                 }
                 else
                 {
-                    if (current_root->_right == nullptr)
+                    if (current_root->_right == NULL)
                     {
                         current_root->_right = new node(val, current_root);
                         current_root = current_root->_right;
@@ -289,20 +288,10 @@ class map
 
         void swap (map& x)
         {
-            if (size() == 0)
-            {
-                for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
-                    insert(ft::make_pair(it->first, it->second));
-                x.clear();
-                return;
-            }
-			ft::map<Key, T> tmp(begin(), end());
-            clear();
-            for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
-                insert(ft::make_pair(it->first, it->second));
-            x.clear();
-            for (typename ft::map<Key,T>::const_iterator itp = tmp.begin(); itp!=tmp.end(); ++itp)
-                x.insert(ft::make_pair(itp->first, itp->second));
+		    ft::swap(_root_node, x._root_node);
+		    ft::swap(_size, x._size);
+		    ft::swap(_compare, x._compare);
+		    ft::swap(_alloc, x._alloc);
         }
 
 
@@ -315,7 +304,7 @@ class map
             if (last != end())
                 tmp.insert(last, end());
             clear();
-            if (tmp._root_node != nullptr)
+            if (tmp._root_node != NULL)
                 insert(tmp.begin(), tmp.end());
         }
 
@@ -339,7 +328,7 @@ class map
         {
             delete_end_node();
             delete_tree(_root_node);
-            _root_node = nullptr;
+            _root_node = NULL;
         }
         
         /* observers */
@@ -455,14 +444,14 @@ class map
             node_ptr current_node;
 
             current_node = _root_node;
-            if (_root_node == nullptr)
+            if (_root_node == NULL)
                 return ;
-            while (current_node->_right != nullptr && current_node->_right->_end_node == false)
+            while (current_node->_right != NULL && current_node->_right->_end_node == false)
                 current_node = current_node->_right;
-            if (current_node->_right == nullptr)
+            if (current_node->_right == NULL)
                 return ;
             node_ptr tmp = current_node->_right;
-            current_node->_right = nullptr;
+            current_node->_right = NULL;
             if (tmp->_end_node == true) 
                 delete(tmp);
         }
@@ -471,9 +460,9 @@ class map
             node_ptr current_node;
 
             current_node = _root_node;
-            if (_root_node == nullptr)
+            if (_root_node == NULL)
                 return;
-            while (current_node->_right != nullptr && current_node->_right->_end_node == false)
+            while (current_node->_right != NULL && current_node->_right->_end_node == false)
                 current_node = current_node->_right;
             current_node->_right = new node (current_node);
             current_node = current_node->_right;

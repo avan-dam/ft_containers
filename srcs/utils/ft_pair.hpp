@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:51:31 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/07 16:03:12 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 17:01:07 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ template <class T1, class T2> struct pair
         first_type  first;
         second_type second;
         
-        // constructors
+        /* constructors */
         pair() : first(), second() {}
         template<class U, class V>
         pair(const pair<U,V>& pr) : first(pr.first), second(pr.second) {}
         pair (const first_type& a, const second_type& b) : first(a), second(b) {}
-        // assignment operator
+        /* assignment operator */
         pair& operator= (const pair& pr)
         {
             if (first != pr.first || second != pr.second)
