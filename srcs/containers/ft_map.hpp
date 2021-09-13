@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/10 12:35:07 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 16:03:28 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,11 @@ class map
     // INNER CLASS VALUE COMPARE 
     class value_compare : std::binary_function<value_type,value_type,bool>
     {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-            friend class map;
         protected:
             Compare comp;
-            value_compare (Compare c) : comp(c) {} 
             // constructed with map's comparison object
         public:
+            value_compare (Compare c) : comp(c) {} 
             typedef bool result_type;
             typedef value_type first_argument_type;
             typedef value_type second_argument_type;
@@ -62,14 +61,15 @@ class map
 
     private:
     	allocator_type	_alloc;
-        key_compare     _compare;
         node_ptr        _root_node;
         size_type       _size;
+    protected:
+        key_compare     _compare;
 
     public:
         /* constructors */
         explicit map (const key_compare& comp = key_compare(), 
-        const allocator_type& alloc = allocator_type()) : _alloc(alloc), _compare(comp), _size(0) 
+        const allocator_type& alloc = allocator_type()) : _alloc(alloc), _size(0), _compare(comp)
         {
             _root_node = nullptr;
         }
