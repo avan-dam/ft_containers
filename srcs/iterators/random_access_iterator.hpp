@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:49:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 16:29:36 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 21:51:59 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,12 @@ class random_access_iterator
     	iterator operator--(int) {  iterator tmp = *this; _vct--; return tmp; }
 	
         difference_type operator+(const iterator &rhs) { return (_vct + rhs._vct); };
-        iterator operator+(const difference_type &off) { return iterator(_vct + off); };
+        iterator operator+(const difference_type &off) const { return iterator(_vct + off); };
+		/* needed to be friend for 2 + begin() etc */
+		friend iterator operator+ (difference_type n, iterator itr) { return iterator(itr._vct + n); }
         difference_type operator-(const iterator &rhs) { return (_vct - rhs._vct); };
-        iterator operator-(const difference_type &off) { return iterator(_vct - off); };
+        iterator operator-(const difference_type &off) const  { return iterator(_vct - off); };
+		friend iterator operator- (difference_type n, iterator itr) { return iterator(itr._vct - n); }
         iterator &operator+=(const difference_type &off) {
             _vct += off;
             return (*this);
@@ -62,6 +65,7 @@ class random_access_iterator
 		iterator &operator-=(const difference_type &off) {
            _vct -= off;
             return (*this);}
+		
 	protected:
    		pointer		_vct;
 };

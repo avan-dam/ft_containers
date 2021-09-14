@@ -20,7 +20,7 @@ void output(vector<T> vct, std::ofstream& myfile)
     myfile << std::endl;
 	if (vct.size() == 0)
 		return;
- 	typename vector<T>::iterator it = vct.begin();
+ 	typename vector<T>::iterator it = 2 + vct.begin();
 	while (it != vct.end())
 	{
         myfile << ' ' << *it;
@@ -29,7 +29,7 @@ void output(vector<T> vct, std::ofstream& myfile)
     myfile << std::endl;
     myfile << "reverse_iterator" << std::endl;
  	typename vector<T>::reverse_iterator itr = vct.rbegin();
-	while (itr != vct.rend())
+	while (itr != vct.rend() - 1)
 	{
         myfile << ' ' << *itr;
 		itr++;
@@ -43,7 +43,7 @@ void output(vector<T> vct, std::ofstream& myfile)
 	}
     myfile << std::endl;
     myfile << "const_reverse_iterator" << std::endl;
- 	typename vector<T>::const_reverse_iterator itrc = vct.rbegin();
+ 	typename vector<T>::const_reverse_iterator itrc = 2 + vct.rbegin();
  	typename vector<T>::const_reverse_iterator itrce = vct.rend();
 	while (itrc != itrce)
 	{
@@ -553,6 +553,9 @@ void    stack_tests(std::ofstream& myfile)
   	stack<int,vector<int> > st1;
   	stack<int,vector<int> > st2;
 	for (int i=0; i<1; ++i) st1.push(2);
+	myfile << std::boolalpha << (st1 == st2) << std::endl;
+	myfile << std::boolalpha << (st1 < st2) << std::endl;
+	myfile << std::boolalpha << (st1 <= st2) << std::endl;
 }
 
 int main(void)

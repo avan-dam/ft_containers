@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/07 16:26:04 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 16:57:36 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 22:04:51 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,14 @@ class reverse_iterator
     }
     reverse_iterator operator+ (difference_type n) const
     {
-        return(_cnt - n);
+        return(reverse_iterator(_cnt - n));
     }
     reverse_iterator& operator++()
     {
         _cnt--;
         return *this;
     }
+    // check this
     reverse_iterator operator++(int) {
     reverse_iterator temp = *this;
     ++(*this);
@@ -72,7 +73,7 @@ class reverse_iterator
     }
     reverse_iterator operator- (difference_type n) const
     {
-        return(_cnt + n);
+        return(reverse_iterator(_cnt + n));
     }
     reverse_iterator& operator--()
     {

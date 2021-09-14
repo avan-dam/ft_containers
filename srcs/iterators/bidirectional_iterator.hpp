@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 14:24:39 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 17:02:55 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 17:41:01 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ class bidirectional_iterator
         }
         bidirectional_iterator(bidirectional_iterator const & source) : _tree_node(node_ptr(source._tree_node)) {}
         ~bidirectional_iterator() {}
-    
+
     private:
         node_ptr    _tree_node;
     };

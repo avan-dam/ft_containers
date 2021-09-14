@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 16:57:26 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/13 21:35:53 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class vector
         {
             _size = n;
             _capacity = n;
-            _vector = new value_type[_capacity];
+			_vector = _alloc.allocate(n);
             for (size_t i = 0; i < n; i++)
                 _vector[i] = val;
         }
@@ -59,12 +59,7 @@ class vector
 			i = 0;
 			_size = distance(first, last);
             _capacity = _size;
-			if (_size == 0)
-			{
-				_vector = NULL;
-				return;
-			}
-            _vector = new value_type[_capacity];
+			_vector = _alloc.allocate(_capacity);
 			for (InputIterator n = first; n != last; n++)
             {
 				_vector[i] = *n;
@@ -82,22 +77,22 @@ class vector
 				_vector = NULL;
 				return;
 			}
-            _vector = new value_type[_capacity];  
+			_vector = _alloc.allocate(_capacity);
             for (size_t i = 0; i < _size; i++)
                 _vector[i] = x[i];
             return;
         }
 
-        ~vector() {	delete [] _vector; }
+        ~vector() {	_alloc.deallocate(_vector, _size);}
 
 		vector& operator=(const vector& x)
         {
             if (_size != x._size || _capacity != x._capacity)
             {
+				_alloc.deallocate(_vector, _capacity);
 				_capacity = x._capacity;
                 _size = x._size;
-                delete [] _vector;
-                _vector = new value_type[_capacity];
+				_vector = _alloc.allocate(_capacity);
             }
             for (size_t i = 0; i < _size; i++)
                 _vector[i] = x[i];
@@ -139,15 +134,16 @@ class vector
 
 		void reserve (size_type n)
 		{
+			if (n > max_size())
+				return;
 			if (n > _capacity)
 			{
-				vector<T,Alloc>		tmp(begin(), end());
-				if (_capacity != 0 && _size != 0 && _vector != NULL)
-					delete [] _vector;
+				value_type *tmp = _alloc.allocate(n, &_vector);
+				for (size_type i = 0; i < _size; i++)
+					tmp[i] = _vector[i];
+				_alloc.deallocate(_vector, _size);
+				_vector = tmp;
 				_capacity = n;
-				_vector = new value_type[_capacity];
-            	for (size_t i = 0; i < _size; i++)
-               		_vector[i] = tmp[i];
 			}
 		}
 
@@ -177,7 +173,7 @@ class vector
 			for (InputIterator counter = first; counter !=last; counter++)
 				_size++;
 			_capacity = _size;
-            _vector = new value_type[_capacity];
+			_vector = _alloc.allocate(_capacity);
             for (size_t i = 0; i < _size; i++)
             {
 			    _vector[i] = *first;
@@ -186,10 +182,10 @@ class vector
 		}
         void assign (size_type n, const value_type& val)
         {
+			_alloc.deallocate(_vector, _size);
             _size = n;
             _capacity = n;
-            delete [] _vector;
-            _vector = new value_type[_capacity];
+			_vector = _alloc.allocate(_capacity);
             for (size_t i = 0; i < _size; i++)
                 _vector[i] = val;
         }
@@ -207,19 +203,26 @@ class vector
 			_size++;
 		}
 
-		void	pop_back()	{	_size--; }
+		void	pop_back()	
+		{	
+			_alloc.destroy(&_vector[_size - 1]);
+			_size--; 
+		}
 
 		iterator insert (iterator position, const value_type& val)
 		{
+			//reallocation
 			vector<T,Alloc>		newvector(1, val);
 			return (insert_vector_helper(newvector, position));
 		}
+
     	void insert (iterator position, size_type n, const value_type& val)
 		{
 			vector<T,Alloc>		newvector(n, val);
 			insert_vector_helper(newvector, position);
 			return ;
 		}
+
 		template <class InputIterator>
         void insert (InputIterator position, InputIterator first, InputIterator last,
                     typename ft::enable_if<ft::is_iterator<InputIterator>::value >::type* = 0)
@@ -231,32 +234,17 @@ class vector
 		iterator erase (iterator first, iterator last)
 		{
 			size_type		size_delete = 0;
-			size_type		i = 0;
-			vector<T,Alloc>	copyvector(begin(), end());
-			iterator 		loop = begin();
-
 			for (iterator tmp = first; tmp != last; tmp++)
 				size_delete++;
 			_size = _size - size_delete;
-			_capacity = _size;
-			delete [] _vector;
-            _vector = new value_type[_capacity];
-			while (loop != first)
-			{
-				_vector[i] = copyvector[i];
-				loop++;
-				i++;
-			}
-			loop = begin();
-			for (size_type k = 0; k != i; k++)
-				loop++;
-			while (i < _size)
-			{
-				_vector[i] = copyvector[i + size_delete];
-				i++;
-			}
-			return (loop);
+			for (size_type i = first - begin(); i < _size; i++)
+				_vector[i] = _vector[i + size_delete];
+			iterator ret = begin();
+			while (ret != first)
+				ret++;
+			return (ret);
 		}
+
 		iterator erase (iterator position)
 		{
 			iterator pos_nxt = position;
@@ -271,17 +259,13 @@ class vector
 			ft::swap(_capacity, x._capacity);
 			ft::swap(_alloc, x._alloc);
 		}
-		
+
 		void clear()
 		{
-			if (_capacity != 0 && _vector != NULL)
-			{
-				_size = 0;
-				_capacity = 0;
-				delete [] _vector;
-			}
+			_alloc.destroy(_vector);
+			_size = 0;
+			_capacity = 0;
 		}
-
 
 		/* Allocator */
 		allocator_type get_allocator() const { return _alloc; }
@@ -312,11 +296,14 @@ class vector
 				clear();
 			if (!vector_start.empty())
 				insert_newvector(vector_start);
+			vector_start.clear();
 			if (!newvector.empty())
 				insert_newvector(newvector);
+			newvector.clear();
 			ret = iterator(&_vector[_size - 1]);
 			if (!vector_end.empty())
 				insert_newvector(vector_end);
+			vector_end.clear();
 			return (ret);
 		}
     };
@@ -325,6 +312,8 @@ class vector
 	template <class T, class Alloc>
 	bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
+		if (lhs.size() != rhs.size())
+			return false;
 		return (ft::equal<typename ft::vector<T,Alloc>::const_iterator, typename ft::vector<T,Alloc>::const_iterator>(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
