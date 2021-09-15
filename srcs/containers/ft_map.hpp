@@ -20,14 +20,15 @@
 #include "../iterators/reverse_iterator.hpp"
 
 namespace ft {
-template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<pair<const Key,T> > > 
+// template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<T> > 
+template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<T> > 
 class map
     {
     public:
        	typedef	Key													                        		key_type; 
 		typedef	T														                        	mapped_type; 
 		typedef	pair<const key_type, mapped_type>						                        	value_type; 
-		typedef	Compare														                        key_compare; 
+		typedef	Compare														                        key_compare;
 		typedef	Alloc														                        allocator_type; 
 		typedef	typename allocator_type::reference							                        reference; 
 		typedef	typename allocator_type::const_reference					                        const_reference; 
@@ -41,7 +42,7 @@ class map
 		typedef size_t		 												                        size_type;
         typedef	tree_node<value_type>                                                               node;
         typedef	tree_node<value_type>*                                                              node_ptr;
-    
+        // typedef typename      Alloc::template rebind<node_ptr>                                      allocator_type_bnd;
     // INNER CLASS VALUE COMPARE 
     class value_compare : std::binary_function<value_type,value_type,bool>
     {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
@@ -62,6 +63,7 @@ class map
     	allocator_type	_alloc;
         node_ptr        _root_node;
         size_type       _size;
+
     protected:
         key_compare     _compare;
 
@@ -94,7 +96,7 @@ class map
             }
         }
 
-        map (const map& x)
+        map (const map& x) : _alloc(x._alloc), _size(x._size), _compare(x._compare)
         {
             _root_node = NULL;
             if (x._root_node == NULL)
@@ -107,6 +109,12 @@ class map
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
                 insert(p);
             }
+        // int count = 0;
+        // pointer data_ = _alloc().allocate(x._size);
+        // for (iterator i = &x.data_[0]; i != &x.data_[x._size]; ++i, ++count)
+        // {
+        //     _alloc().construct(&data_[count], *i);
+        // }
         }
         
         ~map()
@@ -218,19 +226,15 @@ class map
         /* modifiers */
         pair<iterator,bool> insert (const value_type& val)
         {
-            iterator ret;
             node_ptr current_root;
-            if (_root_node == NULL || _root_node->_end_node == true)
+            if (_root_node == NULL)
             {
-                _root_node = new node(val, NULL);
+                _root_node = new node(val, NULL, 1);
                 insert_end_node();
-                iterator ity = begin();
-                ft::pair<iterator, bool>  p(ity, true);
-                return (p);
+                return (ft::make_pair(begin(), true));
             }
-            iterator ity = begin();
-            ft::pair<iterator, bool> p(ity, false);
-            if (find(val.first) != end()) // if a node with that key already exists do not insert a new one
+#            /* if a node with that key already exists do not insert a new one */
+            if (find(val.first) != end()) 
                 return (ft::pair<iterator, bool> (find(val.first), false));
             current_root = _root_node;
             delete_end_node();
@@ -240,32 +244,72 @@ class map
                 {
                     if (current_root->_left == NULL)
                     {
-                        current_root->_left = new node(val, current_root);
-                        current_root = current_root->_left;
-                        ret = iterator(current_root);
+                        // long height = 1 + max(current_root->_left->_height, current_root->_right->_height);
+                        // current_root->_left = new node(val, current_root, height);
+                        current_root->_left = new node(val, current_root, 1);
                         insert_end_node();
-                        ft::pair<iterator, bool>  p(ret, true);
-                        return (p);
+                        break;
                     }
                     current_root = current_root->_left;
                 }
-                else
+                else if (val.first > current_root->_data.first)
                 {
                     if (current_root->_right == NULL)
                     {
-                        current_root->_right = new node(val, current_root);
-                        current_root = current_root->_right;
-                        ret = iterator(current_root);
+                        // long height = 1 + max(current_root->_left->_height, current_root->_right->_height);
+                        // current_root->_right = new node(val, current_root, height);
+                        current_root->_right = new node(val, current_root, 1);
                         insert_end_node();
-                        ft::pair<iterator, bool>  p(ret, true);
-                        return (p);
+                        break;
                     }
                     current_root = current_root->_right;
                 }
-            }    
-            insert_end_node();
-            return (p);
+            }
+            // check_rebalance(current_root);
+            return (ft::pair<iterator, bool> (find(val.first), false));
         }
+
+        // /* modifiers */
+        // pair<iterator,bool> insert (const value_type& val)
+        // {
+        //     node_ptr current_root;
+        //     if (_root_node == NULL)
+        //     {
+        //         _root_node = new node(val, NULL);
+        //         insert_end_node();
+        //         return (ft::make_pair(begin(), true));
+        //     }
+        //     ft::pair<iterator, bool> p(begin(), false);
+        //     /* if a node with that key already exists do not insert a new one */
+        //     if (find(val.first) != end()) 
+        //         return (ft::pair<iterator, bool> (find(val.first), false));
+        //     current_root = _root_node;
+        //     delete_end_node();
+        //     while (current_root != NULL)
+        //     {
+        //         if (val.first < current_root->_data.first)
+        //         {
+        //             if (current_root->_left == NULL)
+        //             {
+        //                 current_root->_left = new node(val, current_root);
+        //                 insert_end_node();
+        //                 return (ft::make_pair(iterator(current_root->_left), true));
+        //             }
+        //             current_root = current_root->_left;
+        //         }
+        //         else
+        //         {
+        //             if (current_root->_right == NULL)
+        //             {
+        //                 current_root->_right = new node(val, current_root);
+        //                 insert_end_node();
+        //                 return (ft::make_pair(iterator(current_root->_right), true));
+        //             }
+        //             current_root = current_root->_right;
+        //         }
+        //     } 
+        //     return (ft::pair<iterator, bool> (find(val.first), false));
+        // }
 
         iterator insert (iterator position, const value_type& val)
         {
@@ -467,6 +511,63 @@ class map
             current_node->_right = new node (current_node);
             current_node = current_node->_right;
             current_node->_end_node = true;
+        }
+
+        long    max(long a, long b)
+        {
+            if (a > b)
+                return (a);
+            return (b);
+        }
+
+        long    get_balance(node_ptr node)
+        {
+            if (node == NULL)
+                return 0;
+            return (node->_left->_height - node->_right->_height);
+        }
+
+        node_ptr    rotate_right(node_ptr y)
+        {
+            node_ptr x = y->_left;
+            node_ptr T2 = x->_right;
+
+            x->_right = y;
+            y->_left = T2;
+            return x;
+        }
+        node_ptr    rotate_left(node_ptr x)
+        {
+            node_ptr    y = x->_right;
+            node_ptr    T2 = y->_left;
+            
+            y->_left = x;
+            x->_right = T2;
+            return y;
+        }
+
+        void    check_rebalance(node_ptr node)
+        {
+            long balance;
+
+            balance = get_balance(node);
+            /* left left case */
+            if (balance > 1 && node->_data.first < node->_left->_data.first)
+                rotate_right(node);
+            /* right right case */
+            if (balance > 1 && node->_data.first > node->_right->_data.first)
+                rotate_left(node);
+            if (balance > 1 && node->_data.first > node->_left->_data.first)
+            {
+                node->_left = rotate_left(node->_left);
+                rotate_right(node);
+            }
+            if (balance < -1 && node->_data.first < node->_right->_data.first)
+            {
+                node_ptr tmp = rotate_right(node->_right);
+                node->_right = tmp;
+                rotate_left(node);
+            }
         }
     };
 }      

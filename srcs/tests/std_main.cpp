@@ -43,7 +43,7 @@ void output(vector<T> vct, std::ofstream& myfile)
 	}
     myfile << std::endl;
     myfile << "const_reverse_iterator" << std::endl;
- 	typename vector<T>::const_reverse_iterator itrc = 2 + vct.rbegin();
+ 	typename vector<T>::const_reverse_iterator itrc = vct.rbegin() + 2;
  	typename vector<T>::const_reverse_iterator itrce = vct.rend();
 	while (itrc != itrce)
 	{

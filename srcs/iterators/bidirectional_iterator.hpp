@@ -38,7 +38,7 @@ class bidirectional_iterator
             if (_tree_node == NULL)
             {
                 /* if null go to first node */
-                while (_tree_node->_left != NULL && _tree_node->_left->_start_node == false)
+                while (_tree_node->_left != NULL)// && _tree_node->_left->_start_node == false)
                     _tree_node = _tree_node->_left; 
             }
             else if (_tree_node->_right != NULL)
@@ -73,7 +73,7 @@ class bidirectional_iterator
             node_ptr p;
             if (_tree_node == NULL)
             {
-                while (_tree_node->_left != NULL && _tree_node->_left->_start_node == false)
+                while (_tree_node->_left != NULL)// && _tree_node->_left->_start_node == false)
                     _tree_node = _tree_node->_left; 
             }
             else if (_tree_node->_right != NULL)
