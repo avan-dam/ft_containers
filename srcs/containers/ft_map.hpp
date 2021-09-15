@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 16:57:20 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/15 23:19:35 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ class map
 		typedef size_t		 												                        size_type;
         typedef	tree_node<value_type>                                                               node;
         typedef	tree_node<value_type>*                                                              node_ptr;
-        // typedef typename      Alloc::template rebind<node_ptr>                                      allocator_type_bnd;
-    // INNER CLASS VALUE COMPARE 
+		typedef typename Alloc::template rebind<node>::other				                        alloc_nd;
+    /* INNER CLASS VALUE COMPARE */
     class value_compare : std::binary_function<value_type,value_type,bool>
-    {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+    {   
         protected:
             Compare comp;
         public:
@@ -60,7 +60,7 @@ class map
     };
 
     private:
-    	allocator_type	_alloc;
+    	alloc_nd	    _alloc;
         node_ptr        _root_node;
         size_type       _size;
 
@@ -83,11 +83,7 @@ class map
         : _alloc(alloc), _compare(comp)
         {
             if (first == last)
-            {
-                _root_node = new node(NULL);
-                _root_node->_end_node = true;
                 return;
-            }
             _root_node = NULL;
 	        for (InputIterator it = first; it!=last; ++it)
             {
@@ -109,12 +105,6 @@ class map
                 ft::pair<Key, T> p = ft::make_pair(it->first, it->second); 
                 insert(p);
             }
-        // int count = 0;
-        // pointer data_ = _alloc().allocate(x._size);
-        // for (iterator i = &x.data_[0]; i != &x.data_[x._size]; ++i, ++count)
-        // {
-        //     _alloc().construct(&data_[count], *i);
-        // }
         }
         
         ~map()
@@ -124,12 +114,6 @@ class map
 
         map& operator= (const map& x)
         {
-            if (x.size() == 0)
-            {
-                _root_node = new node(NULL);
-                _root_node->_end_node = true;
-                return;
-            }
             clear();
             for (typename ft::map<Key,T>::const_iterator it = x.begin(); it!=x.end(); ++it)
             {   
@@ -229,7 +213,8 @@ class map
             node_ptr current_root;
             if (_root_node == NULL)
             {
-                _root_node = new node(val, NULL, 1);
+                _root_node = _alloc.allocate(1);
+                _alloc.construct(_root_node, val);
                 insert_end_node();
                 return (ft::make_pair(begin(), true));
             }
@@ -244,9 +229,9 @@ class map
                 {
                     if (current_root->_left == NULL)
                     {
-                        // long height = 1 + max(current_root->_left->_height, current_root->_right->_height);
-                        // current_root->_left = new node(val, current_root, height);
-                        current_root->_left = new node(val, current_root, 1);
+                        current_root->_left = _alloc.allocate(1);
+                        _alloc.construct(current_root->_left, val);
+                        current_root->_left->_parent = current_root;
                         insert_end_node();
                         break;
                     }
@@ -256,9 +241,9 @@ class map
                 {
                     if (current_root->_right == NULL)
                     {
-                        // long height = 1 + max(current_root->_left->_height, current_root->_right->_height);
-                        // current_root->_right = new node(val, current_root, height);
-                        current_root->_right = new node(val, current_root, 1);
+                        current_root->_right = _alloc.allocate(1);
+                        _alloc.construct(current_root->_right, val);
+                        current_root->_right->_parent = current_root;
                         insert_end_node();
                         break;
                     }
@@ -268,48 +253,6 @@ class map
             // check_rebalance(current_root);
             return (ft::pair<iterator, bool> (find(val.first), false));
         }
-
-        // /* modifiers */
-        // pair<iterator,bool> insert (const value_type& val)
-        // {
-        //     node_ptr current_root;
-        //     if (_root_node == NULL)
-        //     {
-        //         _root_node = new node(val, NULL);
-        //         insert_end_node();
-        //         return (ft::make_pair(begin(), true));
-        //     }
-        //     ft::pair<iterator, bool> p(begin(), false);
-        //     /* if a node with that key already exists do not insert a new one */
-        //     if (find(val.first) != end()) 
-        //         return (ft::pair<iterator, bool> (find(val.first), false));
-        //     current_root = _root_node;
-        //     delete_end_node();
-        //     while (current_root != NULL)
-        //     {
-        //         if (val.first < current_root->_data.first)
-        //         {
-        //             if (current_root->_left == NULL)
-        //             {
-        //                 current_root->_left = new node(val, current_root);
-        //                 insert_end_node();
-        //                 return (ft::make_pair(iterator(current_root->_left), true));
-        //             }
-        //             current_root = current_root->_left;
-        //         }
-        //         else
-        //         {
-        //             if (current_root->_right == NULL)
-        //             {
-        //                 current_root->_right = new node(val, current_root);
-        //                 insert_end_node();
-        //                 return (ft::make_pair(iterator(current_root->_right), true));
-        //             }
-        //             current_root = current_root->_right;
-        //         }
-        //     } 
-        //     return (ft::pair<iterator, bool> (find(val.first), false));
-        // }
 
         iterator insert (iterator position, const value_type& val)
         {
@@ -480,7 +423,8 @@ class map
             if (node == NULL) return;
             delete_tree(node->_left);
             delete_tree(node->_right);
-            delete node;
+            _alloc.destroy(node);
+            _alloc.deallocate(node, 1);
         }
 
         void    delete_end_node()
@@ -508,7 +452,9 @@ class map
                 return;
             while (current_node->_right != NULL && current_node->_right->_end_node == false)
                 current_node = current_node->_right;
-            current_node->_right = new node (current_node);
+            current_node->_right = _alloc.allocate(1);
+            _alloc.construct(current_node->_right);
+            current_node->_right->_parent = current_node;
             current_node = current_node->_right;
             current_node->_end_node = true;
         }

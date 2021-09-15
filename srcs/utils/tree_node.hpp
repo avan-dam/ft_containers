@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 13:21:47 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 17:01:15 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/15 23:12:54 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ template <class T>
 class tree_node
 {
     public:
-		typedef	tree_node<T>	node;
-		typedef tree_node<T>*	node_ptr;
+		typedef	tree_node<T>	    node;
+		typedef tree_node<T>*	    node_ptr;
         typedef T                   value_type;
         typedef T&                  reference;
         typedef T*                  pointer;
@@ -30,11 +30,10 @@ class tree_node
         node_ptr	                _right;
         node_ptr	                _parent;
         bool                        _end_node;
-        long                        _height;
+        long                        _height; // out?
     
-
-        tree_node(node_ptr parent) : _data(), _left(NULL), _right(NULL), _parent(parent), _end_node(false), _height(0) {}
-        tree_node(T data, node_ptr parent, long height) : _data(data), _left(NULL), _right(NULL), _parent(parent), _end_node(false), _height(height) {}
+        tree_node() : _data(), _left(NULL), _right(NULL), _parent(NULL), _end_node(false), _height(0) {}
+        tree_node(T data) : _data(data), _left(NULL), _right(NULL), _parent(NULL), _end_node(false), _height(0) {}
         tree_node(const tree_node & source) : _data(source._data), _left(source._left), _right(source._right), _parent(source._parent), _end_node(source._end_node), _height(source.height) {}
         tree_node & operator=(const tree_node & source)
 		{
