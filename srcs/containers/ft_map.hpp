@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/15 23:19:35 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/16 14:17:14 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,7 @@ class map
             {
                 _root_node = _alloc.allocate(1);
                 _alloc.construct(_root_node, val);
+                _root_node->_height = 1;
                 insert_end_node();
                 return (ft::make_pair(begin(), true));
             }
@@ -231,6 +232,7 @@ class map
                     {
                         current_root->_left = _alloc.allocate(1);
                         _alloc.construct(current_root->_left, val);
+                        current_root->_height = calc_height(current_root);
                         current_root->_left->_parent = current_root;
                         insert_end_node();
                         break;
@@ -243,6 +245,7 @@ class map
                     {
                         current_root->_right = _alloc.allocate(1);
                         _alloc.construct(current_root->_right, val);
+                        current_root->_height = calc_height(current_root);
                         current_root->_right->_parent = current_root;
                         insert_end_node();
                         break;
@@ -250,7 +253,7 @@ class map
                     current_root = current_root->_right;
                 }
             }
-            // check_rebalance(current_root);
+            check_rebalance(current_root);
             return (ft::pair<iterator, bool> (find(val.first), false));
         }
 
@@ -470,6 +473,10 @@ class map
         {
             if (node == NULL)
                 return 0;
+            if (node->_left == NULL)
+                return node->_right->_height;
+            if (node->_right == NULL)
+                return node->_left->_height;
             return (node->_left->_height - node->_right->_height);
         }
 
@@ -490,6 +497,22 @@ class map
             y->_left = x;
             x->_right = T2;
             return y;
+        }
+
+        int calc_height(node_ptr node)
+        {
+            if(node->_left && node->_right){
+            if (node->_left->_height < node->_right->_height)
+                return node->_right->_height + 1;
+            else return  node->_left->_height + 1;
+            }
+            else if(node->_left && node->_right == NULL){
+               return node->_left->_height + 1;
+            }
+            else if(node->_left ==NULL && node->_right){
+               return node->_right->_height + 1;
+            }
+            return 0;
         }
 
         void    check_rebalance(node_ptr node)
