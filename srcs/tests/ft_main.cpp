@@ -562,16 +562,16 @@ void    stack_tests(std::ofstream& myfile)
 
 int main(void)
 {
-    // struct timeval begin, end;
-    // gettimeofday(&begin, 0);
-    // std::ofstream myfile;
-    // myfile.open ("srcs/tests/myfile_ft.txt");
-	// vector_tests(myfile);
-	// map_tests(myfile);
-	// stack_tests(myfile);
-    // myfile.close();
-    // gettimeofday(&end, 0);
-    // time_diff(begin, end);
+    struct timeval begin, end;
+    gettimeofday(&begin, 0);
+    std::ofstream myfile;
+    myfile.open ("srcs/tests/myfile_ft.txt");
+	vector_tests(myfile);
+	map_tests(myfile);
+	stack_tests(myfile);
+    myfile.close();
+    gettimeofday(&end, 0);
+    time_diff(begin, end);
 	map<int,int> mymap;
 	// map<int,int>::iterator it;
 
@@ -590,6 +590,7 @@ int main(void)
 	mymap[5]=30;
 	mymap[6]=30;
 	mymap[7]=30;
+	
 	// mymap[3]=40;
 	// mymap[6]=50;
 	// mymap[7]=60;
