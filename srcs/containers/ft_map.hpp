@@ -19,6 +19,14 @@
 #include "../iterators/bidirectional_iterator.hpp"
 #include "../iterators/reverse_iterator.hpp"
 
+
+#define RESET   "\033[0m"
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+// DELETE 
+
+
+
 namespace ft {
 // template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<T> > 
 template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<T> > 
@@ -210,6 +218,7 @@ class map
         /* modifiers */
         pair<iterator,bool> insert (const value_type& val)
         {
+            std::cout << "starting with "<< val.first << std::endl;
             node_ptr current_root;
             if (_root_node == NULL)
             {
@@ -219,7 +228,7 @@ class map
                 insert_end_node();
                 return (ft::make_pair(begin(), true));
             }
-#            /* if a node with that key already exists do not insert a new one */
+            /* if a node with that key already exists do not insert a new one */
             if (find(val.first) != end()) 
                 return (ft::pair<iterator, bool> (find(val.first), false));
             current_root = _root_node;
@@ -232,9 +241,13 @@ class map
                     {
                         current_root->_left = _alloc.allocate(1);
                         _alloc.construct(current_root->_left, val);
-                        current_root->_height = calc_height(current_root);
                         current_root->_left->_parent = current_root;
-                        insert_end_node();
+                        current_root = current_root->_left;
+                        current_root->_height = 0;
+
+                        // left_insert_rebalance(current_root, val);
+                        // current_root = current_root->_left;
+                        // insert_end_node();
                         break;
                     }
                     current_root = current_root->_left;
@@ -245,15 +258,64 @@ class map
                     {
                         current_root->_right = _alloc.allocate(1);
                         _alloc.construct(current_root->_right, val);
-                        current_root->_height = calc_height(current_root);
                         current_root->_right->_parent = current_root;
-                        insert_end_node();
+                        current_root = current_root->_right;
+                        current_root->_height = 0;
+            //                         while (current_root->_parent)
+            // {
+            //     current_root->_height = calc_height(current_root);
+            //     // check_rebalance(current_root);
+            //     current_root = current_root->_parent;
+            // }
+            //             right_insert_rebalance(current_root, val);
+                        // insert_end_node();
                         break;
                     }
                     current_root = current_root->_right;
                 }
             }
-            check_rebalance(current_root);
+            std::cout << "inserted" << current_root->_data.first << std::endl;
+            node_ptr tmp;
+            node_ptr tmp2 = current_root;
+            while (current_root->_parent)
+            {
+                current_root->_height = calc_height(current_root);
+                // check_rebalance(current_root);
+                current_root = current_root->_parent;
+            }
+            tmp = _root_node;
+            while (tmp != tmp2 && tmp != NULL)
+            {
+                std::cout << "in reblaance" << tmp->_data.first<< std::endl;
+            //     current_root->_height = calc_height(current_root);
+                check_rebalance(tmp);
+                if (val.first < tmp->_data.first)
+                    tmp = tmp->_left;
+                else
+                    tmp = tmp->_right;
+                std::cout << "out reblaance" << std::endl;
+                // current_root = current_root->_parent;
+            }
+            if (tmp != NULL)
+                check_rebalance(tmp);
+            current_root = tmp;
+            // while (current_root->_parent)
+            // {
+            //     current_root->_height = calc_height(current_root);
+            //     // check_rebalance(current_root);
+            //     current_root = current_root->_parent;
+            // }
+            // while (tmp->_parent)
+            // {
+            //     check_rebalance(tmp);
+            //     tmp = tmp->_parent;
+            // }
+            // tmp->_height = calc_height(tmp);
+            // std::cout << "height is " << current_root->_height << std::endl;
+            // if (tmp->_parent)
+                // check_rebalance(current_root);
+            print_tree(_root_node);
+            insert_end_node();
             return (ft::pair<iterator, bool> (find(val.first), false));
         }
 
@@ -472,12 +534,19 @@ class map
         long    get_balance(node_ptr node)
         {
             if (node == NULL)
-                return 0;
-            if (node->_left == NULL)
-                return node->_right->_height;
-            if (node->_right == NULL)
-                return node->_left->_height;
-            return (node->_left->_height - node->_right->_height);
+                return -1;
+            if(node->_left && node->_right){
+                return node->_left->_height - node->_right->_height; 
+            }
+            else if(node->_left && node->_right == NULL)
+            {
+                return node->_left->_height + 1; 
+            }
+            else if(node->_left== NULL && node->_right )
+            {
+                return -node->_right->_height - 1;
+            }
+            return 0;
         }
 
         node_ptr    rotate_right(node_ptr y)
@@ -487,6 +556,11 @@ class map
 
             x->_right = y;
             y->_left = T2;
+
+            x->_height = max(x->_left->_height,   
+                    x->_right->_height) + 1;
+            y->_height = max(y->_left->_height,
+                    y->_right->_height) + 1;
             return x;
         }
         node_ptr    rotate_left(node_ptr x)
@@ -496,48 +570,391 @@ class map
             
             y->_left = x;
             x->_right = T2;
+
+            x->_height = max(x->_left->_height,   
+                    x->_right->_height) + 1;
+            y->_height = max(y->_left->_height,
+                    y->_right->_height) + 1;
             return y;
         }
 
         int calc_height(node_ptr node)
         {
-            if(node->_left && node->_right){
-            if (node->_left->_height < node->_right->_height)
-                return node->_right->_height + 1;
-            else return  node->_left->_height + 1;
+                // std::cout <<std::endl <<  "calc height B4 IS " << std::endl;
+                // if (node->_left)
+                //     std::cout << "height of_left: " << node->_left->_data.first << " IS " << node->_left->_height<< std::endl;
+                // if (node->_right)
+                //     std::cout << "height of_right: " << node->_right->_data.first << " IS " << node->_right->_height << std::endl;
+                // if (node->_parent)
+                //     std::cout << "height of_parent: " << node->_parent->_data.first << " IS " << node->_parent->_height << std::endl;
+            if(node->_left && node->_right)
+            {
+                // std::cout << "in 1 " << std::endl;
+                if (node->_left->_height < node->_right->_height)
+                {   
+                    // std::cout << "height of: " << node->_data.first << " IS " << node->_right->_height + 1<< std::endl;
+                    return node->_right->_height + 1;
+                }
+                else 
+                {
+                    // std::cout << "height of: " << node->_data.first << " IS " << node->_left->_height + 1<< std::endl;
+                    return  node->_left->_height + 1;
+                }
             }
-            else if(node->_left && node->_right == NULL){
+            else if (node->_left && node->_right == NULL)
+            {
+                // std::cout << "height of: " << node->_data.first << " IS " << node->_left->_height + 1<< std::endl;
                return node->_left->_height + 1;
             }
-            else if(node->_left ==NULL && node->_right){
+            else if (node->_left == NULL && node->_right){
+                // std::cout << "height of: " << node->_data.first << " IS " << node->_right->_height + 1<< std::endl;
                return node->_right->_height + 1;
             }
+            // std::cout << "in end" << std::endl;
             return 0;
         }
 
-        void    check_rebalance(node_ptr node)
-        {
-            long balance;
+        void Updateheight(node_ptr root)
+{
+    if (root != NULL) {
+  
+        // Store the height of the
+        // current node
+        int val = 1;
+  
+        // Store the height of the left
+        // and right substree
+        if (root->_left != NULL)
+            val = root->_left->_height + 1;
+  
+        if (root->_right != NULL)
+            val = max(
+                val, root->_right->_height + 1);
+  
+        // Update the height of the
+        // current node
+        root->_height = val;
+    }
+}
 
-            balance = get_balance(node);
-            /* left left case */
-            if (balance > 1 && node->_data.first < node->_left->_data.first)
-                rotate_right(node);
-            /* right right case */
-            if (balance > 1 && node->_data.first > node->_right->_data.first)
-                rotate_left(node);
-            if (balance > 1 && node->_data.first > node->_left->_data.first)
-            {
-                node->_left = rotate_left(node->_left);
-                rotate_right(node);
+
+node_ptr  llrotation(node_ptr root)
+{
+    bool rootly;
+
+    rootly = false;
+    if (root == _root_node)
+        rootly = true;
+    // Create a reference to the
+    // left child
+    node_ptr tmpnode = root->_left;
+  
+    // Update the left child of the
+    // root to the right child of the
+    // current left child of the root
+    root->_left = tmpnode->_right;
+  
+    // Update parent pointer of the
+    // left child of the root node
+    if (tmpnode->_right != NULL)
+        tmpnode->_right->_parent = root;
+  
+    // Update the right child of
+    // tmpnode to root
+    tmpnode->_right = root;
+  
+    // Update parent pointer of
+    // the tmpnode
+    tmpnode->_parent = root->_parent;
+  
+    // Update the parent pointer
+    // of the root
+    root->_parent = tmpnode;
+  
+    // Update tmpnode as the left or the
+    // right child of its parent pointer
+    // according to its key value
+    if (tmpnode->_parent != NULL
+        && root->_data.first < tmpnode->_parent->_data.first) {
+        tmpnode->_parent->_left = tmpnode;
+    }
+    else {
+        if (tmpnode->_parent != NULL)
+            tmpnode->_parent->_right = tmpnode;
+    }
+  
+    // Make tmpnode as the new root
+    root = tmpnode;
+  
+    // Update the heights
+    Updateheight(root->_left);
+    Updateheight(root->_right);
+    Updateheight(root);
+    Updateheight(root->_parent);
+
+    if (rootly == true)
+    {    
+        _root_node = root;
+        Updateheight(_root_node->_left);
+        Updateheight(_root_node->_right);
+        Updateheight(_root_node);
+        Updateheight(_root_node->_parent);
+    }
+  
+    // Return the root node
+    return root;
+    }
+
+
+    node_ptr  rrrotation(node_ptr root){
+            bool rootly;
+
+    rootly = false;
+    if (root == _root_node)
+        rootly = true;
+    // Create a reference to the
+    // right child
+    node_ptr tmpnode = root->_right;
+  
+    // Update the right child of the
+    // root as the left child of the
+    // current right child of the root
+    root->_right = tmpnode->_left;
+  
+    // Update parent pointer of the
+    // right child of the root node
+    if (tmpnode->_left != NULL)
+        tmpnode->_left->_parent = root;
+  
+    // Update the left child of the
+    // tmpnode to root
+    tmpnode->_left = root;
+  
+    // Update parent pointer of
+    // the tmpnode
+    tmpnode->_parent = root->_parent;
+  
+    // Update the parent pointer
+    // of the root
+    root->_parent = tmpnode;
+  
+    // Update tmpnode as the left or
+    // the right child of its parent
+    // pointer according to its key value
+    if (tmpnode->_parent != NULL
+        && root->_data.first < tmpnode->_parent->_data.first) {
+        tmpnode->_parent->_left = tmpnode;
+    }
+    else {
+        if (tmpnode->_parent != NULL)
+            tmpnode->_parent->_right = tmpnode;
+    }
+  
+    // Make tmpnode as the new root
+    root = tmpnode;
+  
+    // Update the heights
+    Updateheight(root->_left);
+    Updateheight(root->_right);
+    Updateheight(root);
+    Updateheight(root->_parent);
+
+        if (rootly == true)
+    {    
+        _root_node = root;
+        Updateheight(_root_node->_left);
+        Updateheight(_root_node->_right);
+        Updateheight(_root_node);
+        Updateheight(_root_node->_parent);
+    }
+  
+    // Return the root node
+    return root;
+    }
+
+
+    node_ptr  rlrotation(node_ptr root){
+        if (root == _root_node)
+        {
+        _root_node->_right = llrotation(_root_node->_right);
+        return rrrotation(_root_node);
+        }
+        root->_right = llrotation(root->_right);
+        return rrrotation(root);
+    }
+
+    node_ptr  lrrotation(node_ptr root){
+        if (root == _root_node)
+        {
+            _root_node->_left = rrrotation(_root_node->_left);
+            return llrotation(_root_node);
+        }
+        root->_left = rrrotation(root->_left);
+        return llrotation(root);
+    }
+
+
+    void    left_insert_rebalance(node_ptr root, const value_type& val)
+    {
+                // Store the heights of the
+        // left and right subtree
+        int firstheight = 0;
+        int secondheight = 0;
+  
+        if (root->_left != NULL)
+            firstheight = root->_left->_height;
+  
+        if (root->_right != NULL)
+            secondheight = root->_right->_height;
+  
+        // Balance the tree if the
+        // current node is not balanced
+        if (abs(firstheight
+                - secondheight)
+            == 2) {
+  
+            if (root->_left != NULL
+                && val.first < root->_left->_data.first) {
+  
+                // Left Left Case
+                root = llrotation(root);
             }
-            if (balance < -1 && node->_data.first < node->_right->_data.first)
-            {
-                node_ptr tmp = rotate_right(node->_right);
-                node->_right = tmp;
-                rotate_left(node);
+            else {
+                // Left Right Case
+                root = lrrotation(root);
+            }
+            }
+    }
+
+    void    right_insert_rebalance(node_ptr root, const value_type& val)
+{
+        // Store the heights of the
+        // left and right subtree
+        int firstheight = 0;
+        int secondheight = 0;
+  
+        if (root->_left != NULL)
+            firstheight
+                = root->_left->_height;
+  
+        if (root->_right != NULL)
+            secondheight = root->_right->_height;
+  
+        // Balance the tree if the
+        // current node is not balanced
+        if (abs(firstheight - secondheight) == 2) {
+            if (root->_right != NULL
+                && val.first < root->_right->_data.first) {
+  
+                // Right Left Case
+                root = rlrotation(root);
+            }
+            else {
+  
+                // Right Right Case
+                root = rrrotation(root);
             }
         }
+}
+
+        void    check_rebalance(node_ptr node)
+        {
+            long bfnd;
+
+
+            bfnd = get_balance(node);
+            std::cout << GREEN << "start balance " << node->_data.first << "bfnd" << bfnd<< RESET << std::endl;
+            std::cout << GREEN << "get_balance(node->_left) " << get_balance(node->_left) << RESET << std::endl;
+            if (node->_left)
+                std::cout << GREEN << "node" << node->_left->_data.first << "node->_left->+height " << node->_left->_height << RESET << std::endl;
+            std::cout << GREEN << "get_balance(node->_right) " << get_balance(node->_right) << RESET << std::endl;
+            if (node->_right)
+                std::cout << GREEN << "node" << node->_right->_data.first << "node->_right->+height " << node->_right->_height << RESET << std::endl;
+
+            /* left left case */
+            if(bfnd>1 && get_balance(node->_left)>=0){
+            std::cout << RED << "4in the balance " << node->_data.first << RESET << std::endl;
+            node = llrotation(node);
+            std::cout << RED << "OUT the balance " << node->_data.first << RESET << std::endl;
+
+        }
+        else if(bfnd<-1 && get_balance(node->_right)<=0){
+            std::cout << RED << "3in the balance " << node->_data.first << RESET << std::endl;
+
+            node = rrrotation(node);
+        }
+        else if(bfnd<-1 && get_balance(node->_right)>=0){
+            std::cout << RED << "2in the balance " << node->_data.first << RESET << std::endl;
+
+            node = rlrotation(node);
+        }
+        else if(bfnd>1 && get_balance(node->_left)<=0){
+            std::cout << RED << "1in the balance " << node->_data.first << RESET << std::endl;
+
+            node = lrrotation(node);
+
+        } 
+        }
+
+        //delete
+        public:
+        void    ft_print_balance()
+        {
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+            {   
+                                std::cout << "node "  << " ";
+                std::cout << it->first;
+                std::cout << " balance "  << " ";
+                std::cout << get_balance(it.get_node());
+                std::cout << " height " << " ";
+                std::cout << calc_height(it.get_node()) << std::endl;
+            }
+        }
+        void    ft_print_map()
+        {
+            std::cout << "rootnode" << _root_node->_data.first << std::endl;
+            if (_root_node->_left)
+                std::cout << "rootnode left" << _root_node->_left->_data.first << std::endl;
+            if (_root_node->_right)
+                 std::cout << "rootnode rigt" << _root_node->_right->_data.first << std::endl;
+            if (_root_node->_right->_right)
+                 std::cout << "rootnode rigt ->_right" << _root_node->_right->_right->_data.first << std::endl;
+            if (_root_node->_right->_left)
+                 std::cout << "rootnode rigt->_left" << _root_node->_right->_left->_data.first << std::endl;
+        }
+        void    ft_iterate()
+        {
+            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
+            {   
+                std::cout << "node is: " << it->first;
+                if (it.get_node()->_parent)
+                    std::cout << "parent is: " << it.get_node()->_parent->_data.first;
+                std::cout << std::endl;
+            }
+            std::cout << std::endl;
+        }
+
+        			void	print_tree_utils(node_ptr root, int space) const
+			{
+			   int count = 5;
+				if (root == NULL)
+					return;
+				space += count;
+				print_tree_utils(root->_right, space);
+				std::cout << std::endl;
+				for (int i = count; i < space; i++)
+					std::cout << " ";
+				std::cout << root->_data.first << ", _height = " << root->_height << std::endl;
+				print_tree_utils(root->_left, space);
+			}
+
+			// REMOVE THIS REMOVE THIS REMOVE THIS REMOVE THIS
+			// REMOVE THIS REMOVE THIS REMOVE THIS REMOVE THIS
+			// REMOVE THIS REMOVE THIS REMOVE THIS REMOVE THIS
+			void	print_tree(node_ptr root) const
+			{
+				print_tree_utils(root, 0);
+			}
     };
 }      
 

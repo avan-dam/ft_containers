@@ -32,6 +32,11 @@ class bidirectional_iterator
         pointer operator->()        {   return &(_tree_node->_data);    }
         reference operator*()       {   return (_tree_node->_data);     }
     
+        node_ptr    get_node()
+        {
+            return (_tree_node);
+        }
+
         bidirectional_iterator& operator++() 
         {  
             node_ptr p;
