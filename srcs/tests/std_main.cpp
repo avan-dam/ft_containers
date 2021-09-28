@@ -252,7 +252,13 @@ void	map_swap(std::ofstream& myfile)
 	bar['b']=22;
 	bar['c']=33;
 
+	map<char,int>::iterator it1 = foo.begin();
+	map<char,int>::iterator it2 = bar.begin();
+	myfile << "b4 swap it1->first"<< it1->first << std::endl;
+	myfile << "b4 swap it1->first"<< it2->first << std::endl;
 	foo.swap(bar);
+	myfile << "afta swap it1->first"<< it1->first << std::endl;
+	myfile << "afta swap it1->first"<< it2->first << std::endl;
 	output_map(foo, myfile);
 	output_map(bar, myfile);
 }
@@ -454,7 +460,13 @@ void	vector_swap(std::ofstream& myfile)
 	vector<int> foo (3,100);
 	vector<int> bar (5,200);
 
+	vector<int>::iterator it1 = foo.begin();
+	vector<int>::iterator it2 = bar.begin();
+	myfile << "b4 swap it1->first"<< *it1 << std::endl;
+	myfile << "b4 swap it1->first"<< *it2 << std::endl;
 	foo.swap(bar);
+	myfile << "afta swap it1->first"<< *it1 << std::endl;
+	myfile << "afta swap it1->first"<< *it2 << std::endl;
 	output(foo, myfile);
 	output(bar, myfile);
 }
