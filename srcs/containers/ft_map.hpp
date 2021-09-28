@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/28 20:34:02 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/28 20:56:09 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -837,25 +837,25 @@ class map
         }
 
         /* debug to print tree */
-        public:
-        void    ft_print_map()
-        {
-            print_tree_utils(_root_node, 0);
-        }
+        // public:
+        // void    ft_print_map()
+        // {
+        //     print_tree_utils(_root_node, 0);
+        // }
 
-        void	print_tree_utils(node_ptr root, int space) const
-		{
-		   int count = 5;
-			if (root == NULL)
-				return;
-			space += count;
-			print_tree_utils(root->_right, space);
-			std::cout << std::endl;
-			for (int i = count; i < space; i++)
-				std::cout << " ";
-			std::cout << root->_data.first << ", _height = " << root->_height << std::endl;
-			print_tree_utils(root->_left, space);
-		}
+        // void	print_tree_utils(node_ptr root, int space) const
+		// {
+		//    int count = 5;
+		// 	if (root == NULL)
+		// 		return;
+		// 	space += count;
+		// 	print_tree_utils(root->_right, space);
+		// 	std::cout << std::endl;
+		// 	for (int i = count; i < space; i++)
+		// 		std::cout << " ";
+		// 	std::cout << root->_data.first << ", _height = " << root->_height << std::endl;
+		// 	print_tree_utils(root->_left, space);
+		// }
     };
 }
 
