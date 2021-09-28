@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/13 21:35:53 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/28 20:09:58 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,6 @@ class vector
 
 		iterator insert (iterator position, const value_type& val)
 		{
-			//reallocation
 			vector<T,Alloc>		newvector(1, val);
 			return (insert_vector_helper(newvector, position));
 		}
