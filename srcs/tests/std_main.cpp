@@ -36,6 +36,10 @@ void output(vector<T> vct, std::ofstream& myfile)
 	}
     myfile << std::endl;
  	typename vector<T>::const_iterator itc = vct.begin();
+	if (itc == it)
+		myfile << "iterator comparable start same" << std::endl;
+	else 
+		myfile << "iterator comparable start NOT same" << std::endl;
 	while (itc != vct.end())
 	{
         myfile << ' ' << *itc;
@@ -269,10 +273,12 @@ void	map_erase(std::ofstream& myfile)
 
 	it=mymap.find('b');
 	mymap.erase (it);  
+	output_map(mymap, myfile);
 
-	mymap.erase ('c');      
-	// mymap.erase ( mymap.begin(), mymap.end() );
-
+	mymap.erase ('e');     
+	output_map(mymap, myfile);
+ 
+	mymap.erase ( mymap.begin(), mymap.end() );
 	output_map(mymap, myfile);
 }
 

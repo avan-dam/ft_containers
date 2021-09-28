@@ -37,6 +37,10 @@ void output(vector<T> vct, std::ofstream& myfile)
 	}
     myfile << std::endl;
  	typename vector<T>::const_iterator itc = vct.begin();
+	if (itc == it)
+		myfile << "iterator comparable start same" << std::endl;
+	else 
+		myfile << "iterator comparable start NOT same" << std::endl;
 	while (itc != vct.end())
 	{
         myfile << ' ' << *itc;
@@ -258,32 +262,24 @@ void	map_erase(std::ofstream& myfile)
 {
 	map<char,int> mymap;
 	map<char,int>::iterator it;
-	map<char,int>::iterator ite;
 
 	mymap['a']=10;
 	mymap['b']=20;
 	mymap['k']=30;
 	mymap['m']=30;
+	mymap['o']=30;
 	mymap['g']=40;
 	mymap['e']=50;
 	mymap['f']=60;
-	mymap['l']=60;
-	mymap['n']=60;
 
-	// it=mymap.find('m');
-	// std::cout << "BEFORE ERASE b" << std::endl;
-	// mymap.erase ('b'); 
-	// std::cout << "after ERASE b" << std::endl;
+	it=mymap.find('b');
+	mymap.erase (it);  
+	output_map(mymap, myfile);
 
-	// mymap.erase ('e');      
-	// std::cout << "after ERASE  e" << std::endl;
-	mymap.ft_print_map();
-	it = mymap.begin();
-	ite = mymap.end();
-	mymap.erase ( it, ite );
-	std::cout << "afta ERASE " << std::endl;
-
-	mymap.ft_print_map();
+	mymap.erase ('e');     
+	output_map(mymap, myfile);
+ 
+	mymap.erase ( mymap.begin(), mymap.end() );
 	output_map(mymap, myfile);
 }
 
@@ -581,32 +577,5 @@ int main(void)
     myfile.close();
     gettimeofday(&end, 0);
     time_diff(begin, end);
-	// map<int,int> mymap;
-	// // map<int,int>::iterator it;
-
-	// // mymap[100]=10;
-	// // mymap[200]=20;
-	// // mymap[300]=30;
-	// // mymap[350]=30;
-	// // mymap[400]=30;
-	// // mymap[160]=30;
-
-	// mymap[10]=10;
-	// mymap[1]=20;
-	// mymap[2]=30;
-	// mymap[3]=30;
-	// mymap[4]=30;
-	// mymap[5]=30;
-	// mymap[6]=30;
-	// mymap[7]=30;
-	
-	// // mymap[3]=40;
-	// // mymap[6]=50;
-	// // mymap[7]=60;
-	// // mymap[8]=30;
-	// // mymap[11]=30;
-	// // mymap[9]=30;
-
-	// mymap.ft_print_map();
     return (0);
 }
