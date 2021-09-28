@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 09:15:25 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/16 14:17:14 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/27 16:24:03 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class map
     public:
        	typedef	Key													                        		key_type; 
 		typedef	T														                        	mapped_type; 
-		typedef	pair<const key_type, mapped_type>						                        	value_type; 
+		typedef	pair<key_type, mapped_type>						                        	value_type; 
 		typedef	Compare														                        key_compare;
 		typedef	Alloc														                        allocator_type; 
 		typedef	typename allocator_type::reference							                        reference; 
@@ -218,7 +218,6 @@ class map
         /* modifiers */
         pair<iterator,bool> insert (const value_type& val)
         {
-            std::cout << "starting with "<< val.first << std::endl;
             node_ptr current_root;
             if (_root_node == NULL)
             {
@@ -269,7 +268,16 @@ class map
                 current_root->_height = calc_height(current_root);
                 current_root = current_root->_parent;
             }
+            _root_node->_height = calc_height(_root_node);
             tmp = _root_node;
+            if (tmp != tmp2 && tmp != NULL)
+            {
+                check_rebalance(_root_node);
+                if (val.first < _root_node->_data.first)
+                    tmp = _root_node->_left;
+                else
+                    tmp = _root_node->_right;
+            }
             while (tmp != tmp2 && tmp != NULL)
             {
                 check_rebalance(tmp);
@@ -296,7 +304,7 @@ class map
             // std::cout << "height is " << current_root->_height << std::endl;
             // if (tmp->_parent)
                 // check_rebalance(current_root);
-            print_tree(_root_node);
+            // print_tree(_root_node);
             insert_end_node();
             return (ft::pair<iterator, bool> (find(val.first), false));
         }
@@ -344,24 +352,26 @@ class map
 
         void erase (iterator position)
         {
-            iterator posnext = position;
-            posnext++;
-            erase(position, posnext);
+            node_ptr node;
+            
+            node = position._node;
+            delete_end_node();
+            erase_recursively(_root_node, position->first);
+            insert_end_node();
         }
 
         size_type erase (const key_type& k)
         {
             if (count(k) == 0)
                 return (0);
-            iterator it = find(k);
-            erase(it);
+            erase(find(k));
             return (1);
         }
 
         void    clear()
         {
             delete_end_node();
-            delete_tree(_root_node);
+            delete_node(_root_node);
             _root_node = NULL;
         }
         
@@ -466,11 +476,11 @@ class map
         /* privat helper functions */
         private:
         
-        void delete_tree(node_ptr node)
+        void delete_node(node_ptr node)
         {
             if (node == NULL) return;
-            delete_tree(node->_left);
-            delete_tree(node->_right);
+            delete_node(node->_left);
+            delete_node(node->_right);
             _alloc.destroy(node);
             _alloc.deallocate(node, 1);
         }
@@ -517,7 +527,8 @@ class map
         long    get_balance(node_ptr node)
         {
             if (node->_left && node->_right)
-                return (node->_left->_height - node->_right->_height - 1); 
+                return (node->_left->_height - node->_right->_height); 
+                // return (node->_left->_height - node->_right->_height - 1); 
             else if (node->_left && node->_right == NULL)
                 return (node->_left->_height + 1); 
             else if (node->_left== NULL && node->_right )
@@ -582,19 +593,24 @@ class map
             	tmpnode->_parent->_right = tmpnode;
     		/* Make tmpnode as the new root */ 
     		root = tmpnode;
-    		/* Update the heights */ 
-    		update_height(root->_left);
-    		update_height(root->_right);
-    		update_height(root);
-    		update_height(root->_parent);
+            if (root->_left)
+        		root->_left->_height = calc_height(root->_left);
+            if (root->_right)
+        		root->_right->_height = calc_height(root->_right);
+            if (root)
+                root->_height = calc_height(root);
+            if (root->_parent)
+    		    root->_parent->_height = calc_height(root->_parent);
     		/* special case if root node */
     		if (rootly == true)
     		{    
        			_root_node = root;
-        		update_height(_root_node->_left);
-        		update_height(_root_node->_right);
-        		update_height(_root_node);
-        		update_height(_root_node->_parent);
+                if (_root_node->_left)
+        		    _root_node->_left->_height = calc_height(_root_node->_left);
+        		if (_root_node->_right)
+                    _root_node->_right->_height = calc_height(_root_node->_right);
+        		if (_root_node)
+                    _root_node->_height = calc_height(_root_node);
     		}
     		return root;
 		}
@@ -627,18 +643,23 @@ class map
             	tmpnode->_parent->_right = tmpnode;
     		root = tmpnode;
 	    	/* Update the heights */ 
-    		update_height(root->_left);
-    		update_height(root->_right);
-    		update_height(root);
-    		update_height(root->_parent);
+            if (root->_left)
+        		root->_left->_height = calc_height(root->_left);
+            if (root->_right)
+    		    root->_right->_height = calc_height(root->_right);
+            if (root)
+    		    root->_height = calc_height(root);
+            if (root->_parent)
+        		root->_parent->_height = calc_height(root->_parent);
 		    /* special case for root */
 			if (rootly == true)
     		{    
         		_root_node = root;
-        		update_height(_root_node->_left);
-        		update_height(_root_node->_right);
-        		update_height(_root_node);
-        		update_height(_root_node->_parent);
+                if (_root_node->_left)
+            		_root_node->_left->_height = calc_height(_root_node->_left);
+                if (_root_node->_right)
+            		_root_node->_right->_height = calc_height(_root_node->_right);
+        		_root_node->_height = calc_height(_root_node);
     		}
 		    return root;
     	}
@@ -665,19 +686,136 @@ class map
         	return llrotation(root);
     	}
 
-    	void    check_rebalance(node_ptr node)
+    	node_ptr    check_rebalance(node_ptr node)
     	{
-        	long bfnd;
+            long bfnd;
 
         	bfnd = get_balance(node);
+            if (node == _root_node)
+            {
+        	    if(bfnd > 1 && get_balance(_root_node->_left) > 0)
+                    _root_node = llrotation(_root_node);
+        	    else if(bfnd < -1 && get_balance(_root_node->_right) < 0)
+                    _root_node = rrrotation(_root_node);
+        	    else if(bfnd < -1 && get_balance(_root_node->_right) > 0)
+                    _root_node = rlrotation(_root_node);
+        	    else if(bfnd > 1 && get_balance(_root_node->_left) < 0)
+                    _root_node = lrrotation(_root_node);
+                return _root_node;
+            }
         	if(bfnd > 1 && get_balance(node->_left) > 0)
-            	node = llrotation(node);
+                node = llrotation(node);
         	else if(bfnd < -1 && get_balance(node->_right) < 0)
-            	node = rrrotation(node);
+                node = rrrotation(node);
         	else if(bfnd < -1 && get_balance(node->_right) > 0)
-            	node = rlrotation(node);
+                node = rlrotation(node);
         	else if(bfnd > 1 && get_balance(node->_left) < 0)
-            	node = lrrotation(node);
+                node = lrrotation(node);
+            return node;
+        }
+        
+        /* For Finding the minimum element in Right Subtree */
+        node_ptr find_min(node_ptr node)
+        {
+	        node_ptr tmp = node;
+	        while(tmp && tmp->_left != NULL)
+		        tmp = tmp->_left;
+	        return tmp;
+        }
+
+        node_ptr erase_recursively(node_ptr root, Key key)
+        {
+        /* actually delete the memory too */ 
+        if (root == NULL) 
+            return NULL;
+        /* If the node is found */ 
+        if (root->_data.first == key) 
+        {
+            /* Replace root with its left child */
+            if (root->_right == NULL && root->_left != NULL) 
+            {
+                if (root->_parent != NULL) 
+                {
+                    if (root->_parent->_data.first < root->_data.first )
+                        root->_parent->_right = root->_left;
+                    else
+                        root->_parent->_left = root->_left;
+                    /* Update the height of root's parent */
+                    root->_parent->_height = calc_height(root->_parent);
+                }
+                root->_left->_parent = root->_parent;
+                /* Balance the node after deletion */
+                root->_left = check_rebalance(root->_left);
+                // node_ptr ret = root->_left;
+                // _alloc.destroy(root);
+                // _alloc.deallocate(root, 1);
+                // return ret;
+                return root->_left;
+            }
+            /* Replace root with its right child */ 
+            else if (root->_left == NULL && root->_right != NULL) 
+            {
+                if (root->_parent != NULL) 
+                {
+                    if (root->_parent->_data.first  < root->_data.first )
+                        root->_parent->_right = root->_right;
+                    else
+                        root->_parent->_left = root->_right;
+                    /* Update the height of the root's parent */ 
+                    root->_parent->_height = calc_height(root->_parent);
+                }
+                root->_right->_parent = root->_parent;
+                root->_right = check_rebalance(root->_right);
+                // node_ptr ret = root->_left;
+                // _alloc.destroy(root);
+                // _alloc.deallocate(root, 1);
+                // return ret;
+                return root->_right;
+            }
+            /*Remove the references of the current node */ 
+            else if (root->_left == NULL && root->_right == NULL) 
+            {
+                if (root->_parent->_data.first  < root->_data.first)
+                    root->_parent->_right = NULL;
+                else 
+                    root->_parent->_left = NULL;
+                if (root->_parent != NULL)
+                    root->_parent->_height = calc_height(root->_parent);
+                // _alloc.destroy(root);
+                // _alloc.deallocate(root, 1);
+                return NULL;
+            }
+            /* Otherwise, replace the current node with its successor and then recursively call Delete() */ 
+            else 
+            {
+                node_ptr temp = root;
+                temp = temp->_right;
+                while (temp->_left != NULL)
+                    temp = temp->_left;
+				value_type val = temp->_data;
+                root->_right = erase_recursively(root->_right, temp->_data.first);
+                root->set_data(val);
+                /* Balance the node after deletion */ 
+                root = check_rebalance(root);
+            }
+        }
+        /*Recur to the right subtree to delete the current node */ 
+        else if (root->_data.first < key) 
+        {
+            root->_right = erase_recursively(root->_right, key);
+            root = check_rebalance(root);
+        }
+        /* Recur into the right subtree to delete the current node */
+        else if (root->_data.first > key) 
+        {
+            root->_left = erase_recursively(root->_left, key);
+            root = check_rebalance(root);
+        }
+        /*Update height of root */ 
+        if (root != NULL)
+            root->_height = calc_height(root);
+        std::cout << "end NULL root first is " << root->_data.first << std::endl; 
+        return root;
         }
 
         //delete AALLLL
@@ -696,15 +834,16 @@ class map
         }
         void    ft_print_map()
         {
-            std::cout << "rootnode" << _root_node->_data.first << std::endl;
-            if (_root_node->_left)
-                std::cout << "rootnode left" << _root_node->_left->_data.first << std::endl;
-            if (_root_node->_right)
-                 std::cout << "rootnode rigt" << _root_node->_right->_data.first << std::endl;
-            if (_root_node->_right->_right)
-                 std::cout << "rootnode rigt ->_right" << _root_node->_right->_right->_data.first << std::endl;
-            if (_root_node->_right->_left)
-                 std::cout << "rootnode rigt->_left" << _root_node->_right->_left->_data.first << std::endl;
+            // std::cout << "rootnode" << _root_node->_data.first << std::endl;
+            // if (_root_node->_left)
+            //     std::cout << "rootnode left" << _root_node->_left->_data.first << std::endl;
+            // if (_root_node->_right)
+            //      std::cout << "rootnode rigt" << _root_node->_right->_data.first << std::endl;
+            // if (_root_node->_right->_right)
+            //      std::cout << "rootnode rigt ->_right" << _root_node->_right->_right->_data.first << std::endl;
+            // if (_root_node->_right->_left)
+            //      std::cout << "rootnode rigt->_left" << _root_node->_right->_left->_data.first << std::endl;
+            print_tree(_root_node);
         }
         void    ft_iterate()
         {
@@ -718,7 +857,7 @@ class map
             std::cout << std::endl;
         }
 
-        			void	print_tree_utils(node_ptr root, int space) const
+        	void	print_tree_utils(node_ptr root, int space) const
 			{
 			   int count = 5;
 				if (root == NULL)

@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/05 13:21:47 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/15 23:12:54 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/21 19:54:05 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,18 @@ class tree_node
             if (_data == rhs._data && _left == rhs._left && _right == rhs._right && _parent == rhs._parent && _end_node == rhs._end_node && _height == rhs._height)
                 return (false);
             return (true); 
+        }
+
+        void    set_data(value_type data)
+        {
+            _data.first = data.first;
+            _data.second = data.second;
+            return;
+        }
+        
+        value_type    get_data()
+        {
+            return _data;
         }
 };
 

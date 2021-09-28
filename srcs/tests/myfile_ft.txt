@@ -395,27 +395,3 @@ empty is 0
  y=200 x=100 p=4
 size is 0
 empty is 1
-
-
-PERFORMING STACK TESTS:
-calling constructors
-1
-2
-0
-0
-calling push()
-calling top()
-15
-calling push()
-testing pop() and top() and empty()
-4
-3
-2
-1
-0
-mystack1.empty()
-1
-stack relational operator tests:
-false
-false
-false

@@ -268,11 +268,17 @@ void	map_erase(std::ofstream& myfile)
 	mymap['e']=50;
 	mymap['f']=60;
 
-	it=mymap.find('b');
-	mymap.erase (it);  
+	// it=mymap.find('m');
+	std::cout << "BEFORE ERASE b" << std::endl;
+	mymap.ft_print_map();
+	mymap.erase ('b'); 
+	std::cout << "after ERASE b" << std::endl;
+	mymap.ft_print_map();
 
-	mymap.erase ('c');      
-	mymap.erase ( mymap.begin(), mymap.end() );
+	// mymap.erase ('e');      
+	// std::cout << "after ERASE  e" << std::endl;
+	// mymap.ft_print_map();
+	// mymap.erase ( mymap.begin(), mymap.end() );
 
 	output_map(mymap, myfile);
 }
@@ -572,34 +578,34 @@ int main(void)
     myfile.close();
     gettimeofday(&end, 0);
     time_diff(begin, end);
-	map<int,int> mymap;
-	// map<int,int>::iterator it;
+	// map<int,int> mymap;
+	// // map<int,int>::iterator it;
 
-	// mymap[100]=10;
-	// mymap[200]=20;
-	// mymap[300]=30;
-	// mymap[350]=30;
-	// mymap[400]=30;
-	// mymap[160]=30;
+	// // mymap[100]=10;
+	// // mymap[200]=20;
+	// // mymap[300]=30;
+	// // mymap[350]=30;
+	// // mymap[400]=30;
+	// // mymap[160]=30;
 
-	mymap[10]=10;
-	mymap[1]=20;
-	mymap[2]=30;
-	mymap[3]=30;
-	mymap[4]=30;
-	mymap[5]=30;
-	mymap[6]=30;
-	mymap[7]=30;
+	// mymap[10]=10;
+	// mymap[1]=20;
+	// mymap[2]=30;
+	// mymap[3]=30;
+	// mymap[4]=30;
+	// mymap[5]=30;
+	// mymap[6]=30;
+	// mymap[7]=30;
 	
-	// mymap[3]=40;
-	// mymap[6]=50;
-	// mymap[7]=60;
-	// mymap[8]=30;
-	// mymap[11]=30;
-	// mymap[9]=30;
+	// // mymap[3]=40;
+	// // mymap[6]=50;
+	// // mymap[7]=60;
+	// // mymap[8]=30;
+	// // mymap[11]=30;
+	// // mymap[9]=30;
 
-	mymap.ft_print_balance();
-	mymap.ft_print_map();
-	mymap.ft_iterate();
+	// mymap.ft_print_balance();
+	// mymap.ft_print_map();
+	// mymap.ft_iterate();
     return (0);
 }

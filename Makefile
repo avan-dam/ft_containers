@@ -6,7 +6,7 @@
 #    By: avan-dam <avan-dam@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/03/23 14:38:29 by avan-dam      #+#    #+#                  #
-#    Updated: 2021/09/13 16:49:45 by ambervandam   ########   odam.nl          #
+#    Updated: 2021/09/27 14:47:28 by ambervandam   ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ STD_NAME = srcs/tests/ft_containers_std
 
 CXX = clang++
 
-FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
 
 FT_FILES = srcs/tests/ft_main.cpp
 

@@ -78,5 +78,6 @@ int main(void)
 {
     test_content();
     test_timing();
+    while (1) {}
     return (0);
 }

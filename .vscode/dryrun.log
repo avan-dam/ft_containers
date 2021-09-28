@@ -1,0 +1,10 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/ambervandam/Documents/codam/ft_containers'
+clang++ srcs/tests/ft_main.cpp -Wall -Wextra -Werror -pedantic -std=c++98 -g -fsanitize=address -o srcs/tests/ft_containers_ft
+./srcs/tests/ft_containers_ft
+ 
+clang++ srcs/tests/std_main.cpp -Wall -Wextra -Werror -pedantic -std=c++98 -g -fsanitize=address -o srcs/tests/ft_containers_std
+./srcs/tests/ft_containers_std
+clang++ srcs/tests/main.cpp -Wall -Wextra -Werror -pedantic -std=c++98 -g -fsanitize=address -o ft_containers
+make: Leaving directory `/Users/ambervandam/Documents/codam/ft_containers'
+ 

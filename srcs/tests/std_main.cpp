@@ -271,7 +271,7 @@ void	map_erase(std::ofstream& myfile)
 	mymap.erase (it);  
 
 	mymap.erase ('c');      
-	mymap.erase ( mymap.begin(), mymap.end() );
+	// mymap.erase ( mymap.begin(), mymap.end() );
 
 	output_map(mymap, myfile);
 }
