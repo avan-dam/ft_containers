@@ -162,7 +162,7 @@ class map
         const_iterator  end() const
         {
             node_ptr _current_node = _root_node;
-            while (_current_node->_right != NULL)
+            while (_current_node && _current_node->_right != NULL)
                 _current_node = _current_node->_right;
             const_iterator ret(_current_node);
             return (ret);
@@ -224,6 +224,7 @@ class map
                 _root_node = _alloc.allocate(1);
                 _alloc.construct(_root_node, val);
                 _root_node->_height = 1;
+                _size++;
                 insert_end_node();
                 return (ft::make_pair(begin(), true));
             }
@@ -240,6 +241,7 @@ class map
                     {
                         current_root->_left = _alloc.allocate(1);
                         _alloc.construct(current_root->_left, val);
+                        _size++;
                         current_root->_left->_parent = current_root;
                         current_root = current_root->_left;
                         current_root->_height = 0;
@@ -253,6 +255,7 @@ class map
                     {
                         current_root->_right = _alloc.allocate(1);
                         _alloc.construct(current_root->_right, val);
+                        _size++;
                         current_root->_right->_parent = current_root;
                         current_root = current_root->_right;
                         current_root->_height = 0;
@@ -339,8 +342,15 @@ class map
 
         void erase (iterator first, iterator last)
         {
-            for (typename ft::map<Key,T>::iterator it = first; it!=last ; ++it) 
-                erase(p);
+            while (first != last)
+            {
+				iterator temp = first;
+					temp++;
+					erase(first);
+				    if (empty())
+                        return;
+                    first = find(temp->first);
+            }
         }
 
         void erase (iterator position)
@@ -395,6 +405,8 @@ class map
 
         iterator find (const key_type& k)
         {
+            if (_root_node == NULL)
+                return (end());
             for (typename ft::map<Key,T>::iterator it = begin(); it!=end(); ++it)
             {   
                 if (it->first == k)
@@ -476,6 +488,7 @@ class map
             delete_node(node->_right);
             _alloc.destroy(node);
             _alloc.deallocate(node, 1);
+            _size--;
         }
 
         void    delete_end_node()
@@ -499,9 +512,9 @@ class map
             node_ptr current_node;
 
             current_node = _root_node;
-            if (_root_node == NULL)
+            if (current_node == NULL)
                 return;
-            while (current_node->_right != NULL && current_node->_right->_end_node == false)
+            while (current_node && current_node->_right != NULL && current_node->_right->_end_node == false)
                 current_node = current_node->_right;
             current_node->_right = _alloc.allocate(1);
             _alloc.construct(current_node->_right);
@@ -521,7 +534,6 @@ class map
         {
             if (node->_left && node->_right)
                 return (node->_left->_height - node->_right->_height); 
-                // return (node->_left->_height - node->_right->_height - 1); 
             else if (node->_left && node->_right == NULL)
                 return (node->_left->_height + 1); 
             else if (node->_left== NULL && node->_right )
@@ -716,6 +728,28 @@ class map
 	        return tmp;
         }
 
+        node_ptr new_erase_node(node_ptr old_node, const value_type& val) 
+        {
+				node_ptr node;
+
+				node = _alloc.allocate(1);
+				_alloc.construct(node, val);
+                _size++;
+				node->_parent = old_node->_parent;
+				if (old_node->_parent && old_node->_parent->_left == old_node)
+					old_node->_parent->_left = node;
+				if (old_node->_parent && old_node->_parent->_right == old_node)
+					old_node->_parent->_right = node;
+				if (old_node->_left && old_node->_left->_parent == old_node)
+					old_node->_left->_parent = node;
+				if (old_node->_right && old_node->_right->_parent == old_node)
+					old_node->_right->_parent = node;
+				node->_right = old_node->_right;
+				node->_left = old_node->_left;
+				node->_height = old_node->_height;
+				return (node);
+			}
+
         node_ptr erase_recursively(node_ptr root, Key key)
         {
         /* actually delete the memory too */ 
@@ -727,6 +761,7 @@ class map
             /* Replace root with its left child */
             if (root->_right == NULL && root->_left != NULL) 
             {
+                std::cout << "in 1" << key << std::endl;
                 if (root->_parent != NULL) 
                 {
                     if (root->_parent->_data.first < root->_data.first )
@@ -736,18 +771,30 @@ class map
                     /* Update the height of root's parent */
                     root->_parent->_height = calc_height(root->_parent);
                 }
-                root->_left->_parent = root->_parent;
-                /* Balance the node after deletion */
-                root->_left = check_rebalance(root->_left);
-                // node_ptr ret = root->_left;
-                // _alloc.destroy(root);
-                // _alloc.deallocate(root, 1);
-                // return ret;
-                return root->_left;
+
+                node_ptr tmp = root->_left;   
+                tmp->_parent = root->_parent;
+                /* Balance the node after deletion  */
+                _alloc.destroy(root);
+                _alloc.deallocate(root, 1);
+                _size--;
+                tmp = check_rebalance(tmp);
+                if (_size == 1)
+                    _root_node = tmp;
+                return tmp;
+                // node_ptr tmp = root;   
+                // root->_left->_parent = root->_parent;
+                // /* Balance the node after deletion  */
+                // root->_left = check_rebalance(root->_left);
+                // _alloc.destroy(tmp);
+                // _alloc.deallocate(tmp, 1);
+                // _size--;
+                // return root->_left;
             }
             /* Replace root with its right child */ 
             else if (root->_left == NULL && root->_right != NULL) 
             {
+                std::cout << "in 2" << key << std::endl;
                 if (root->_parent != NULL) 
                 {
                     if (root->_parent->_data.first  < root->_data.first )
@@ -757,120 +804,111 @@ class map
                     /* Update the height of the root's parent */ 
                     root->_parent->_height = calc_height(root->_parent);
                 }
-                root->_right->_parent = root->_parent;
-                root->_right = check_rebalance(root->_right);
-                // node_ptr ret = root->_left;
-                // _alloc.destroy(root);
-                // _alloc.deallocate(root, 1);
-                // return ret;
-                return root->_right;
+                node_ptr tmp = root->_right;   
+                tmp->_parent = root->_parent;
+                _alloc.destroy(root);
+                _alloc.deallocate(root, 1);
+                std::cout << "size" << _size << std::endl;
+                _size--;
+                tmp = check_rebalance(tmp);
+                std::cout << "tmp" << tmp->_data.first << std::endl;
+                std::cout << "size" << _size << std::endl;
+                if (_size == 1)
+                    _root_node = tmp;
+                return tmp;
+                // node_ptr tmp = root;   
+                // root->_right->_parent = root->_parent;
+                // root->_right = check_rebalance(root->_right);
+                // _alloc.destroy(tmp);
+                // _alloc.deallocate(tmp, 1);
+                // _size--;
+                // return root->_right;
             }
             /*Remove the references of the current node */ 
             else if (root->_left == NULL && root->_right == NULL) 
             {
-                if (root->_parent->_data.first  < root->_data.first)
-                    root->_parent->_right = NULL;
-                else 
-                    root->_parent->_left = NULL;
-                if (root->_parent != NULL)
+            std::cout << "in 3" << key << std::endl;
+                if (root->_parent)
+                {
+                    if (root->_parent->_data.first  < root->_data.first)
+                        root->_parent->_right = NULL;
+                    else 
+                        root->_parent->_left = NULL;
                     root->_parent->_height = calc_height(root->_parent);
-                // _alloc.destroy(root);
-                // _alloc.deallocate(root, 1);
+                }
+                std::cout << "in31" << std::endl;
+                _alloc.destroy(root);
+                _alloc.deallocate(root, 1);
+                _size--;
+                if (_size == 0)
+                {   
+                    std::cout << "in" << std::endl;
+                     _root_node = NULL;
+                    std::cout << "out" << std::endl;
+
+                }
+                std::cout << "out 3" << key << std::endl;
                 return NULL;
             }
             /* Otherwise, replace the current node with its successor and then recursively call Delete() */ 
             else 
             {
-                node_ptr temp = root;
-                temp = temp->_right;
-                while (temp->_left != NULL)
-                    temp = temp->_left;
-				value_type val = temp->_data;
-                root->_right = erase_recursively(root->_right, temp->_data.first);
-                root->set_data(val);
-                /* Balance the node after deletion */ 
-                root = check_rebalance(root);
+            std::cout << "in 4" << key << std::endl;
+                node_ptr tmp = root;
+                tmp = tmp->_right;
+                while (tmp->_left != NULL)
+                    tmp = tmp->_left;
+				value_type val = tmp->_data;
+                root->_right = erase_recursively(root->_right, tmp->_data.first);
+				node_ptr new_node = new_erase_node(root, val);
+                _alloc.destroy(root);
+                _alloc.deallocate(root, 1);
+                _size--;
+				new_node = check_rebalance(new_node);
+				return (new_node);
             }
         }
         /*Recur to the right subtree to delete the current node */ 
         else if (root->_data.first < key) 
         {
+            std::cout << "in 5" << key << std::endl;
             root->_right = erase_recursively(root->_right, key);
             root = check_rebalance(root);
         }
         /* Recur into the right subtree to delete the current node */
         else if (root->_data.first > key) 
         {
+                    std::cout << "in 6" << key << std::endl;
+
             root->_left = erase_recursively(root->_left, key);
             root = check_rebalance(root);
         }
         /*Update height of root */ 
         if (root != NULL)
             root->_height = calc_height(root);
-        std::cout << "end NULL root first is " << root->_data.first << std::endl; 
         return root;
         }
 
-        //delete AALLLL
+        /* debug to print tree */
         public:
-        void    ft_print_balance()
-        {
-            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
-            {   
-                std::cout << "node "  << " ";
-                std::cout << it->first;
-                std::cout << " balance "  << " ";
-                std::cout << get_balance(it.get_node());
-                std::cout << " height " << " ";
-                std::cout << calc_height(it.get_node()) << std::endl;
-            }
-        }
         void    ft_print_map()
         {
-            // std::cout << "rootnode" << _root_node->_data.first << std::endl;
-            // if (_root_node->_left)
-            //     std::cout << "rootnode left" << _root_node->_left->_data.first << std::endl;
-            // if (_root_node->_right)
-            //      std::cout << "rootnode rigt" << _root_node->_right->_data.first << std::endl;
-            // if (_root_node->_right->_right)
-            //      std::cout << "rootnode rigt ->_right" << _root_node->_right->_right->_data.first << std::endl;
-            // if (_root_node->_right->_left)
-            //      std::cout << "rootnode rigt->_left" << _root_node->_right->_left->_data.first << std::endl;
-            print_tree(_root_node);
-        }
-        void    ft_iterate()
-        {
-            for (typename ft::map<Key,T>::const_iterator it = begin(); it!=end(); ++it)
-            {   
-                std::cout << "node is: " << it->first;
-                if (it.get_node()->_parent)
-                    std::cout << "parent is: " << it.get_node()->_parent->_data.first;
-                std::cout << std::endl;
-            }
-            std::cout << std::endl;
+            print_tree_utils(_root_node, 0);
         }
 
-        	void	print_tree_utils(node_ptr root, int space) const
-			{
-			   int count = 5;
-				if (root == NULL)
-					return;
-				space += count;
-				print_tree_utils(root->_right, space);
-				std::cout << std::endl;
-				for (int i = count; i < space; i++)
-					std::cout << " ";
-				std::cout << root->_data.first << ", _height = " << root->_height << std::endl;
-				print_tree_utils(root->_left, space);
-			}
-
-			// REMOVE THIS REMOVE THIS REMOVE THIS REMOVE THIS
-			// REMOVE THIS REMOVE THIS REMOVE THIS REMOVE THIS
-			// REMOVE THIS REMOVE THIS REMOVE THIS REMOVE THIS
-			void	print_tree(node_ptr root) const
-			{
-				print_tree_utils(root, 0);
-			}
+        void	print_tree_utils(node_ptr root, int space) const
+		{
+		   int count = 5;
+			if (root == NULL)
+				return;
+			space += count;
+			print_tree_utils(root->_right, space);
+			std::cout << std::endl;
+			for (int i = count; i < space; i++)
+				std::cout << " ";
+			std::cout << root->_data.first << ", _height = " << root->_height << std::endl;
+			print_tree_utils(root->_left, space);
+		}
     };
 }      
 

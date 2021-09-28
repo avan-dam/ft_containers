@@ -258,28 +258,32 @@ void	map_erase(std::ofstream& myfile)
 {
 	map<char,int> mymap;
 	map<char,int>::iterator it;
+	map<char,int>::iterator ite;
 
 	mymap['a']=10;
 	mymap['b']=20;
 	mymap['k']=30;
 	mymap['m']=30;
-	mymap['o']=30;
 	mymap['g']=40;
 	mymap['e']=50;
 	mymap['f']=60;
+	mymap['l']=60;
+	mymap['n']=60;
 
 	// it=mymap.find('m');
-	std::cout << "BEFORE ERASE b" << std::endl;
-	mymap.ft_print_map();
-	mymap.erase ('b'); 
-	std::cout << "after ERASE b" << std::endl;
-	mymap.ft_print_map();
+	// std::cout << "BEFORE ERASE b" << std::endl;
+	// mymap.erase ('b'); 
+	// std::cout << "after ERASE b" << std::endl;
 
 	// mymap.erase ('e');      
 	// std::cout << "after ERASE  e" << std::endl;
-	// mymap.ft_print_map();
-	// mymap.erase ( mymap.begin(), mymap.end() );
+	mymap.ft_print_map();
+	it = mymap.begin();
+	ite = mymap.end();
+	mymap.erase ( it, ite );
+	std::cout << "afta ERASE " << std::endl;
 
+	mymap.ft_print_map();
 	output_map(mymap, myfile);
 }
 
@@ -297,7 +301,6 @@ void vector_constructor(std::ofstream& myfile)
 	output(third, myfile);
 	output(fourth, myfile);
 }
-
 
 void	vector_assigment_opperator(std::ofstream& myfile)
 {
@@ -604,8 +607,6 @@ int main(void)
 	// // mymap[11]=30;
 	// // mymap[9]=30;
 
-	// mymap.ft_print_balance();
 	// mymap.ft_print_map();
-	// mymap.ft_iterate();
     return (0);
 }

@@ -18,7 +18,7 @@ STD_NAME = srcs/tests/ft_containers_std
 
 CXX = clang++
 
-FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
+FLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -g -fsanitize=address
 
 FT_FILES = srcs/tests/ft_main.cpp
 
