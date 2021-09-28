@@ -23,12 +23,8 @@
 #define RESET   "\033[0m"
 #define RED     "\033[31m"      /* Red */
 #define GREEN   "\033[32m"      /* Green */
-// DELETE 
-
-
 
 namespace ft {
-// template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<T> > 
 template < class Key, class T, class Compare = less<Key>, class Alloc = std::allocator<T> > 
 class map
     {
@@ -292,22 +288,6 @@ class map
             if (tmp != NULL)
                 check_rebalance(tmp);
             current_root = tmp;
-            // while (current_root->_parent)
-            // {
-            //     current_root->_height = calc_height(current_root);
-            //     // check_rebalance(current_root);
-            //     current_root = current_root->_parent;
-            // }
-            // while (tmp->_parent)
-            // {
-            //     check_rebalance(tmp);
-            //     tmp = tmp->_parent;
-            // }
-            // tmp->_height = calc_height(tmp);
-            // std::cout << "height is " << current_root->_height << std::endl;
-            // if (tmp->_parent)
-                // check_rebalance(current_root);
-            // print_tree(_root_node);
             insert_end_node();
             return (ft::pair<iterator, bool> (find(val.first), false));
         }
@@ -784,7 +764,6 @@ class map
             /* Replace root with its right child */ 
             else if (root->_left == NULL && root->_right != NULL) 
             {
-                std::cout << "in 2" << key << std::endl;
                 if (root->_parent != NULL) 
                 {
                     if (root->_parent->_data.first  < root->_data.first )
