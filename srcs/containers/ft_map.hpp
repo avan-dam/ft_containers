@@ -761,7 +761,6 @@ class map
             /* Replace root with its left child */
             if (root->_right == NULL && root->_left != NULL) 
             {
-                std::cout << "in 1" << key << std::endl;
                 if (root->_parent != NULL) 
                 {
                     if (root->_parent->_data.first < root->_data.first )
@@ -771,7 +770,6 @@ class map
                     /* Update the height of root's parent */
                     root->_parent->_height = calc_height(root->_parent);
                 }
-
                 node_ptr tmp = root->_left;   
                 tmp->_parent = root->_parent;
                 /* Balance the node after deletion  */
@@ -782,14 +780,6 @@ class map
                 if (_size == 1)
                     _root_node = tmp;
                 return tmp;
-                // node_ptr tmp = root;   
-                // root->_left->_parent = root->_parent;
-                // /* Balance the node after deletion  */
-                // root->_left = check_rebalance(root->_left);
-                // _alloc.destroy(tmp);
-                // _alloc.deallocate(tmp, 1);
-                // _size--;
-                // return root->_left;
             }
             /* Replace root with its right child */ 
             else if (root->_left == NULL && root->_right != NULL) 
@@ -808,26 +798,15 @@ class map
                 tmp->_parent = root->_parent;
                 _alloc.destroy(root);
                 _alloc.deallocate(root, 1);
-                std::cout << "size" << _size << std::endl;
                 _size--;
                 tmp = check_rebalance(tmp);
-                std::cout << "tmp" << tmp->_data.first << std::endl;
-                std::cout << "size" << _size << std::endl;
                 if (_size == 1)
                     _root_node = tmp;
                 return tmp;
-                // node_ptr tmp = root;   
-                // root->_right->_parent = root->_parent;
-                // root->_right = check_rebalance(root->_right);
-                // _alloc.destroy(tmp);
-                // _alloc.deallocate(tmp, 1);
-                // _size--;
-                // return root->_right;
             }
             /*Remove the references of the current node */ 
             else if (root->_left == NULL && root->_right == NULL) 
             {
-            std::cout << "in 3" << key << std::endl;
                 if (root->_parent)
                 {
                     if (root->_parent->_data.first  < root->_data.first)
@@ -836,24 +815,16 @@ class map
                         root->_parent->_left = NULL;
                     root->_parent->_height = calc_height(root->_parent);
                 }
-                std::cout << "in31" << std::endl;
                 _alloc.destroy(root);
                 _alloc.deallocate(root, 1);
                 _size--;
                 if (_size == 0)
-                {   
-                    std::cout << "in" << std::endl;
                      _root_node = NULL;
-                    std::cout << "out" << std::endl;
-
-                }
-                std::cout << "out 3" << key << std::endl;
                 return NULL;
             }
             /* Otherwise, replace the current node with its successor and then recursively call Delete() */ 
             else 
             {
-            std::cout << "in 4" << key << std::endl;
                 node_ptr tmp = root;
                 tmp = tmp->_right;
                 while (tmp->_left != NULL)
@@ -871,15 +842,12 @@ class map
         /*Recur to the right subtree to delete the current node */ 
         else if (root->_data.first < key) 
         {
-            std::cout << "in 5" << key << std::endl;
             root->_right = erase_recursively(root->_right, key);
             root = check_rebalance(root);
         }
         /* Recur into the right subtree to delete the current node */
         else if (root->_data.first > key) 
         {
-                    std::cout << "in 6" << key << std::endl;
-
             root->_left = erase_recursively(root->_left, key);
             root = check_rebalance(root);
         }
@@ -910,6 +878,6 @@ class map
 			print_tree_utils(root->_left, space);
 		}
     };
-}      
+}
 
 #endif
