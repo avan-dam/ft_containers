@@ -339,15 +339,8 @@ class map
 
         void erase (iterator first, iterator last)
         {
-            ft::map<Key,T> tmp;
-            
-            if (first != begin())
-                tmp.insert(begin(), first);
-            if (last != end())
-                tmp.insert(last, end());
-            clear();
-            if (tmp._root_node != NULL)
-                insert(tmp.begin(), tmp.end());
+            for (typename ft::map<Key,T>::iterator it = first; it!=last ; ++it) 
+                erase(p);
         }
 
         void erase (iterator position)
