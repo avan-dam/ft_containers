@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/29 09:02:52 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/29 09:34:51 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class vector
             _capacity = n;
 			_vector = _alloc.allocate(n);
             for (size_t i = 0; i < n; i++)
-                _vector[i] = val;
+                _alloc.construct(&_vector[i], val);
         }
 		
 		template <class InputIterator>
@@ -60,11 +60,8 @@ class vector
 			_size = distance(first, last);
             _capacity = _size;
 			_vector = _alloc.allocate(_capacity);
-			for (InputIterator n = first; n != last; n++)
-            {
-				_vector[i] = *n;
-				i++;
-			}
+			for (InputIterator n = first; n != last; n++, i++)
+				_alloc.construct(&_vector[i], *n);
         }
 
         vector (const vector& x)
@@ -79,7 +76,7 @@ class vector
 			}
 			_vector = _alloc.allocate(_capacity);
             for (size_t i = 0; i < _size; i++)
-                _vector[i] = x[i];
+			    _alloc.construct(&_vector[i], x[i]);
             return;
         }
 
@@ -99,7 +96,7 @@ class vector
 				_vector = _alloc.allocate(_capacity);
             }
             for (size_t i = 0; i < _size; i++)
-                _vector[i] = x[i];
+				_alloc.construct(&_vector[i], x[i]);
 		    return *this;
         }
 
@@ -180,7 +177,8 @@ class vector
 			_vector = _alloc.allocate(_capacity);
             for (size_t i = 0; i < _size; i++)
             {
-			    _vector[i] = *first;
+				_alloc.destroy(&_vector[i]);
+				_alloc.construct(&_vector[i], *first);
 				first++;
 			}	
 		}
@@ -191,7 +189,10 @@ class vector
             _capacity = n;
 			_vector = _alloc.allocate(_capacity);
             for (size_t i = 0; i < _size; i++)
-                _vector[i] = val;
+            {
+				_alloc.destroy(&_vector[i]);
+				_alloc.construct(&_vector[i], val);
+			}
         }
 
 		void push_back (const value_type& val)
@@ -225,7 +226,7 @@ class vector
 					reserve(_size * 2);
 			}
 			for (unsigned int i = _size - 1; i >pos; i--)
-				_vector[i] = _vector[i - 1];
+				_alloc.construct(&_vector[i], _vector[i - 1]);
 			_vector[pos] = val;
 			iterator ret(&_vector[pos]);
 			return ret;
@@ -244,9 +245,9 @@ class vector
 					reserve(_size * 2);
 			}
 			for (unsigned int i = _size; i >= endpos; i--)
-				_vector[i] = _vector[i - n];
+				_alloc.construct(&_vector[i], _vector[i - n]);
 			for (unsigned int j = startpos; j < endpos; j++)
-				_vector[j] = val;
+				_alloc.construct(&_vector[j], val);
 			return ;
 		}
 
@@ -266,24 +267,27 @@ class vector
 					reserve(_size * 2);
 			}
 			for (unsigned int i = _size; i >= endpos; i--)
-				_vector[i] = _vector[i - n];
+				_alloc.construct(&_vector[i], _vector[i - n]);
 			for (unsigned int j = startpos; j < endpos; j++, first++)
-				_vector[j] = *first;
+				_alloc.construct(&_vector[j], *first);
 			return ;
 		}
 
 		iterator erase (iterator first, iterator last)
 		{
-			size_type		size_delete = 0;
-			for (iterator tmp = first; tmp != last; tmp++)
-				size_delete++;
+			size_t		size_delete = last - first;
+			size_t 		position = first - begin();
+			size_t 		startdel = 0;
+			
 			_size = _size - size_delete;
-			for (size_type i = first - begin(); i < _size; i++)
-				_vector[i] = _vector[i + size_delete];
-			iterator ret = begin();
-			while (ret != first)
-				ret++;
-			return (ret);
+			for (size_t i = first - begin(); i < _size; i++)
+			{	
+				_alloc.construct(&_vector[i], _vector[i + size_delete]);
+				startdel++;
+			}
+			for (size_type i = 0; i < size_delete; i++)
+				_alloc.destroy(&_vector[i + startdel]);
+			return (iterator(begin() + position));
 		}
 
 		iterator erase (iterator position)

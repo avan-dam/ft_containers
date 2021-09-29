@@ -346,11 +346,12 @@ void	vector_capacity(std::ofstream& myfile)
 void	vector_assign(std::ofstream& myfile)
 {
 	myfile << "\ncalling vector vector_assign functions" << std::endl;
-	vector<int> first;
+	vector<int> first(2, 100);
 	vector<int> second;
 	vector<int> third;
 
-	first.assign (7,100);             // 7 ints with a value of 100
+	first.assign (7,100); 
+	first.push_back(2);
 	vector<int>::iterator it =first.begin(); it++;
 	second.assign (it ,first.end());
 	output(first, myfile);
@@ -453,7 +454,7 @@ void 	vector_erase(std::ofstream& myfile)
 	vector<int>::iterator result = myvector.erase (first,last);  // erase the first 3 elements:
 	myfile << *result << std::endl;
 	first = myvector.end(); first--;
-	myvector.erase (first);
+	myfile << *(myvector.erase (first)) << std::endl;
 	output(myvector, myfile);
 }
 
