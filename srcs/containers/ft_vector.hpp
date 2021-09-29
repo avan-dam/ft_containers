@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/29 09:01:46 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/29 09:02:52 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,37 +316,6 @@ class vector
 		size_type		_size;
 		size_type		_capacity;
 		allocator_type	_alloc;
-
-		/* helper functions */
-		void	insert_newvector(ft::vector<T,Alloc> newvector)
-		{
-			if (newvector.size() == 0)
-				return ;
-			for (ft::vector<T,Alloc>::iterator it=newvector.begin(); it!=newvector.end(); ++it)
-				push_back(*it);
-			return ;
-		}
-		
-		iterator	insert_vector_helper(ft::vector<T,Alloc> newvector, iterator position)
-		{
-			vector<T,Alloc>					vector_start(begin(), position);
-			vector<T,Alloc>					vector_end(position, end());
-			ft::vector<T,Alloc>::iterator	ret;
-
-			if (!empty())
-				clear();
-			if (!vector_start.empty())
-				insert_newvector(vector_start);
-			vector_start.clear();
-			if (!newvector.empty())
-				insert_newvector(newvector);
-			newvector.clear();
-			ret = iterator(&_vector[_size - 1]);
-			if (!vector_end.empty())
-				insert_newvector(vector_end);
-			vector_end.clear();
-			return (ret);
-		}
     };
 
 	/* Non-member function overloads */
