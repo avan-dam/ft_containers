@@ -278,7 +278,9 @@ void	map_erase(std::ofstream& myfile)
 	mymap['f']=60;
 
 	it=mymap.find('b');
+	map<char,int>::iterator ite = mymap.find('a');
 	mymap.erase (it);  
+	myfile << "after erase: " << ite->first << std::endl;
 	output_map(mymap, myfile);
 
 	mymap.erase ('e');     
