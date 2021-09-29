@@ -21,9 +21,9 @@ void    test_content()
         getline(ft,ftline);
         getline(std,stdline);
         if(ftline!=stdline){ 
-           std::cout << "first unequal line is" << std::endl;
+           std::cout << "first unequal line is std is:" << std::endl;
            std::cout << stdline << std::endl;
-           std::cout << "and" << std::endl;
+           std::cout << "and ft is:" << std::endl;
            std::cout << ftline << std::endl;
            std::cout << "on line " << i << std::endl;
            found = -1;

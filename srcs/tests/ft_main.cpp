@@ -439,9 +439,11 @@ void	vector_insert(std::ofstream& myfile)
 {
 	myfile << "\ncalling vector vector_insert functions" << std::endl;
 	vector<int> myvector (3,100);
+	myvector.push_back(4);
+	myvector.push_back(7);
 	vector<int>::iterator it;
 
-	it = myvector.begin(); it++; it++; it++;
+	it = myvector.begin(); it++; it++;
 	it = myvector.insert ( it , 200 );
 	myfile << *it << std::endl;
 	myvector.insert (it,2,300);
@@ -449,6 +451,7 @@ void	vector_insert(std::ofstream& myfile)
 
 	it = myvector.begin();
 	vector<int> anothervector (2,400); it++; it++;
+	anothervector.push_back(5);
 	myvector.insert (it,anothervector.begin(),anothervector.end());
 	output(myvector, myfile);
 }

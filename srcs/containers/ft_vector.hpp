@@ -6,7 +6,7 @@
 /*   By: ambervandam <ambervandam@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/10 12:04:40 by ambervandam   #+#    #+#                 */
-/*   Updated: 2021/09/28 20:09:58 by ambervandam   ########   odam.nl         */
+/*   Updated: 2021/09/29 09:01:46 by ambervandam   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,11 @@ class vector
             return;
         }
 
-        ~vector() {	_alloc.deallocate(_vector, _size);}
+        ~vector() 
+		{
+			clear();
+			_alloc.deallocate(_vector, _size);
+		}
 
 		vector& operator=(const vector& x)
         {
@@ -211,14 +215,38 @@ class vector
 
 		iterator insert (iterator position, const value_type& val)
 		{
-			vector<T,Alloc>		newvector(1, val);
-			return (insert_vector_helper(newvector, position));
+			size_t pos = position - begin();
+			_size++;
+			if (_size > _capacity)
+			{
+				if (_capacity == 0)
+					reserve(1);
+				else
+					reserve(_size * 2);
+			}
+			for (unsigned int i = _size - 1; i >pos; i--)
+				_vector[i] = _vector[i - 1];
+			_vector[pos] = val;
+			iterator ret(&_vector[pos]);
+			return ret;
 		}
 
     	void insert (iterator position, size_type n, const value_type& val)
 		{
-			vector<T,Alloc>		newvector(n, val);
-			insert_vector_helper(newvector, position);
+			size_t startpos = position - begin();
+			size_t endpos = startpos + n;
+			_size = _size + n;
+			if (_size > _capacity)
+			{
+				if (_capacity == 0)
+					reserve(1);
+				else
+					reserve(_size * 2);
+			}
+			for (unsigned int i = _size; i >= endpos; i--)
+				_vector[i] = _vector[i - n];
+			for (unsigned int j = startpos; j < endpos; j++)
+				_vector[j] = val;
 			return ;
 		}
 
@@ -226,8 +254,22 @@ class vector
         void insert (InputIterator position, InputIterator first, InputIterator last,
                     typename ft::enable_if<ft::is_iterator<InputIterator>::value >::type* = 0)
 		{
-			vector<T,Alloc>		newvector(first, last);
-			insert_vector_helper(newvector, position);
+			size_t n = last - first;
+			size_t startpos = position - begin();
+			size_t endpos = startpos + n;
+			_size = _size + n;
+			if (_size > _capacity)
+			{
+				if (_capacity == 0)
+					reserve(1);
+				else
+					reserve(_size * 2);
+			}
+			for (unsigned int i = _size; i >= endpos; i--)
+				_vector[i] = _vector[i - n];
+			for (unsigned int j = startpos; j < endpos; j++, first++)
+				_vector[j] = *first;
+			return ;
 		}
 
 		iterator erase (iterator first, iterator last)
