@@ -38,6 +38,6 @@ To test run
 
 The output of the test performed by the STL containter can be found in srcs/tests/myfile_std.txt and that of my container in srcs/tests/myfile_ft.txt, these outputs are then compared to see if they are identical. The timings of the two tests are printed in myfile_std_time.txt and myfile_ft_time.txt adn compared.
 
-If everything works as it should the result should be the same as can be seen in the screenshot below
+If everything works as it should the result should be similar to that seen in the screenshot below
 
 <img width="526" alt="Screenshot 2021-10-13 at 08 42 28" src="https://user-images.githubusercontent.com/61982496/137080823-028fe083-f364-433d-8196-1cf92d8f869f.png">
